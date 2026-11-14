@@ -1,0 +1,55 @@
+{
+  "intro": "一个汇总实验结果的小命令收到空 CSV 就抛出异常。让编码 Agent 修改并不难，难的是确定空文件应该怎样报错，以及怎样证明正常文件和其他坏输入仍按原来的约定处理。",
+  "sections": [
+    {
+      "id": "locate",
+      "title": "从实际命令找到要改的函数",
+      "paragraphs": [
+        "先让 Agent 根据报错和文件名找命令行入口，再追到解析器和调用它的测试。它能很快汇总路径、函数与调用关系。工程师要抽查入口是否真能触发这个分支，也要看有没有其他代码直接调用解析器。",
+        "假设入口负责读取文件、把文本传给 parse_csv，并在捕获 ValueError 时写入 stderr、退出 2。解析器负责判断表头与必需字段。空文件修在解析器里，命令行和其他调用者都能得到同一种清晰的输入错误。"
+      ],
+      "figure": {
+        "caption": "阅读调用链时先分清谁判断输入，谁把错误转成命令行结果。",
+        "nodes": [
+          {"title": "命令行入口", "text": "读取输入文件，调用解析器"},
+          {"title": "CSV 解析器", "text": "核对表头和必需列，交回记录或输入错误"},
+          {"title": "命令行输出", "text": "成功写 stdout，输入错误写 stderr 并退出 2"}
+        ]
+      }
+    },
+    {
+      "id": "baseline",
+      "title": "改之前先留两份对照",
+      "paragraphs": [
+        "回归检查是重新验证原有行为。保存一个正常文件的输出与退出码，再用一个缺列文件保存原错误。这样新代码即使表面上能运行，也必须与原来的对照吻合。",
+        "分别记录实际看到了什么和希望得到什么。空文件当前可能出现 Python 堆栈，预期是提示缺少表头。仅有正确表头的文件则表示零条数据，应正常输出 0。看上去同样没有数据行，接口含义不同。"
+      ],
+      "example": {
+        "title": "读一份可手查的基线",
+        "text": "正常输入为 sample_id,mae 加两行 img01,2 与 img02,3，结果为 stdout 2、退出 0。只写 sample_id 一列时，保留 stderr missing column: mae 与退出 2。把空文件加入检查后，它应单独得到 stderr missing header 与退出 2。"
+      }
+    },
+    {
+      "id": "review",
+      "title": "从代码差异读到真实结果",
+      "paragraphs": [
+        "请 Agent 在代码差异旁写明改动理由、验证命令和观察到的输出。如果它在命令行入口捕获所有异常并返回空列表，空文件的堆栈确实消失了，缺列也可能被伪装成零条结果。查看非零退出码就能发现这种回归。",
+        "用原命令检查正常、空、缺列和仅表头四个样例。核对 Git 差异是否只增加了空表头的判断及相应检查。若工作区已有同事修改，保留它们，并注明此次差异涉及哪些文件。"
+      ]
+    }
+  ],
+  "task": {
+    "input": "建一个空目录，把下面的最小基线和样例贴给本地 Agent。\n\nimport csv\nimport io\nimport sys\nfrom pathlib import Path\n\ndef parse_csv(text):\n    reader = csv.DictReader(io.StringIO(text))\n    for column in ('sample_id', 'mae'):\n        if column not in reader.fieldnames:\n            raise ValueError(f'missing column: {column}')\n    return list(reader)\n\nif __name__ == '__main__':\n    try:\n        rows = parse_csv(Path(sys.argv[1]).read_text(encoding='utf-8'))\n    except ValueError as error:\n        print(error, file=sys.stderr)\n        sys.exit(2)\n    print(len(rows))\n\n四个夹具为 normal.csv「sample_id,mae\\nimg01,2\\nimg02,3\\n」、empty.csv（0 字节）、missing.csv「sample_id\\nimg01\\n」、header.csv「sample_id,mae\\n」。字符串里的 \\n 写成真正换行。",
+    "prompt": "把代码保存为 summary.py。先运行基线并记录四个样例的 stdout、stderr 和退出码。只在 parse_csv 内修复无表头的情况，错误信息用 missing header。保留命令行入口、正常输出和原缺列行为。修复后用相同命令复核，提交差异和执行记录。没运行的项明确标记。",
+    "deliverable": "修订后的 summary.py、四个 CSV 和一页前后对照记录。",
+    "check": [
+      "normal.csv 输出 2，header.csv 输出 0，两者均退出 0。",
+      "empty.csv 输出 missing header 到 stderr，退出 2，无成功数据。",
+      "missing.csv 仍输出 missing column: mae，退出 2。代码差异可定位到解析器的相关分支。"
+    ]
+  },
+  "sources": [
+    {"title": "Python 官方文档 · csv.DictReader", "url": "https://docs.python.org/3/library/csv.html#csv.DictReader"},
+    {"title": "OpenAI · Harness engineering", "url": "https://openai.com/index/harness-engineering/"}
+  ]
+}

@@ -6,6 +6,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 root = Path(__file__).resolve().parent / "labs"
 out = Path(sys.argv[1])
 fusion_output = Path(sys.argv[2]) if len(sys.argv) > 2 else None
+lesson_tasks = Path(sys.argv[3]) if len(sys.argv) > 3 else None
 out.mkdir(parents=True, exist_ok=True)
 for lab in sorted(root.iterdir()):
     if not lab.is_dir():
@@ -24,3 +25,21 @@ for lab in sorted(root.iterdir()):
             archive.writestr(entry, file.read_bytes(), compress_type=ZIP_DEFLATED)
     with ZipFile(out / f"{lab.name}.zip") as archive:
         assert archive.testzip() is None
+
+if lesson_tasks:
+    for task in sorted(lesson_tasks.glob("*.md")):
+        name = task.stem
+        files = {"task.md": task}
+        if name == "a3":
+            images = root.parent / "static" / "visual-input"
+            files.update({file.name: file for file in images.glob("*.png")})
+            files.update({file: fusion_output / file for file in ("weak.png", "strong.png")})
+        if name == "b9":
+            images = root.parent / "static" / "visual-input"
+            for file in ("low-light-wood-crop.png", "low-light-weak-wood-crop.png", "low-light-strong-wood-crop.png"):
+                files[file] = images / file
+        with ZipFile(out / f"{name}.zip", "w") as archive:
+            for path, source in sorted(files.items()):
+                archive.writestr(ZipInfo(f"{name}/{path}"), source.read_bytes(), compress_type=ZIP_DEFLATED)
+        with ZipFile(out / f"{name}.zip") as archive:
+            assert archive.testzip() is None

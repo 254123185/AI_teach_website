@@ -1,9 +1,9 @@
 {
   "src": "workflow-examples/papers/zhang-wu-kong-2019-fig6.png",
   "alt": "Barbara 灰度测试图的六格对照。上排是原图、加噪图、NPGTV；下排是 NLGBT、经典总变差和非局部均值。",
-  "caption": "先在 (a) 找到左下桌布和围巾的重复条纹，再比较 (b) 的加噪输入、(e) 的经典总变差（TV）和 (c) 的非局部图总变差（NPGTV）。作者指出，经典 TV 会磨掉 NPGTV 保留下来的一些纹理。作者给同一幅 Barbara 灰度图加入零均值高斯噪声，图中条件记为 σ = 30 dB。这里借用它的对照方法。茶铺的暗墙、木纹和灯芯使用本站的独立算例。",
+  "caption": "先在 (a) 找到左下桌布和围巾的重复条纹，再比较 (b) 的加噪输入、(e) 的经典总变差（TV）和 (c) 的非局部图总变差（NPGTV）。作者指出，经典 TV 会磨掉 NPGTV 保下来的一些纹理。作者给同一幅 Barbara 灰度图加入零均值高斯噪声，图中条件记为 σ = 30 dB。本案例借用同位置对照的读图方法。",
   "title": "Yan Zhang、Jiasong Wu、Youyong Kong、Gouenou Coatrieux、Huazhong Shu（2019），《Image denoising via a non-local patch graph total variation》，PLOS ONE，图 6",
   "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0226067#pone.0226067.g006",
-  "license": "© 2019 Zhang 等，CC BY 4.0。出版原图未修改；原 Barbara 图据图注引自 Liu 等（2015），PLOS ONE，图 1，同为 CC BY 4.0。",
+  "license": "© 2019 Zhang 等，PLOS ONE 出版图 6，文章许可 CC BY 4.0。本站刊载出版图，带读另作局部裁剪。作者图注将 Barbara 测试图注明为引自 Liu 等（2015），PLOS ONE 图 1。",
   "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
 }

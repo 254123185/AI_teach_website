@@ -5,14 +5,14 @@
 ## 给 Agent 的材料
 
 - `brief.json` 描述失败现象、已有接口和数据限制。
-- `papers.json` 是三份带原文定位的预读卡，分别写了论文发现和项目改造草案。
+- `papers.json` 是四份带原文定位的预读卡。FFDNet 是已有线索，Mertens 是后来补查的过渡带参考。
 - 可联网时，沿链接核查章节和图号。离线时可直接使用证据卡，在备忘录中标记「原文待复核」。
 
 ## 交给 Agent
 
-用证据卡筛选方案，并把筛选条件留成脚本。实现 `shortlist(brief, papers)`，返回顺序与证据卡一致的列表。每项包含 `id`、`status`、`missing`、`conflicts`。必要条件都可用且没有已观察到的冲突时，状态为 `try`，其余为 `defer`。缺条件和冲突列表沿证据卡原顺序保存。
+先让 Agent 用证据卡起草一页选型备忘录。要求它逐项写明原文位置、作者改变的变量、项目能用哪一部分、什么时候该停。请特别说明为什么 FFDNet 能帮助设计首试，以及完整的 Mertens 多尺度融合为何放到以后、它的失败图现在为何仍值得用。
 
-运行 `python -m unittest -v` 和 `python solution.py`。基于 `shortlist.json` 写 `idea.md`，每个候选记四项：来源及原文位置、可借机制、缺口或风险、建议先跑的对照。只选一条首试，写清基线、候选、固定项与分区指标。
+如果团队会重复这类筛选，可以再让 Agent 把规则写入 `shortlist(brief, papers)`。按证据卡顺序返回每项的 `id`、`status`、`missing`、`conflicts`。必要条件都可用且没有已观察到的冲突时，状态为 `try`，其余为 `defer`。保留缺条件和冲突的原顺序。完成后可用 `python -m unittest -v` 和 `python solution.py` 检查规则并输出 `shortlist.json`。
 
 ## 人工验收
 

@@ -2,13 +2,22 @@
   {
     "id": "ffdnet",
     "location": "FFDNet · §IV-C、图 5",
-    "source": "https://arxiv.org/pdf/1710.04026#page=9",
+    "source": "https://arxiv.org/html/1710.04026v2#S4.F5",
     "evidence": "空间噪声图能为不同区域施加不同强度。图 5 对照的是合成空间变化高斯噪声。",
     "idea": "先试分区融合权重。复用区域控制的思路，沿用现有模型。",
     "requires": [
       "rendered_images",
       "blend_weight_hook"
     ],
+    "concerns": []
+  },
+  {
+    "id": "mertens",
+    "location": "Exposure Fusion · §3.2、图 4",
+    "source": "https://www.tommertens.com/old-academic/papers/exposure_fusion_reduced.pdf#page=5",
+    "evidence": "图 4 对比权重突变造成的接缝、平滑权重后的光晕和多尺度融合结果。论文对象是多曝光图。",
+    "idea": "带着图 4 检查本案过渡带。完整多尺度融合只在能改合成器时进入实现评估。",
+    "requires": ["multiscale_blender_hook"],
     "concerns": []
   },
   {
@@ -29,7 +38,7 @@
     "location": "Noise2Void · §3.1、§4.4、图 6",
     "source": "https://arxiv.org/pdf/1811.10980#page=8",
     "evidence": "单张噪声图可以做自监督。邻域噪声独立与零均值是关键假设，结构噪声是已展示的限制。",
-    "idea": "先搁置。当前残差有条纹，需先核查空间相关性，且本轮没有训练预算。",
+    "idea": "本轮没有训练预算。若后续观察到稳定条纹，先核查噪声相关性。",
     "requires": [
       "rendered_images",
       "training_slot"

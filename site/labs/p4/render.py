@@ -89,7 +89,7 @@ def comparison_svg(result, frames, png_bytes, detail):
             f'<text class="small" x="{38 + index * 122}" y="510">{label} ROI</text>'
             for index, (region, label) in enumerate(REGIONS.items())
         )
-        title = "同一张茶铺夜景的输入、支路与融合结果"
+        title = "同一低照度样本的输入、支路与融合结果"
         subtitle = "两路输出固定。A 和 B 只更换强支路权重，彩框是评估位置。"
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {total_width} {total_height}" role="img" aria-labelledby="title description">
 <title id="title">{title}</title><desc id="description">{subtitle}</desc>
@@ -114,25 +114,37 @@ def demo_html(result, frames, png_bytes):
             if method == "weights":
                 selected = [[(value * 255 + 50) // 100 for value in row] for row in selected]
             images[method][region] = png_url(png(selected))
-    choices = "".join(f'<option value="{method}">{LABELS[method]}</option>' for method in frame_names)
+    def method_choices(default):
+        return "".join(f'<option value="{method}"{" selected" if method == default else ""}>'
+                       f'{LABELS[method]}</option>' for method in frame_names)
+
     region_choices = "".join(f'<option value="{region}">{name}</option>' for region, name in regions.items())
+    presets = {region: ["global", "spatial", region] for region in regions}
+    presets["matched"] = ["mean_matched", "spatial", "wall"]
+    preset_links = "".join(f'<a id="{region}" href="#{region}">{name}</a>' for region, name in regions.items())
+    peak_x, peak_y = scene["lamp_peak_xy"]
     rows = "".join(
         f"<tr><th>{escape(gate['label'])}</th><td>{gate['baseline']:.3f}</td><td>{gate['candidate']:.3f}</td>"
         f"<td>{escape(gate['op'])} {gate['limit']:.3f}</td><td>{'通过' if gate['passed'] else '失败'}</td></tr>"
         for gate in result["gates"]
     )
     bundle = dumps({"scene": scene, "images": images, "labels": LABELS, "regions": regions, "boxes": areas,
-                    "metrics": result["metrics"], "experiment_id": result["experiment_id"]},
+                    "metrics": result["metrics"], "reference_lamp_peak": frames["reference"][peak_y][peak_x],
+                    "presets": presets, "experiment_id": result["experiment_id"]},
                    ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")
     return f"""<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>茶铺夜景 · 分区融合 A/B</title><link rel="icon" href="data:,">
+<title>低照度图像降噪 · 权重对照</title><link rel="icon" href="data:,">
 <style>
   *{{box-sizing:border-box}} body{{margin:0;background:#f6f7ee;color:#19291f;font:16px/1.55 system-ui,sans-serif}}
   main{{max-width:960px;margin:auto;padding:1rem clamp(.6rem,3vw,2rem) 2rem}}
   h1{{line-height:1.18;margin:.5rem 0}} p{{margin:.55rem 0}}
+  .presets{{display:flex;flex-wrap:wrap;gap:.45rem;margin:.8rem 0}}
+  .presets[hidden]{{display:none}}
+  .presets a{{padding:.32rem .55rem;border:1px solid #9cb09e;border-radius:.35rem;color:#224f37;scroll-margin-top:.65rem}}
+  .presets a[aria-current]{{background:#e3eddf;font-weight:650}}
   .controls,.panels{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:.8rem 0}}
   .controls{{grid-template-columns:repeat(3,minmax(0,1fr))}} label{{display:grid;gap:.2rem;font-weight:650}}
   select{{width:100%;font:inherit;padding:.35rem;background:#fffef7;color:#19291f;border:1px solid #9cb09e;border-radius:.35rem}}
@@ -147,26 +159,32 @@ def demo_html(result, frames, png_bytes):
 </style>
 </head>
 <body><main>
-<p class="muted">{escape(result['experiment_id'])} · 合成灰度场景 · 可离线复算对照</p>
-<h1>同一输入的固定权重与分区权重</h1>
-<p>弱、强两路固定。A 的强支路权重处处为 50%。B 在暗墙、木纹、灯芯邻域分别为 85%、15%、8%，边界线性过渡。</p>
-<p class="muted">均值匹配诊断使用 B 的全图平均权重（{result['diagnostics']['mean_matched']['strong_weight']:.3f}%），门槛表仍比较 B 和 A。</p>
+<p class="muted">{escape(result['experiment_id'])} · 低照度合成灰度图</p>
+<h1>固定权重与分区权重对照</h1>
+<p>A、B 共用弱、强两路降噪结果。A 全图用 50% 的强支路。B 在暗墙、木纹和灯芯附近分别用 85%、15% 和 8%，交界处线性过渡。</p>
+<p class="muted">同均值对照把 B 的平均强支路权重（{result['diagnostics']['mean_matched']['strong_weight']}%）用于全图。与 B 比较，可以看出权重分配到不同位置有什么影响。</p>
+<nav class="presets" aria-label="快速选择对照" hidden>{preset_links}<a id="matched" href="#matched">同均值对照</a></nav>
+<noscript><p>下方显示 A/B 整图和验收结果。启用 JavaScript 后可切换版本和区域。</p></noscript>
 <div class="controls">
-<label for="method-a">左图<select id="method-a">{choices}</select></label>
-<label for="method-b">右图<select id="method-b">{choices}</select></label>
-<label for="region" class="scope">同坐标剪裁<select id="region">{region_choices}</select></label>
+<label for="method-a">左图<select id="method-a" disabled>{method_choices('global')}</select></label>
+<label for="method-b">右图<select id="method-b" disabled>{method_choices('spatial')}</select></label>
+<label for="region" class="scope">同坐标裁剪<select id="region" disabled>{region_choices}</select></label>
 </div>
 <div class="panels">
 <figure><div class="frame"><img id="frame-a" src="{images['global']['full']}" alt="固定权重"></div><figcaption id="label-a">A · 固定权重</figcaption></figure>
 <figure><div class="frame"><img id="frame-b" src="{images['spatial']['full']}" alt="分区权重"></div><figcaption id="label-b">B · 分区权重</figcaption></figure>
 </div>
 <p class="small" id="position" role="status"></p>
-<p class="small" id="selection" role="status"></p>
-<h2>固定比较 · B 对 A</h2>
-<p class="status">{'本张教学图全部过线' if result['all_gates_pass'] else '本张教学图有未通过项'}</p>
-<div class="table-wrap" tabindex="0" aria-label="固定门槛结果">
+<div id="selection" aria-live="polite" hidden>
+<p class="small" id="reading"></p>
+<div class="table-wrap" tabindex="0" aria-label="所选区域的测量结果">
+<table><thead><tr><th scope="col">指标</th><th scope="col" id="metric-a">左图</th><th scope="col" id="metric-b">右图</th></tr></thead>
+<tbody id="metric-rows"></tbody></table></div></div>
+<h2>验收结果 · B 对 A</h2>
+<p class="status">{'分区权重通过全部预设门槛。' if result['all_gates_pass'] else '分区权重未通过部分预设门槛。'}</p>
+<div class="table-wrap" tabindex="0" aria-label="预设门槛与判定">
 <table><thead><tr><th>门槛</th><th>A</th><th>B</th><th>条件</th><th>判定</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p class="muted">此页展示同一实验的预计算像素和指标。切换视图不调整算法或门槛。没有独立实拍，不能据此判断部署效果。权重图黑 0%、白 100%。</p>
+<p class="muted">图像和读数来自同一次合成实验。真实画质和设备表现需要另行验证。</p>
 </main>
 <script type="application/json" id="experiment">{bundle}</script>
 <script>
@@ -174,30 +192,81 @@ const evidence = JSON.parse(document.getElementById('experiment').textContent);
 const left = document.getElementById('method-a');
 const right = document.getElementById('method-b');
 const roi = document.getElementById('region');
-left.value = 'global';
-right.value = 'spatial';
+const controls = [left, right, roi];
+const presetNav = document.querySelector('.presets');
+const seamView = {{
+  metrics: [['seam_excess_step_mae', '两处交界合计梯度误差 MAE', 3]],
+  reading: '画面显示所选交界。表中合并统计两处交界，比较输出与参考的横向相邻像素差，再取平均绝对误差。'
+}};
+const views = {{
+  full: {{metrics: [['global_mae', '全图 MAE', 3]], reading: 'MAE 是输出与参考图逐像素比较得到的平均绝对误差。'}},
+  wall: {{metrics: [['wall_residual_std', '暗墙残差标准差', 3], ['wall_mae', '暗墙 MAE', 3]],
+    reading: '残差标准差越低，输出减去参考后的波动越小。MAE 也计入整体偏亮或偏暗造成的误差。'}},
+  wood: {{metrics: [['wood_mae', '木纹 MAE', 3], ['wood_contrast_ratio', '木纹反差比', 3]],
+    reading: '木纹反差比是输出的横向平均反差除以参考值，接近 1 表示反差接近参考。噪点也可能抬高反差，因此要和 MAE 一起看。'}},
+  lamp: {{metrics: [['lamp_peak_value', '灯芯固定点亮度', 0], ['lamp_peak_loss', '灯芯固定点亮度损失', 0]],
+    reading: `灯芯测量点位于 (${{evidence.scene.lamp_peak_xy.join(', ')}})，参考亮度为 ${{evidence.reference_lamp_peak}}。`
+      + '亮度损失表示该点比参考暗了多少。'}},
+  seam1: seamView,
+  seam2: seamView
+}};
+const reference = {{wood_contrast_ratio: 1, lamp_peak_value: evidence.reference_lamp_peak}};
+function metricCell(method, key, digits) {{
+  if (method === 'weights') return '—';
+  const value = method === 'reference' ? (reference[key] ?? 0) : evidence.metrics[method][key];
+  return value.toFixed(digits) + (key === 'wood_contrast_ratio' ? '' : ' 灰度级');
+}}
 function update() {{
   const region = roi.value;
-  for (const [side, method] of [['a',left.value],['b',right.value]]) {{
+  const methods = [left.value, right.value];
+  for (const [side, method] of [['a', methods[0]], ['b', methods[1]]]) {{
     const image = document.getElementById('frame-' + side);
     image.src = evidence.images[method][region];
     image.alt = evidence.labels[method] + '，' + evidence.regions[region];
     document.getElementById('label-' + side).textContent = evidence.labels[method];
+    document.getElementById('metric-' + side).textContent = evidence.labels[method];
   }}
   const frameBox = [0,0,evidence.scene.width,evidence.scene.height];
   document.getElementById('position').textContent =
-    evidence.regions[region] + '，评估坐标 [x, y, 宽, 高] = [' +
+    evidence.regions[region] + '，裁剪范围 [x, y, 宽, 高] = [' +
     (evidence.boxes[region] ?? frameBox).join(', ') + ']';
-  const metric = region === 'full' ? 'global_mae' : region + '_mae';
-  const results = [left.value,right.value].map(method => {{
-    if (method === 'reference') return '参考图 0.000';
-    if (method === 'weights') return '权重图不计 MAE';
-    if (region.startsWith('seam')) return evidence.labels[method] + ' ' + evidence.metrics[method].seam_excess_step_mae.toFixed(3);
-    return evidence.labels[method] + ' ' + evidence.metrics[method][metric].toFixed(3);
+  const view = views[region];
+  document.getElementById('reading').textContent = view.reading
+    + (methods.includes('weights') ? ' 权重图的黑色和白色分别表示 0% 和 100% 的强支路权重。表中该列显示 —。' : '');
+  const rows = view.metrics.map(([key, label, digits]) => {{
+    const row = document.createElement('tr');
+    const heading = document.createElement('th');
+    heading.scope = 'row';
+    heading.textContent = label;
+    row.append(heading);
+    for (const method of methods) row.insertCell().textContent = metricCell(method, key, digits);
+    return row;
   }});
-  const metricLabel = region.startsWith('seam') ? '两处交界合计梯度误差 MAE' : '所选范围 MAE';
-  document.getElementById('selection').textContent = metricLabel + '（灰度级） · ' + results.join(' / ');
+  document.getElementById('metric-rows').replaceChildren(...rows);
+  for (const link of presetNav.querySelectorAll('a')) {{
+    const preset = evidence.presets[link.hash.slice(1)];
+    if (preset[0] === methods[0] && preset[1] === methods[1] && preset[2] === region) {{
+      link.setAttribute('aria-current', 'true');
+    }} else {{
+      link.removeAttribute('aria-current');
+    }}
+  }}
 }}
-for (const control of [left,right,roi]) control.addEventListener('change', update);
-update();
+function applyPreset() {{
+  const name = location.hash.slice(1);
+  const preset = Object.hasOwn(evidence.presets, name) ? evidence.presets[name] : evidence.presets.full;
+  [left.value, right.value, roi.value] = preset;
+  update();
+}}
+for (const control of controls) {{
+  control.disabled = false;
+  control.addEventListener('change', update);
+}}
+presetNav.addEventListener('click', event => {{
+  if (event.target.matches('a') && event.target.hash === location.hash) applyPreset();
+}});
+window.addEventListener('hashchange', applyPreset);
+applyPreset();
+presetNav.hidden = false;
+document.getElementById('selection').hidden = false;
 </script></body></html>"""

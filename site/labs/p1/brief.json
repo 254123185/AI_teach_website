@@ -1,5 +1,5 @@
 {
-  "problem": "夜景平坦区有残噪，调高全局融合强度会丢木纹与细字。",
+  "problem": "低照度样本的暗墙有残噪，强降噪可能磨掉木纹、压低灯芯。现有管线只能改两路输出的融合权重。",
   "available": [
     "rendered_images",
     "blend_weight_hook"
@@ -7,11 +7,10 @@
   "unavailable": [
     "raw_calibration",
     "paired_calibration_images",
-    "training_slot"
+    "training_slot",
+    "multiscale_blender_hook"
   ],
-  "observations": [
-    "row_correlated_residual"
-  ],
+  "observations": [],
   "baseline": "全局常量融合权重",
   "candidate": "平坦区与纹理区可使用不同权重",
   "fixed": [
@@ -21,7 +20,7 @@
   ],
   "metrics": [
     "暗墙非边缘区残差",
-    "纹理和细字保真",
+    "木纹和灯芯保真",
     "掩码过渡区域接缝"
   ]
 }

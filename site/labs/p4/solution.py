@@ -99,7 +99,7 @@ def report_markdown(result):
     scene = result["scene"]
     protocol = result["protocol"]
     body = [
-        "# 夜景茶铺分区融合实验报告",
+        "# 低照度图像降噪 · 分区融合实验报告",
         "",
         f"实验 `{result['experiment_id']}`，场景 `{scene['id']}`，种子 `{scene['seed']}`，"
         f"{scene['width']}×{scene['height']}，{scene['domain']}。{scene['split']}。",
@@ -109,7 +109,7 @@ def report_markdown(result):
         "## 方案从哪里来",
         "",
         "AI 调研选中 FFDNet Fig. 5 作为立题证据。原论文固定含噪图和模型，比较与空间噪声图均值相同的常量输入和空间变化输入，"
-        "同一合成噪声样本的 PSNR 为 27.45 dB 与 30.08 dB。茶铺借鉴同图控制强度分布的实验思路，"
+        "同一合成噪声样本的 PSNR 为 27.45 dB 与 30.08 dB。本实验借鉴同图控制强度分布的思路，"
         "把改变强度的位置放到现有的后融合接口。 [FFDNet 原文 Fig. 5](https://arxiv.org/html/1710.04026v2#S4.F5)",
         "",
         "Exposure Fusion Fig. 4 展示了多曝光融合中的接缝和光晕，提醒我们在对照里单独检查分区交界。"
@@ -231,7 +231,7 @@ def write_experiment(out):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="复算茶铺夜景分区融合实验")
+    parser = argparse.ArgumentParser(description="复算低照度图像降噪的分区融合实验")
     parser.add_argument("--out", type=Path, default=Path("run"), help="输出目录，默认 run")
     args = parser.parse_args()
     result = write_experiment(args.out)

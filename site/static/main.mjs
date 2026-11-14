@@ -68,10 +68,10 @@ if (processes.length) {
   const { mountProcess } = await import('./process.mjs');
   for (const root of processes) mountProcess(root, root.dataset.process);
 }
-const casePrompt = document.querySelector('.case-prompt');
-if (casePrompt) {
+const casePrompts = document.querySelectorAll('.case-prompt');
+if (casePrompts.length) {
   const { mountCasePrompt } = await import('./case-guide.mjs');
-  mountCasePrompt(casePrompt);
+  casePrompts.forEach(mountCasePrompt);
 }
 const workspace = document.querySelector('[data-workflow-id]');
 if (workspace) {

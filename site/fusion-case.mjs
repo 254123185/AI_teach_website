@@ -9,36 +9,48 @@ const texturePanels = [
 export function paperTextureRead(base, paper, h) {
   const { width, height, cropWidth, cropHeight } = paperCrop;
   const src = base + 'assets/' + paper.src;
-  return `<figure class="story-figure paper-reading"><figcaption><strong>跟读论文局部 · 同一块桌布，四种输入或输出</strong>
-<p>用 (a) 确认信号原本在哪，再对照 (b)、(c)、(e)。四格从原图同坐标裁剪并按同一尺度放大。</p></figcaption>
+  return `<figure class="story-figure paper-reading"><figcaption><strong>Barbara 测试图的桌布局部</strong>
+<p>从 (a) 找到桌布上的细条，再看其他三格保留了哪些条纹。各格取自论文原图中相同的位置，放大倍率一致。</p></figcaption>
 <div class="paper-crop-grid">${texturePanels.map(panel => `<div><div class="paper-crop" style="--crop-ratio:${cropWidth}/${cropHeight};--source-width:${100 * width / cropWidth}%;--crop-x:${-100 * panel.x / cropWidth}%;--crop-y:${-100 * panel.y / cropHeight}%"><img src="${h(src)}" width="${width}" height="${height}" alt="${h(panel.label + '的桌布局部')}" loading="lazy"></div><strong>${panel.label}</strong><p>${panel.reading}</p></div>`).join('')}</div>
-<p class="story-source"><a href="${h(paper.url)}">来源与图号 ↗</a> · <a href="${h(paper.licenseUrl)}">CC BY 4.0</a> · 本站只做局部裁剪显示。</p></figure>`;
+<p class="story-source"><a href="${h(paper.url)}">Zhang 等，图 6</a> · <a href="${h(paper.licenseUrl)}">文章许可 CC BY 4.0</a></p></figure>`;
 }
 
 export function researchRecord(selection, h) {
-  const { task, inputs, queries, criteria, candidates, recommendation, implementation, boundary, toolActions } = selection;
+  const { queries, candidates, toolActions } = selection;
   const points = (items) => items.map(item => `<li>${h(item)}</li>`).join('');
   return `<div class="fusion-research">
-<h3>这次 AI 是怎么选的</h3><p>${h(task)}</p>
-<ol class="fusion-flow"><li><strong>项目限制进来</strong><ul>${points(inputs)}</ul></li><li><strong>AI 检索和比较</strong><ul>${criteria.map(item => `<li><b>${h(item.name)}</b>　${h(item.question)}</li>`).join('')}</ul></li><li><strong>选中可验证的方向</strong><p>${h(recommendation)}</p></li></ol>
-<p class="artifact-scroll-hint">横向滑动可查看候选的证据、资源和取舍。</p>
-<div class="selection-table" role="region" aria-label="AI 候选比较" tabindex="0"><table><caption>实际调研得到的候选比较</caption><thead><tr><th scope="col">候选和原文</th><th scope="col">论文证据</th><th scope="col">接口和资源</th><th scope="col">风险与取舍</th></tr></thead>
-<tbody>${candidates.map(item => `<tr><th scope="row"><a href="${h(item.source)}">${h(item.name)} ↗</a><small>${h(item.locator)}</small></th><td>${h(item.evidence)}</td><td>${h(item.interfaceFit)}<br>${h(item.resources)}</td><td>${h(item.risks)}<br><b>${h(item.decision)}</b></td></tr>`).join('')}</tbody></table></div>
-<p>${h(implementation)}</p><p class="note">${h(boundary)}</p>
-<details class="artifact-reference"><summary>查看本次检索式与核对记录</summary><ul>${points(queries)}</ul><ol>${points(toolActions)}</ol></details></div>`;
+<h3>文献笔记</h3>
+<ul class="paper-notes">${candidates.map(item => `<li><h4><a href="${h(item.source)}">${h(item.name)}</a></h4><p>${h(item.decision)}</p><details><summary>${h(item.locator)}</summary><p>${h(item.evidence)}</p><p>${h(item.interfaceFit)} ${h(item.resources)}</p><p>${h(item.risks)}</p></details></li>`).join('')}</ul>
+<details class="artifact-reference"><summary>检索词与原文核对记录</summary><ul>${points(queries)}</ul><ol>${points(toolActions)}</ol></details></div>`;
+}
+
+export function denoiseOpening(base) {
+  const path = base + fusionPath;
+  return `<figure class="opening-images"><div class="opening-grid">
+<a href="${path}weak.png"><img src="${path}weak.png" width="128" height="80" alt="弱降噪输出，墙面仍有颗粒，木百叶纹路清楚"><span>弱降噪</span></a>
+<a href="${path}strong.png"><img src="${path}strong.png" width="128" height="80" alt="强降噪输出，墙面较平整，木百叶纹路变淡"><span>强降噪</span></a>
+</div><figcaption>同一张合成图。左侧是暗墙，中间是木百叶，右侧是灯芯。两张图采用相同的灰度标尺。</figcaption></figure>`;
+}
+
+export function controlReview(base, result) {
+  return `<figure class="story-figure fusion-diagram"><figcaption><strong>三种权重，回答两个问题</strong></figcaption>
+<dl class="comparison-key"><div><dt>固定 50% 与分区融合</dt><dd>和预定的全图权重相比，分区融合能否同时满足四处的画质要求？</dd></div>
+<div><dt>固定 ${result.diagnostics.mean_matched.strong_weight}% 与分区融合</dt><dd>全图平均权重相同时，暗墙和木纹的差异还有多少？</dd></div></dl>
+<p><a href="${base + fusionPath}demo.html#matched">查看暗墙的同均值对照</a></p></figure>`;
 }
 
 export function fusionFlow() {
-  return `<figure class="story-figure fusion-diagram"><figcaption><strong>方案迁移的两条路径</strong></figcaption>
-<div class="fusion-branches"><div class="fusion-branch"><h3>论文路径</h3><ol class="fusion-flow"><li><strong>带噪图 + 噪声强度图</strong></li><li><strong>FFDNet 模型推理</strong></li><li><strong>论文输出</strong><p>图 5 比较模型输入条件。</p></li></ol></div>
-<div class="fusion-branch"><h3>本次已运行的教学路径</h3><ol class="fusion-flow"><li><strong>同输入的弱、强输出</strong><p>两路结果冻结。</p></li><li><strong>推理后融合</strong><p>固定权重和分区权重从同一输入比较。</p></li><li><strong>同坐标评估</strong><p>暗墙、木纹、灯芯和接缝写入报告。</p></li></ol></div></div>
-<p>教学路径里的弱、强两路由固定滤波器产生，权重图由已知场景区域生成。下一轮才用真实图像和设备验证。</p></figure>`;
+  return `<figure class="story-figure fusion-diagram"><figcaption><strong>两种控制量各用在什么位置</strong></figcaption>
+<div class="fusion-branches"><div class="fusion-branch"><h3>FFDNet 图 5</h3><ol class="fusion-flow"><li><strong>带噪图和噪声图</strong></li><li><strong>FFDNet 推理</strong></li><li><strong>降噪图</strong></li></ol></div>
+<div class="fusion-branch"><h3>低照度合成样本</h3><ol class="fusion-flow"><li><strong>同一输入，分别做弱降噪和强降噪</strong></li><li><strong>用权重图混合两张输出</strong></li><li><strong>融合图</strong></li></ol></div></div>
+<p>噪声图是模型的输入，记录各处的噪声水平。融合权重图记录各处强降噪输出的占比，用于混合两路输出。</p></figure>`;
 }
 
 export function revisionRecord(record, h) {
-  return `<section id="revision" class="story-chapter"><h2>AI 交付与人工修订记录</h2><p>${h(record.scope)}</p>
-<ol class="revision-list">${record.rows.map(row => `<li><h3>${h(row.label)}</h3><p>${h(row.evidence)}</p><p><b>结果</b>　${h(row.result)}</p></li>`).join('')}</ol>
-<p class="note">${h(record.limits)}</p></section>`;
+  return `<details id="revision" class="artifact-reference editorial-history"><summary>案例编写与修订记录</summary><p>${h(record.scope)}</p>
+<ol class="revision-list">${record.rows.map(row => `<li><h3>${h(row.label)}</h3><p>${h(row.evidence)}</p><p>${h(row.result)}</p></li>`).join('')}</ol>
+<p><a href="https://github.com/254123185/AI_teach_website/compare/94fc28f...8eb61f9">查看当时的仓库修订 ↗</a> · <a href="#research">核对候选表</a> · <a href="#experiment">核对补上的比较</a></p>
+<p class="note">${h(record.limits)}</p></details>`;
 }
 
 const fusionPath = 'experiments/tea-shop/';
@@ -72,4 +84,14 @@ export function fusionResults(result, h) {
 export function fusionLinks(base) {
   const src = base + fusionPath;
   return `<div class="actions fusion-links"><a class="button primary" href="${src}demo.html">打开同一实验的 Demo ↗</a><a class="button secondary" href="${src}report.md" download>下载报告</a><a class="button secondary" href="${src}result.json" download>下载机器可读结果</a><a class="button secondary" href="${base}downloads/p4.zip" download>下载完整复现包</a></div>`;
+}
+
+export function inspectFusionRegions(base) {
+  const demo = base + fusionPath + 'demo.html';
+  return `<ul class="fusion-proof-links" aria-label="打开对应的评审证据">
+  <li><a href="${demo}#wood">木纹是否保住</a></li>
+  <li><a href="${demo}#wall">暗墙残噪是否下降</a></li>
+  <li><a href="${demo}#lamp">灯芯是否变暗</a></li>
+  <li>过渡带是否出现接缝 <a href="${demo}#seam1">看左侧</a> · <a href="${demo}#seam2">看右侧</a></li>
+</ul>`;
 }
