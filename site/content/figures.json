@@ -1,0 +1,54 @@
+{
+  "A1": [
+    {
+      "src": "figures/attention.svg",
+      "alt": "查询分别给三个位置打分，经 softmax 得到权重 0.09、0.24、0.67，用于加权读取三个值",
+      "caption": "先看第三列。它的得分最高，所以求和时 V₃ 前面的权重最大。图中只画了一个查询，得分取自教学算例，省去了掩码和多头结构。",
+      "sourceTitle": "Vaswani 等，《Attention Is All You Need》，图 2 左、式 1",
+      "sourceUrl": "https://arxiv.org/html/1706.03762v7#S3.F2",
+      "license": "本站绘制的简化示意。"
+    }
+  ],
+  "A7": [
+    {
+      "src": "figures/rag.svg",
+      "alt": "从问题检索相关版本手册，再把问题和对应文档片段交给模型",
+      "caption": "如果只搜「超时重试」，两个版本的手册都可能排在前面。图中用版本条件和出处做核对。与论文图 1 相比，这里省略了检索器与生成模型的联合训练，也没展开多篇文档预测的合并方式。",
+      "sourceTitle": "Lewis 等，《Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks》，图 1",
+      "sourceUrl": "https://arxiv.org/html/2005.11401v4#S1.F1",
+      "license": "本站绘制的简化示意。"
+    }
+  ],
+  "B2": [
+    {
+      "src": "figures/paperbench-fig2.svg",
+      "alt": "论文复现要求被拆成树状的可评分小项，叶节点分数按权重汇总",
+      "caption": "PaperBench 原图。先从叶节点看每项要求是否通过，再按权重一层层汇总。图里的 55% 用于演示怎么算分。做自己的 Demo 时，可以先挑一条可检查的主张，把代码实现、实验执行和结果匹配分别记下来。",
+      "sourceTitle": "Giulio Starace、Oliver Jaffe 等，《PaperBench: Evaluating AI’s Ability to Replicate AI Research》，图 2",
+      "sourceUrl": "https://arxiv.org/html/2504.01848v1#S2.F2",
+      "license": "© 2025 论文作者。CC BY 4.0，原图未修改。",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ],
+  "B9": [
+    {
+      "src": "figures/q-insight.svg",
+      "alt": "Q-Insight 同时训练画质评分与退化识别，分别用人类评分和标签给奖励",
+      "caption": "左边的问题要模型给主观质量分，右边的问题要判断模糊、噪声等退化及其程度。两类任务有各自的奖励依据。教学图保留了这两条主线，省去输出格式奖励、参考模型约束和组内优势计算。",
+      "sourceTitle": "Weiqi Li、Xuanyu Zhang 等，《Q-Insight: Understanding Image Quality via Visual Reinforcement Learning》，图 2",
+      "sourceUrl": "https://arxiv.org/html/2503.22679v2#S3.F2",
+      "license": "本站绘制的简化示意。"
+    }
+  ],
+  "B11": [
+    {
+      "src": "figures/kernelbench-fig4.webp",
+      "alt": "KernelBench 三种任务难度上的速度门槛曲线：提高加速要求时，同时通过数值检查和加速要求的比例下降",
+      "caption": "KernelBench 论文实测。横轴是相对 PyTorch Eager 的加速门槛，纵轴是同时通过正确性检查和速度门槛的任务比例。先找 1× 刻度，再看同一条线怎样往下走。这里是论文中的单次生成设定与 NVIDIA L40S 测试条件。",
+      "sourceTitle": "Anne Ouyang、Simon Guo 等，《KernelBench: Can LLMs Write Efficient GPU Kernels?》，图 4",
+      "sourceUrl": "https://arxiv.org/html/2502.10517v1#S4.F4",
+      "license": "© 2025 论文作者。CC BY 4.0，图像缩放并转换为 WebP，图表内容保持原样。",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+    }
+  ]
+}

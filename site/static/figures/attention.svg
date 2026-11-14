@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 310" width="640" height="310" role="img" aria-labelledby="title description">
+  <title id="title">一个查询如何读取三个位置</title>
+  <desc id="description">查询 Q 与三个键 K 分别计算得分。缩放后的得分为 0、1、2，经过 softmax 得到约 0.09、0.24、0.67，再用这些权重对三个值 V 求和。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 Z" fill="#66558a"/>
+    </marker>
+  </defs>
+  <rect width="640" height="310" rx="16" fill="#f7f4fd"/>
+  <g font-family="system-ui, 'Microsoft YaHei', 'PingFang SC', sans-serif" fill="#281e38">
+    <text x="27" y="40" font-size="22" font-weight="700">一个查询 Q 怎么读取上下文？</text>
+    <g font-size="15" fill="#55466d">
+      <text x="26" y="88">位置的键</text>
+      <text x="26" y="132">缩放后的得分</text>
+      <text x="26" y="190">softmax 权重</text>
+    </g>
+    <g fill="#fff" stroke="#d4c7e9">
+      <rect x="152" y="64" width="140" height="39" rx="7"/>
+      <rect x="304" y="64" width="140" height="39" rx="7"/>
+      <rect x="456" y="64" width="140" height="39" rx="7"/>
+    </g>
+    <g text-anchor="middle" font-size="18">
+      <text x="222" y="89">K₁</text>
+      <text x="374" y="89">K₂</text>
+      <text x="526" y="89">K₃</text>
+      <text x="222" y="133">0</text>
+      <text x="374" y="133">1</text>
+      <text x="526" y="133">2</text>
+    </g>
+    <g fill="none" stroke="#66558a" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M222 145v18"/>
+      <path d="M374 145v18"/>
+      <path d="M526 145v18"/>
+    </g>
+    <g fill="#e5d8f8">
+      <rect x="152" y="174" width="140" height="37" rx="7"/>
+      <rect x="304" y="174" width="140" height="37" rx="7"/>
+      <rect x="456" y="174" width="140" height="37" rx="7"/>
+    </g>
+    <g fill="#59367b">
+      <rect x="152" y="207" width="13" height="4" rx="2"/>
+      <rect x="304" y="207" width="34" height="4" rx="2"/>
+      <rect x="456" y="207" width="94" height="4" rx="2"/>
+    </g>
+    <g text-anchor="middle" font-size="19" font-weight="600">
+      <text x="222" y="199">0.09</text>
+      <text x="374" y="199">0.24</text>
+      <text x="526" y="199">0.67</text>
+    </g>
+    <rect x="26" y="231" width="570" height="52" rx="9" fill="#33244a"/>
+    <text x="46" y="264" font-size="20" fill="#fff">输出 ≈ 0.09V₁ + 0.24V₂ + 0.67V₃</text>
+  </g>
+</svg>

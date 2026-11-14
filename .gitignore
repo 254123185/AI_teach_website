@@ -1,0 +1,9 @@
+/*
+!/.gitignore
+!/.gitattributes
+!/.github/
+!/package.json
+!/README.md
+!/site/
+/site/output/
+/site/.playwright-cli/

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 346" width="640" height="346" role="img" aria-labelledby="title description">
+  <title id="title">检索增强生成的文档流向</title>
+  <desc id="description">输入问题后，从索引里挑出相关文档片段，再把问题和片段一起交给生成模型。示例展示版本匹配和保留出处的工程做法。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#436a5e"/>
+    </marker>
+  </defs>
+  <rect width="640" height="346" rx="16" fill="#eff7f2"/>
+  <g font-family="system-ui, 'Microsoft YaHei', 'PingFang SC', sans-serif">
+    <text x="28" y="39" font-size="19" fill="#254336">问题：v2 接口超时后能不能重试？</text>
+    <g fill="none" stroke="#436a5e" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M148 61v23"/>
+      <path d="M149 159v24"/>
+      <path d="M412 159v24"/>
+      <path d="M319 255v23"/>
+    </g>
+    <g fill="#fff" stroke="#c1ddcc">
+      <rect x="28" y="90" width="243" height="68" rx="9"/>
+      <rect x="295" y="90" width="317" height="68" rx="9"/>
+      <rect x="28" y="190" width="584" height="64" rx="9"/>
+    </g>
+    <g font-size="19" font-weight="700" fill="#18382a">
+      <text x="45" y="117">问题编码与检索</text>
+      <text x="312" y="117">文档索引</text>
+      <text x="45" y="217">问题 + 检索到的片段</text>
+    </g>
+    <g font-size="15" fill="#436a5e">
+      <text x="45" y="142">保留 v2 版本条件</text>
+      <text x="312" y="142">v1 手册、v2 手册、发布日志</text>
+      <text x="45" y="241">示例：v2 手册 § 4.2 的重试条件</text>
+    </g>
+    <rect x="28" y="284" width="584" height="36" rx="8" fill="#255d47"/>
+    <text x="45" y="308" font-size="17" fill="#fff">生成答复，再核对每条结论是否有出处</text>
+  </g>
+</svg>

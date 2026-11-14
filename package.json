@@ -1,0 +1,11 @@
+{
+  "name": "ai-rnd-training",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "sample": "node site/build.mjs --sample",
+    "build": "node site/build.mjs",
+    "preview": "node site/preview.mjs"
+  }
+}

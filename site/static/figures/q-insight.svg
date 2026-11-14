@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 348" width="640" height="348" role="img" aria-labelledby="title description">
+  <title id="title">Q-Insight 训练中的两个任务</title>
+  <desc id="description">训练样本由图像和问题组成。模型针对画质评分和退化识别分别给出一组回答，以人类评分、退化类别和程度标签计算奖励，联合更新同一个模型。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#3f6588"/>
+    </marker>
+  </defs>
+  <rect width="640" height="348" rx="16" fill="#f1f6fb"/>
+  <g font-family="system-ui, 'Microsoft YaHei', 'PingFang SC', sans-serif">
+    <rect x="142" y="26" width="356" height="46" rx="9" fill="#dce9f6" stroke="#bfd4e9"/>
+    <text x="320" y="56" fill="#203d5b" text-anchor="middle" font-size="20" font-weight="700">输入图像与对应问题</text>
+    <g fill="none" stroke="#3f6588" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M320 72v14H169v18"/>
+      <path d="M320 72v14h151v18"/>
+      <path d="M169 241v22h151v20"/>
+      <path d="M471 241v22H320v20"/>
+    </g>
+    <g fill="#fff" stroke="#bfd4e9">
+      <rect x="27" y="110" width="284" height="131" rx="9"/>
+      <rect x="329" y="110" width="284" height="131" rx="9"/>
+    </g>
+    <g fill="#203d5b" font-size="21" font-weight="700">
+      <text x="45" y="144">这张图能打几分？</text>
+      <text x="347" y="144">出现什么退化？</text>
+    </g>
+    <g fill="#3f5974" font-size="16">
+      <text x="45" y="178">生成一组评分回答</text>
+      <text x="347" y="178">生成一组类别与程度回答</text>
+      <text x="45" y="209">奖励查验：接近人类平均评分</text>
+      <text x="347" y="209">奖励查验：匹配退化标签</text>
+    </g>
+    <rect x="142" y="291" width="356" height="34" rx="8" fill="#28557b"/>
+    <text x="320" y="314" fill="#fff" text-anchor="middle" font-size="16">两类任务的奖励用于更新同一个模型</text>
+  </g>
+</svg>
