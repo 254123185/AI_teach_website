@@ -9,6 +9,7 @@ const sample = process.argv.includes('--sample');
 const json = async (name) => JSON.parse((await readFile(join(site, 'content', name), 'utf8')).replace(/^\uFEFF/, ''));
 const { modules, sources, version } = await json('curriculum.json');
 const { projects } = await json('projects.json');
+const caseGuides = await json('case-guides.json');
 const lessons = sample ? {} : await json('lessons.json');
 const figures = sample ? {} : await json('figures.json');
 const courseMap = new Map(modules.map(item => [item.id, item]));
@@ -24,11 +25,11 @@ const routes = [
   { key: 'build', name: '做一个领域工具', text: '把已有脚本接到 AI 工作流，学习怎样留下运行记录、验证结果和处理失败。', ids: ['A6','A9','A10','A11','A12','B7','B9'] },
   { key: 'platform', name: '建设团队能力', text: '关心长任务、评测、协作和服务化时，从这里开始。', ids: ['A11','A12','A13','A14','A15','C4'] },
 ];
-const projectIntros = {
-  P1: '把一个公式拆成实现和独立测试，再看一个常见误读如何暴露。',
-  P2: '给候选设定预算，在开发集选方案，再看它在保留集上表现如何。',
-  P3: '在两张对齐的图上拖动分隔线，选择测量区域并解读实时计算的指标。',
-  P4: '调整量化方案，观察中间层误差和基于示例设定的性能取舍。',
+const caseTitles = {
+  P1: '把论文公式变成可测代码',
+  P2: '在固定预算内筛选实验',
+  P3: '定位降噪带来的细节损失',
+  P4: '定位 INT8 量化误差',
 };
 const demoCaptions = {
   A9: '切换故障和执行模式，再逐步看日志里哪条线索改变了下一步。示例日志为教学构造。',
@@ -59,6 +60,7 @@ function validateData() {
   const expected = [...Object.entries({ A: 15, B: 12, C: 5 }).flatMap(([key, count]) => Array.from({length: count}, (_, index) => key + (index + 1)))];
   assert.deepEqual([...courseMap.keys()], expected);
   assert.deepEqual(projects.map(item => item.id), ['P1', 'P2', 'P3', 'P4']);
+  assert.deepEqual(Object.keys(caseGuides).sort(), projects.map(project => project.id));
   const completed = new Set();
   function visit(id, trail = new Set()) {
     assert(courseMap.has(id), `Missing prerequisite ${id}`);
@@ -73,6 +75,14 @@ function validateData() {
   }
   for (const project of projects) {
     for (const id of project.modules) assert(courseMap.has(id), `Missing module ${id}`);
+    const guide = caseGuides[project.id];
+    for (const key of ['task','handoff','deliverable','verification','before','withAI','limit','prompt']) {
+      assert(typeof guide[key] === 'string' && guide[key].trim(), `Missing ${key} in ${project.id}`);
+    }
+    assert(guide.steps.length === 4 && guide.steps.some(step => step.role === 'AI') && guide.steps.some(step => step.role === '验证'), `Incomplete workflow in ${project.id}`);
+    for (const step of guide.steps) {
+      assert(['工程师','AI','验证'].includes(step.role) && step.title && step.detail && step.evidence, `Invalid workflow step in ${project.id}`);
+    }
   }
   if (sample) return;
   assert.deepEqual(Object.keys(lessons).sort(), expected.sort());
@@ -96,7 +106,7 @@ function shell(base, title, active, main) {
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f6ed">
 <meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、演示、练习与四个综合案例。">
-<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${active === 'projects' && !sample ? `<link rel="stylesheet" href="${base}assets/projects.css">` : ''}
+<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}${active === 'projects' && !sample ? `<link rel="stylesheet" href="${base}assets/projects.css">` : ''}
 <script type="module" src="${base}assets/main.mjs"></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="masthead"><div class="wrap header-inner">
 <a class="brand" href="${base}index.html"><img src="${base}assets/mark.svg" alt="" width="34" height="34"><span>AI 辅助研发训练手册</span></a>
@@ -114,27 +124,27 @@ function workflowArt(base) {
 <div class="art-fork"></div>
 <div class="art-choices"><div><span>PATH</span><b>检查数据目录</b></div><div><span>OOM</span><b>查看显存记录</b></div></div>
 <div class="art-stem end"></div><div class="art-verdict"><span>✓</span> 记录证据，决定下一步</div>
-</div><figcaption>同一个目标，可以根据证据走不同的步骤。 <a href="${base + courseUrl('A9')}#demo">试试看 ↗</a></figcaption></div></figure>`;
+</div><figcaption>按报错线索选择检查项。 <a href="${base + courseUrl('A9')}#demo">打开排查演示 ↗</a></figcaption></div></figure>`;
 }
 
 function home() {
   return `<div class="wrap"><section class="hero"><div><p class="eyebrow">算法研发 · 自助培训</p>
 <h1>把 AI 用到<br>日常研发里<span>。</span></h1>
-<p class="intro">从理解大语言模型，到排查训练、复现论文和做部署取舍。选一个你正在做的任务，从对应的课程开始。</p>
+<p class="intro">算法研发自学材料，覆盖模型原理、论文复现、实验诊断、图像质量和部署。</p>
 <div class="actions"><a class="button primary" href="paths/">选一条学习路线 <span aria-hidden="true">↗</span></a><a class="button secondary" href="courses/">浏览课程</a></div>
 <div class="hero-summary"><span><b>32</b> 门课程</span><span><b>4</b> 个综合案例</span></div></div>${workflowArt('')}</section>
 <section class="home-tracks" aria-labelledby="tracks-title"><div class="section-heading"><div><h2 id="tracks-title">课程内容</h2></div><a class="text-link" href="courses/">查看完整目录 ↗</a></div>
 <div class="cards">${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="courses/#track-${key}"><span class="track-sign" aria-hidden="true">${track.sign}</span><h3>${track.title}</h3><p>${track.text}</p><span class="card-end">${modules.filter(item => item.track === key).length} 门课程 <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>
-<section class="home-cases"><div class="section-heading"><h2>动手做案例</h2><a class="text-link" href="projects/">查看全部案例 ↗</a></div>${projectCards('')}</section></div>`;
+<section class="home-cases"><div class="section-heading"><h2>研发案例</h2><a class="text-link" href="projects/">查看全部案例 ↗</a></div>${projectCards('')}</section></div>`;
 }
 
 function paths() {
-  return `<div class="wrap"><section class="page-intro"><p class="eyebrow">学习路线</p><h1>从你手头的任务开始</h1><p class="intro">知道一门课讲什么后，可以直接进入练习。遇到陌生术语，再打开课程顶部的先修章节。</p></section>
+  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">按研发任务选课。先修章节见各课页首。</p></section>
 <div class="route-list">${routes.map(route => `<section class="route" id="${route.key}"><h2>${route.name}</h2><p>${route.text}</p><ol>${route.ids.map(id => `<li>${courseChip(id, '../')}</li>`).join('')}</ol></section>`).join('')}</div></div>`;
 }
 
 function catalog() {
-  return `<div class="wrap"><section class="page-intro"><p class="eyebrow">课程目录</p><h1>课程</h1><p class="intro">按主题找课，也可以搜索「训练诊断」「量化」或课程编号。</p></section>
+  return `<div class="wrap"><section class="page-intro"><h1>课程目录</h1></section>
 <div class="catalog-toolbar"><label class="search"><span>搜索课程</span><input type="search" data-course-search placeholder="搜索标题、主题或编号" autocomplete="off"></label><p class="catalog-count" data-course-count aria-live="polite">${modules.length} 门课程</p></div>
 <div class="tabs"><a href="#track-A">通用主干</a><a href="#track-B">算法实战</a><a href="#track-C">前沿选修</a></div><p data-empty hidden>没有找到课程，试试别的关键词。</p>
 ${Object.entries(tracks).map(([key, track]) => `<section class="catalog-track" data-course-group id="track-${key}"><h2>${track.title}</h2><p>${track.text}</p><div class="catalog-list">${modules.filter(item => item.track === key).map(item => {
@@ -166,29 +176,55 @@ function course(item) {
   return `<div class="wrap"><div class="breadcrumbs"><a href="../">课程目录</a><span>/</span><a href="../#track-${item.track}">${tracks[item.track].title}</a><span>/</span><span>${item.id}</span></div>
 <div class="reading-layout"><article><header class="lesson-header"><p class="eyebrow">${item.id} · ${h(item.level)}</p><h1>${h(item.title)}</h1><p class="intro">${h(lesson.question)}</p><p>${h(item.goal)}</p>
 ${item.prerequisites.length ? `<div class="prerequisites"><strong>先修</strong> ${item.prerequisites.map(id => courseChip(id, base)).join(' ')}</div>` : ''}</header>
-<section id="concept"><h2>问题怎么拆</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}</section>
-${demoCaptions[item.id] ? `<section id="demo"><h2>跟着演示走一遍</h2><p>${demoCaptions[item.id]}</p><div data-process="${item.id}"></div><noscript><p>启用 JavaScript 后可单步操作演示。</p></noscript></section>` : ''}
-<section id="practice"><h2>动手试试</h2><h3>先判断一步</h3>${renderQuiz(lesson.quiz)}<h3>上手练习</h3><p>${h(item.exercise)}</p>${list(item.steps, 'ol')}
-<details class="reference"><summary>参考产物与自查</summary><p>${h(lesson.sample)}</p>${list(lesson.checklist)}</details><h3>检查结果</h3>${list(item.checks)}<p class="note"><b>常见误区</b>　${h(item.failure)}</p></section>
+<section id="concept"><h2>原理与示例</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}</section>
+${demoCaptions[item.id] ? `<section id="demo"><h2>分步演示</h2><p>${demoCaptions[item.id]}</p><div data-process="${item.id}"></div><noscript><p>启用 JavaScript 后可单步操作演示。</p></noscript></section>` : ''}
+<section id="practice"><h2>练习</h2>${renderQuiz(lesson.quiz)}<h3>实操任务</h3><p>${h(item.exercise)}</p>${list(item.steps, 'ol')}
+<details class="reference"><summary>参考产物与自查</summary><p>${h(lesson.sample)}</p>${list(lesson.checklist)}</details><h3>验收条件</h3>${list(item.checks)}<p class="note"><b>常见误区</b>　${h(item.failure)}</p></section>
 <section id="references"><h2>继续阅读</h2><ul class="source-list">${item.references.map(id => sourceMap.get(id)).map(source => `<li><a href="${h(source.url)}">${h(source.title)} ↗</a><p>${h(source.use)}</p></li>`).join('')}</ul>
 ${related.length ? `<h3>相关案例</h3><ul class="text-list">${related.map(project => `<li><a href="${base + projectUrl(project.id)}">${project.id} · ${h(project.title)}</a></li>`).join('')}</ul>` : ''}</section>
 <div class="lesson-end"><button type="button" class="button secondary" data-complete="${item.id}" aria-pressed="false" hidden>标记已学</button><span data-save-message role="status"></span>${next && !sample ? `<a class="text-link" href="${base + courseUrl(next.id)}">下一课 ${next.id} ↗</a>` : ''}</div></article>
-<aside class="reading-aside"><nav aria-label="本课导航"><strong>本课内容</strong><a href="#concept">问题怎么拆</a>${demoCaptions[item.id] ? '<a href="#demo">分步演示</a>' : ''}<a href="#practice">动手试试</a><a href="#references">继续阅读</a></nav></aside></div></div>`;
+<aside class="reading-aside"><nav aria-label="本课导航"><strong>本课内容</strong><a href="#concept">原理与示例</a>${demoCaptions[item.id] ? '<a href="#demo">分步演示</a>' : ''}<a href="#practice">练习</a><a href="#references">继续阅读</a></nav></aside></div></div>`;
 }
 
 function projectCards(base) {
-  return `<div class="project-cards">${projects.map(item => `<a class="project-card" href="${base + (sample ? 'projects/' : projectUrl(item.id))}"><span class="project-code">${item.id}</span><div><h3>${h(item.title)}</h3><p>${projectIntros[item.id]}</p></div><span aria-hidden="true">↗</span></a>`).join('')}</div>`;
+  return `<div class="project-cards illustrated-cards">${projects.map(item => {
+    const guide = caseGuides[item.id];
+    return `<a class="project-card illustrated-card" href="${base + (sample ? 'projects/' : projectUrl(item.id))}">
+<div class="case-card-art"><img src="${base}assets/case-art/${item.id.toLowerCase()}.svg" width="460" height="214" alt="" loading="lazy"></div>
+<div class="case-card-text"><div class="case-card-label"><span class="project-code">${item.id}</span><span aria-hidden="true">↗</span></div>
+<h3>${caseTitles[item.id]}</h3><p>AI 交付：${h(guide.deliverable)}</p></div></a>`;
+  }).join('')}</div>`;
+}
+
+const caseRole = { '工程师': 'engineer', AI: 'ai', '验证': 'verify' };
+
+function caseFlow(guide) {
+  return `<figure class="case-flow" data-case-flow aria-label="工程师与 AI 的协作流程">
+<ol class="case-flow-nodes">${guide.steps.map((step, index) => `<li class="flow-${caseRole[step.role]}">
+<button type="button" data-case-step="${index}" aria-controls="case-evidence-${index}" aria-pressed="${index === 0}" hidden><span class="flow-role"><span>${index + 1}</span> ${step.role}</span><strong>${h(step.title)}</strong></button></li>`).join('')}</ol>
+<div class="case-evidence">${guide.steps.map((step, index) => `<div class="case-panel flow-${caseRole[step.role]}" id="case-evidence-${index}" data-case-panel><p class="case-panel-owner">${index + 1} · ${step.role} · ${h(step.title)}</p><p>${h(step.detail)}</p><pre><code>${h(step.evidence)}</code></pre></div>`).join('')}</div>
+<figcaption><span>教学流程 · 产物为示例</span><div class="case-flow-controls" data-case-controls hidden><button type="button" class="button" data-tour-play>播放</button><button type="button" class="button" data-tour-next>下一步</button><button type="button" class="button" data-tour-reset>重置</button></div></figcaption>
+</figure>`;
 }
 
 function projectDetail(item) {
   const base = '../../';
-  return `<div class="wrap"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${item.id}</span></div><div class="reading-layout"><article>
-<header class="lesson-header"><p class="eyebrow">${item.id} · 综合案例</p><h1>${h(item.title)}</h1><p class="intro">${projectIntros[item.id]}</p><p>${h(item.goal)}</p></header>
-<section id="demo"><h2>在网页里试一遍</h2><div data-project-demo="${item.id}"></div><noscript><p>启用 JavaScript 后可操作案例。</p></noscript></section>
-<section id="steps"><h2>把它用到自己的项目</h2><p>${h(item.input)}</p><ol class="stages">${item.stages.map(([name, text]) => `<li><strong>${h(name)}</strong><p>${h(text)}</p></li>`).join('')}</ol></section>
-<section id="checks"><h2>交付与自查</h2><h3>留哪些材料</h3>${list(item.deliverables)}<h3>怎么验收</h3>${list(item.rubric)}<p class="note">${h(item.resource)}</p></section>
+  const guide = caseGuides[item.id];
+  return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${item.id}</span></div>
+<header class="case-hero"><div><p class="eyebrow">${item.id} · 实战案例</p><h1>${caseTitles[item.id]}</h1><p class="intro">${h(guide.task)}</p>
+<div class="actions"><a class="button primary" href="#steps">看协作流程 ↓</a><a class="button secondary" href="#demo">打开交互演示</a></div></div>
+<div class="case-hero-art"><img src="${base}assets/case-art/${item.id.toLowerCase()}.svg" width="460" height="214" alt=""></div></header>
+<article class="case-body">
+<section id="steps"><div class="section-heading"><h2>协作流程</h2></div>
+<dl class="case-contract"><div><dt>交给 AI</dt><dd>${h(guide.handoff)}</dd></div><div><dt>AI 交付</dt><dd>${h(guide.deliverable)}</dd></div><div><dt>工程师验收</dt><dd>${h(guide.verification)}</dd></div></dl>
+${caseFlow(guide)}
+<details class="case-prompt"><summary>给 AI 的任务单</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>
+<section id="demo"><h2>交互演示</h2><div data-project-demo="${item.id}"></div><noscript><p>启用 JavaScript 后可操作案例。</p></noscript></section>
+<section id="checks"><h2>用到实际项目时</h2><dl class="case-comparison"><div><dt>原有工作</dt><dd>${h(guide.before)}</dd></div><div><dt>AI 接手</dt><dd>${h(guide.withAI)}</dd></div></dl>
+<p class="note">${h(guide.limit)}</p>
+<details class="reference"><summary>完整交付清单</summary>${list(item.deliverables)}${list(item.rubric)}</details></section>
 <section id="related"><h2>相关课程</h2><div class="prerequisites">${item.modules.map(id => courseChip(id, base)).join(' ')}</div></section>
-</article><aside class="reading-aside"><nav aria-label="本案例导航"><strong>案例内容</strong><a href="#demo">站内演示</a><a href="#steps">项目步骤</a><a href="#checks">交付与自查</a><a href="#related">相关课程</a></nav></aside></div></div>`;
+</article></div>`;
 }
 
 async function write(path, data) {
@@ -232,13 +268,13 @@ await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
-await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><section class="page-intro"><p class="eyebrow">实战案例</p><h1>把方法用到研发里</h1><p class="intro">四个案例各有一段站内演示。可以用教学样例熟悉步骤，再拿自己的任务做一遍。</p></section>${projectCards('../')}</div>`));
+await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><section class="page-intro"><h1>实战案例</h1><p class="intro">四个研发任务，分别演示 AI 接手的工作和工程师的验收步骤。</p></section>${projectCards('../')}</div>`));
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
   await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item)));
 }
 if (!sample) {
-  for (const item of projects) await write(projectUrl(item.id) + 'index.html', shell('../../', item.title, 'projects', projectDetail(item)));
+  for (const item of projects) await write(projectUrl(item.id) + 'index.html', shell('../../', caseTitles[item.id], 'projects', projectDetail(item)));
 }
 const pages = await checkLinks();
 console.log(`Verified ${pages} HTML pages, ${pageCourseIds.length} courses and ${sample ? 0 : projects.length} project details.`);

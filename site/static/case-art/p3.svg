@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
+  <title id="title">从两张图到局部画质证据</title>
+  <desc id="description">工程师交给 AI 助手两版对齐图像。AI 标出局部，右侧汇总视觉观察和指标。</desc>
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }
+      .dot { animation: signal 1200ms ease-out 2; }
+      @keyframes twinkle { 40% { transform: scale(1.25) rotate(7deg); } }
+      @keyframes signal { 40% { opacity: .25; } }
+    }
+  </style>
+  <defs>
+    <pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#71936d" opacity=".32"/>
+    </pattern>
+  </defs>
+  <rect width="460" height="214" rx="16" fill="#f0f0dd"/>
+  <rect x="12" y="12" width="436" height="190" rx="13" fill="url(#grid)"/>
+  <path d="M28 179h404" stroke="#b9c6ac" stroke-width="2.2" stroke-linecap="round"/>
+  <ellipse cx="231" cy="113" rx="73" ry="66" fill="#e0ead3"/>
+  <path d="M153 110h17m-5-5 5 5-5 5m124-5h17m-5-5 5 5-5 5" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="dot" cx="156" cy="110" r="3" fill="#f2a992"/>
+  <circle class="dot" cx="292" cy="110" r="3" fill="#f2a992"/>
+    <rect x="31" y="57" width="99" height="113" rx="11" fill="#e1ebd5" stroke="#254535" stroke-width="2.5" transform="rotate(-8 75 105)"/>
+    <rect x="45" y="51" width="102" height="112" rx="10" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
+    <rect x="53" y="60" width="86" height="78" rx="6" fill="#33594d"/>
+    <path d="M59 122 83 82l18 32 15-17 17 25v10H59Z" fill="#b4cd96"/>
+    <path d="M96 60v78" stroke="#fff8e9" stroke-width="2"/>
+    <circle cx="115" cy="83" r="8" fill="#f8c783"/>
+    <path d="M60 70h14m-14 5h8m-8 5h5m68 13h-7m7 5h-4" stroke="#779785" stroke-width="2" stroke-linecap="round"/>
+    <path d="M77 106v-10h8m22 0h8v10m0 12v10h-8m-22 0h-8v-10" fill="none" stroke="#ffc194" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M64 150h22m9 0h29" stroke="#567861" stroke-width="3" stroke-linecap="round"/>
+    <rect x="316" y="57" width="108" height="107" rx="11" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
+    <rect x="327" y="69" width="85" height="25" rx="5" fill="#e2efd4"/>
+    <path d="M334 82h9m-5-5v10m14-5h48m-65 29h65m-65 14h55m-55 14h62" stroke="#395e4b" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="399" cy="145" r="19" fill="#f6bfa7" stroke="#254535" stroke-width="2.7"/>
+    <path d="m414 160 11 11" stroke="#254535" stroke-width="5" stroke-linecap="round"/>
+    <rect x="392" y="138" width="14" height="14" rx="2" fill="none" stroke="#254535" stroke-width="2" stroke-dasharray="3 2"/>
+  <g>
+    <path d="M211 145v22m39-22v22m-43 0h11m28 0h11m-27-96V57" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="230" cy="56" r="6.4" fill="#f2a992" stroke="#254535" stroke-width="2.5"/>
+    <path d="M187 101h-3a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h3m86-24h3a5 5 0 0 1 5 5v14a5 5 0 0 1-5 5h-3" fill="#f2a992" stroke="#254535" stroke-width="2.6"/>
+    <rect x="187" y="75" width="86" height="73" rx="19" fill="#9bc89a" stroke="#254535" stroke-width="2.8"/>
+    <rect x="195" y="83" width="70" height="52" rx="14" fill="#244535"/>
+    <path d="m207 109 6-6 6 6m22 0 6-6 6 6m-30 8c4 5 10 5 14 0" fill="none" stroke="#f7fae9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M223 142h14" stroke="#466f51" stroke-width="2.6" stroke-linecap="round"/>
+    <path class="spark" d="M272 46c0 8 3 11 11 11-8 0-11 3-11 11 0-8-3-11-11-11 8 0 11-3 11-11Z" fill="#f2a992" stroke="#254535" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+</svg>

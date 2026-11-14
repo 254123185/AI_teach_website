@@ -19,7 +19,7 @@ function bilateral(values, center, range) {
 
 function mountPaper(root) {
   root.innerHTML = `
-    <p class="demo-intro">相邻的两个像素可能刚好隔着一条轮廓。平滑图像时，怎样判断它们该不该互相影响？</p>
+    <p class="demo-intro">切换公式、代码和测试，观察灰度尺度如何改变跨边缘的权重。</p>
     <div class="demo-buttons" role="group" aria-label="查看公式、代码或测试">
       <button type="button" data-mode="formula" aria-pressed="true">公式</button>
       <button type="button" data-mode="code" aria-pressed="false">代码</button>
@@ -102,7 +102,7 @@ const candidates = [
 
 function mountExperiments(root) {
   root.innerHTML = `
-    <p class="demo-intro">用有限预算挑一个候选。开发集用来筛选，独立集留到候选锁定之后再看。</p>
+    <p class="demo-intro">调整预算。锁定候选后，对照基线查看独立集结果。</p>
     <div class="demo-controls">
       <label>开发预算 <output data-budget-output></output>
         <input data-budget type="range" min="0" max="10" value="5" step="1"></label>
@@ -259,7 +259,7 @@ function measure(reference, result, region) {
 
 function mountImage(root) {
   root.innerHTML = `
-    <p class="demo-intro">试一版更强的降噪。暗墙干净了多少？木板上的细纹还在吗？拖动分割线，再切换测量区域。</p>
+    <p class="demo-intro">拖动分割线对比降噪效果。切换暗墙和木板两处测量区域。</p>
     <figure class="demo-image-figure">
       <div class="demo-image-stage" data-image-stage>
         <canvas data-image-compare width="${frameWidth}" height="${frameHeight}" role="img" aria-label="合成夜景图像，包含暗墙、窗框和带纹理木板">画面包含暗墙、窗框和带纹理木板。下方表格给出每个选定区域的误差。</canvas>
@@ -359,7 +359,7 @@ function quantize(value, limit) {
 
 function mountQuantization(root) {
   root.innerHTML = `
-    <p class="demo-intro">普通输入看起来都正常，亮场景却把模型输出拉低了。先检查激活是否被截断，再只改变这一处的配置。</p>
+    <p class="demo-intro">切换输入和量化方案，对照饱和数与输出误差。</p>
     <div class="demo-controls">
       <label>输入场景
         <select data-activation-set><option value="normal">常规输入</option><option value="bright" selected>高亮输入</option></select>

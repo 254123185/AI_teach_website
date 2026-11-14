@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
+  <title id="title">从论文公式到可复核的实现</title>
+  <desc id="description">论文页经过 AI 助手梳理后，右侧出现对应代码和独立测试清单。</desc>
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }
+      .dot { animation: signal 1200ms ease-out 2; }
+      @keyframes twinkle { 40% { transform: scale(1.25) rotate(7deg); } }
+      @keyframes signal { 40% { opacity: .25; } }
+    }
+  </style>
+  <defs>
+    <pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#71936d" opacity=".32"/>
+    </pattern>
+  </defs>
+  <rect width="460" height="214" rx="16" fill="#f5efdc"/>
+  <rect x="12" y="12" width="436" height="190" rx="13" fill="url(#grid)"/>
+  <path d="M28 179h404" stroke="#b9c6ac" stroke-width="2.2" stroke-linecap="round"/>
+  <ellipse cx="231" cy="113" rx="73" ry="66" fill="#e3edda"/>
+  <path d="M153 110h17m-5-5 5 5-5 5m124-5h17m-5-5 5 5-5 5" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="dot" cx="156" cy="110" r="3" fill="#ef9e80"/>
+  <circle class="dot" cx="292" cy="110" r="3" fill="#ef9e80"/>
+    <rect x="34" y="53" width="85" height="118" rx="11" fill="#e0ead4" stroke="#254535" stroke-width="2.5" transform="rotate(-8 76 105)"/>
+    <path d="M61 40h60l19 20v107a6 6 0 0 1-6 6H61a7 7 0 0 1-7-7V47a7 7 0 0 1 7-7Z" fill="#fffaf0" stroke="#254535" stroke-width="2.5"/>
+    <path d="M121 41v19h18M70 67h40m-40 9h23m-23 67h51m-51 12h39" fill="none" stroke="#254535" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="67" y="88" width="61" height="43" rx="8" fill="#f8ccb7"/>
+    <path d="M106 98H88l9 11-9 11h18m5-12h8m-8 5h8" fill="none" stroke="#254535" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="311" y="53" width="112" height="86" rx="11" fill="#264739" stroke="#173529" stroke-width="2.5"/>
+    <path d="M312 72h110" stroke="#597967" stroke-width="2"/>
+    <path d="M322 63h1m6 0h1m6 0h1" stroke="#f4b59b" stroke-width="3" stroke-linecap="round"/>
+    <path d="m334 92-8 7 8 7m15-14 8 7-8 7m-9 8 5-31" fill="none" stroke="#c9e5a3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M366 92h38m-38 9h28m-28 9h32m-66 13h66" stroke="#9ebdaa" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="347" y="124" width="81" height="51" rx="8" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
+    <path d="m357 139 4 4 7-8m-11 19 4 4 7-8m6-11h36m-36 15h27" fill="none" stroke="#3f7554" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <path d="M211 145v22m39-22v22m-43 0h11m28 0h11m-27-96V57" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="230" cy="56" r="6.4" fill="#ef9e80" stroke="#254535" stroke-width="2.5"/>
+    <path d="M187 101h-3a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h3m86-24h3a5 5 0 0 1 5 5v14a5 5 0 0 1-5 5h-3" fill="#ef9e80" stroke="#254535" stroke-width="2.6"/>
+    <rect x="187" y="75" width="86" height="73" rx="19" fill="#9bc89a" stroke="#254535" stroke-width="2.8"/>
+    <rect x="195" y="83" width="70" height="52" rx="14" fill="#244535"/>
+    <path d="m207 109 6-6 6 6m22 0 6-6 6 6m-30 8c4 5 10 5 14 0" fill="none" stroke="#f7fae9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M223 142h14" stroke="#466f51" stroke-width="2.6" stroke-linecap="round"/>
+    <path class="spark" d="M272 46c0 8 3 11 11 11-8 0-11 3-11 11 0-8-3-11-11-11 8 0 11-3 11-11Z" fill="#ef9e80" stroke="#254535" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+</svg>

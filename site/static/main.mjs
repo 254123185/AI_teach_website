@@ -85,6 +85,12 @@ if (processes.length) {
   const { mountProcess } = await import('./process.mjs');
   for (const root of processes) mountProcess(root, root.dataset.process);
 }
+const caseFlow = document.querySelector('[data-case-flow]');
+if (caseFlow) {
+  const { mountCaseFlow, mountCasePrompt } = await import('./case-guide.mjs');
+  mountCaseFlow(caseFlow);
+  mountCasePrompt(document.querySelector('.case-prompt'));
+}
 const demos = document.querySelectorAll('[data-project-demo]');
 if (demos.length) {
   const { mountProject } = await import('./projects.mjs');

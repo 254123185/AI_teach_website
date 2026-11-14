@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
+  <title id="title">从浮点模型到可检验的部署方案</title>
+  <desc id="description">AI 助手读取模型输出，整理量化前后差异，右侧是带数值对照的目标设备。</desc>
+  <style>
+    @media (prefers-reduced-motion: no-preference) {
+      .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }
+      .dot { animation: signal 1200ms ease-out 2; }
+      @keyframes twinkle { 40% { transform: scale(1.25) rotate(7deg); } }
+      @keyframes signal { 40% { opacity: .25; } }
+    }
+  </style>
+  <defs>
+    <pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#71936d" opacity=".32"/>
+    </pattern>
+  </defs>
+  <rect width="460" height="214" rx="16" fill="#f4eddd"/>
+  <rect x="12" y="12" width="436" height="190" rx="13" fill="url(#grid)"/>
+  <path d="M28 179h404" stroke="#b9c6ac" stroke-width="2.2" stroke-linecap="round"/>
+  <ellipse cx="231" cy="113" rx="73" ry="66" fill="#e1ebd3"/>
+  <path d="M153 110h17m-5-5 5 5-5 5m124-5h17m-5-5 5 5-5 5" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="dot" cx="156" cy="110" r="3" fill="#f3b785"/>
+  <circle class="dot" cx="292" cy="110" r="3" fill="#f3b785"/>
+    <rect x="35" y="57" width="108" height="105" rx="11" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
+    <path d="M45 72h88m-88 74h88" stroke="#9cb298" stroke-width="2"/>
+    <path d="m48 116 13-14 13 12 13-23 14 21 13-18 14 9" fill="none" stroke="#47755b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m48 123 14-13h13V99h13v16h13v-11h14v7h13" fill="none" stroke="#ad6348" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M54 64h1m6 0h1m6 0h1" stroke="#47755b" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="323" y="49" width="90" height="124" rx="13" fill="#345a49" stroke="#254535" stroke-width="2.5"/>
+    <rect x="330" y="57" width="76" height="104" rx="9" fill="#fff9ee"/>
+    <path d="M360 166h16" stroke="#bbd9a3" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M340 97h55m-55 13h55m-55 13h55" stroke="#d5dfcc" stroke-width="2"/>
+    <path d="M347 126v-16m13 16v-24m13 24v-31m13 31v-22" stroke="#a5c480" stroke-width="7" stroke-linecap="round"/>
+    <path d="M348 73h35m-35 10h25m-20 61h28" stroke="#4d735e" stroke-width="2.5" stroke-linecap="round"/>
+    <g transform="translate(405 124)">
+      <rect x="-15" y="-15" width="33" height="33" rx="5" fill="#f4bc90" stroke="#254535" stroke-width="2.4"/>
+      <rect x="-8" y="-8" width="19" height="19" rx="3" fill="#fff6e7" stroke="#254535" stroke-width="2"/>
+      <path d="M-8-15v-6m9 6v-6m9 6v-6m-18 39v6m9-6v6m9-6v6m-25-33h-6m6 9h-6m6 9h-6m39-18h6m-6 9h6m-6 9h6" stroke="#254535" stroke-width="2.1" stroke-linecap="round"/>
+      <path d="m-4 1 3 3 6-7" fill="none" stroke="#254535" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  <g>
+    <path d="M211 145v22m39-22v22m-43 0h11m28 0h11m-27-96V57" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="230" cy="56" r="6.4" fill="#f3b785" stroke="#254535" stroke-width="2.5"/>
+    <path d="M187 101h-3a5 5 0 0 0-5 5v14a5 5 0 0 0 5 5h3m86-24h3a5 5 0 0 1 5 5v14a5 5 0 0 1-5 5h-3" fill="#f3b785" stroke="#254535" stroke-width="2.6"/>
+    <rect x="187" y="75" width="86" height="73" rx="19" fill="#9bc89a" stroke="#254535" stroke-width="2.8"/>
+    <rect x="195" y="83" width="70" height="52" rx="14" fill="#244535"/>
+    <path d="m207 109 6-6 6 6m22 0 6-6 6 6m-30 8c4 5 10 5 14 0" fill="none" stroke="#f7fae9" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M223 142h14" stroke="#466f51" stroke-width="2.6" stroke-linecap="round"/>
+    <path class="spark" d="M272 46c0 8 3 11 11 11-8 0-11 3-11 11 0-8-3-11-11-11 8 0 11-3 11-11Z" fill="#f3b785" stroke="#254535" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+</svg>
