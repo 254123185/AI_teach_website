@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { experimentFigure, counterexampleFigure } from './case-evidence.mjs';
 
 const site = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(site, '../dist');
@@ -17,6 +18,8 @@ const workflowFixtures = {
   P4: ['p2/fixtures.json', 'p2-fixtures.json'],
 };
 const nightProfiles = await json('../labs/p2/fixtures.json');
+const denoiseCase = await json('denoise-case.json');
+const denoisePapers = [await json('denoise-paper.json')].flat();
 const stages = { P1: '论文证据', P2: '候选实验', P3: '样本补齐', P4: '评审 Demo' };
 const stageIntros = {
   P1: '改变能用的数据与训练资源，看看哪条论文机制仍值得先试。',
@@ -97,6 +100,14 @@ function validateData() {
       assert(source.title && /^https:\/\//.test(source.url) && source.note, `Invalid source in ${guide.id}`);
     }
   }
+  assert(denoiseCase.intro.length && denoiseCase.chapters.length >= 7, 'Incomplete denoising case');
+  assert(new Set(denoiseCase.chapters.map(chapter => chapter.id)).size === denoiseCase.chapters.length, 'Duplicate case chapter');
+  for (const chapter of denoiseCase.chapters) {
+    assert(chapter.title && chapter.lead && chapter.paragraphs.length >= 2, `Incomplete chapter ${chapter.id}`);
+    if (chapter.image) assert(caseIllustrations[chapter.image], `Missing illustration ${chapter.image}`);
+    if (chapter.artifact) assert(chapter.artifact.title && chapter.artifact.body, `Incomplete artifact in ${chapter.id}`);
+  }
+  assert(denoisePapers.length && denoisePapers.every(paper => paper.src && paper.alt && paper.caption && paper.license && /^https:\/\//.test(paper.url) && /^https:\/\//.test(paper.licenseUrl)), 'Incomplete paper attribution');
   if (sample) return;
   assert.deepEqual(Object.keys(lessons).sort(), expected.sort());
   for (const [id, lesson] of Object.entries(lessons)) {
@@ -153,7 +164,7 @@ function home() {
 <div class="hero-summary"><span><b>32</b> 门课程</span><span><b>4</b> 个综合案例</span></div></div>${workflowArt('')}</section>
 <section class="home-tracks" aria-labelledby="tracks-title"><div class="section-heading"><div><h2 id="tracks-title">课程内容</h2></div><a class="text-link" href="courses/">查看完整目录 ↗</a></div>
 <div class="cards">${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="courses/#track-${key}"><span class="track-sign" aria-hidden="true">${track.sign}</span><h3>${track.title}</h3><p>${track.text}</p><span class="card-end">${modules.filter(item => item.track === key).length} 门课程 <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>
-<section class="home-cases"><div class="section-heading"><h2>研发案例</h2><a class="text-link" href="projects/">查看全部案例 ↗</a></div>${projectCards('')}</section></div>`;
+<section class="home-cases"><div class="section-heading"><h2>研发案例</h2><a class="text-link" href="projects/">阅读完整案例 ↗</a></div>${projectCards('')}</section></div>`;
 }
 
 function paths() {
@@ -241,16 +252,74 @@ function workflowEvidence(base, current) {
 <ol>${evidence.map(([id, title, text, output], index) => `<li><a href="${base + (sample ? 'projects/' : projectUrl(id))}"${id === current ? ' aria-current="step"' : ''}><span class="guide-index">${index + 1}</span><strong>${title}</strong><span>${text}</span><small>${output}</small></a></li>`).join('')}</ol></figure>`;
 }
 
-function sceneEvidence() {
+function sceneEvidence(heading = 'h3') {
   const [wall, wood] = nightProfiles.dev;
   const regions = [
     ['暗墙', wall, '第 4 个点从参考 42 跳到 73。该去掉的是孤立尖峰。'],
     ['木纹', wood, '94 与 104 的交替也出现在参考里。该保留的是原有反差。'],
   ];
   const strip = (points) => `<span class="evidence-strip" style="--point-count:${points.length}">${points.map(level => `<span style="--level:${level}">${level}</span>`).join('')}</span>`;
-  return `<figure class="profile-evidence"><figcaption><h2>先分清噪声和纹理</h2><p>下图取自 P2 的两条教学剖面。每格是一个灰度值，原始输入和参考使用同一灰度尺度。</p></figcaption>
+  return `<figure class="profile-evidence"><figcaption><${heading}>同样是亮点，信号和噪声要分开</${heading}><p>两条教学剖面。每格是一个灰度值，原始输入和参考使用同一灰度尺度。</p></figcaption>
 <div class="profile-grid">${regions.map(([name, profile, note]) => `<div><h3>${name}</h3><dl><div><dt>参考</dt><dd>${strip(profile.reference)}</dd></div><div><dt>输入</dt><dd>${strip(profile.noisy)}</dd></div></dl><p>${note}</p></div>`).join('')}</div>
-<p class="profile-foot">还有第三类：灯罩里的亮峰也可能是有效信号。<a href="p4/#demo">在评审 Demo 里验证这个反例 ↗</a></p></figure>`;
+<p class="profile-foot">灯罩里也可能有孤立亮峰。后面的反例会用参考真值区分它和暗墙噪点。</p></figure>`;
+}
+
+const caseIllustrations = {
+  intake: { height: 480, alt: '工程师标出暗墙、木纹和灯芯，AI 整理论文、曲线和样本，团队据此安排下一轮', caption: '先把三处关注点和限制交给 AI。论文、对照脚本、生成数据和评审快照都是交付物，每份都能单独复核。' },
+  research: { height: 480, alt: '工程师交付场景与限制，AI 在论文里找实验条件，再把证据转成待测对照', caption: 'AI 把论文中的机制和前提写在同一张证据卡上，再标出当前管线能改哪一项。' },
+  review: { height: 720, alt: '同一个滤波门控消除暗墙噪点，也误伤了灯芯，工程师圈出需要复测的反例', caption: '两路使用同一个门控。上路的亮点来自噪声，下路的亮点来自真实信号。曲线和具体数值见同节算例。' },
+};
+
+function storyIllustration(name) {
+  const figure = caseIllustrations[name];
+  const src = `../assets/workflow-examples/story/${name}.webp`;
+  return `<figure class="story-figure story-illustration"><a href="${src}"><img src="${src}" width="1440" height="${figure.height}" loading="lazy" alt="${h(figure.alt)}"></a><figcaption>${h(figure.caption)} <small>ImageGen 流程插图</small></figcaption></figure>`;
+}
+
+function publishedFigures(base) {
+  return denoisePapers.map(paper => {
+    const src = base + 'assets/' + paper.src;
+    return `<figure class="story-figure paper-original"><a href="${h(src)}"><img src="${h(src)}" loading="lazy" alt="${h(paper.alt)}"></a><figcaption><strong>论文原图</strong>　${h(paper.caption)}<br><a href="${h(paper.url)}">${h(paper.title)} ↗</a> · <a href="${h(paper.licenseUrl)}">${h(paper.license)}</a> · <a href="${h(src)}">放大原图 ↗</a></figcaption></figure>`;
+  }).join('');
+}
+
+function ffdnetComparison() {
+  const values = [['均匀噪声图（取真值图均值）', 27.45], ['空间变化的真值噪声图', 30.08]];
+  return `<figure class="story-figure ffdnet-chart"><figcaption><strong>FFDNet 图 5 的两项读数</strong><p>同一个模型、同一张带噪合成图，只替换模型的噪声图输入。</p></figcaption>
+<dl>${values.map(([label, score]) => `<div><dt>${label}</dt><dd><span class="ffdnet-bar" style="--psnr:${score / 35 * 100}%" aria-hidden="true"></span><strong>${score.toFixed(2)} dB</strong></dd></div>`).join('')}</dl>
+<p>按作者图 5 的读数重绘，比较标尺为 0–35 dB。<a href="https://arxiv.org/pdf/1710.04026#page=9">查看 FFDNet 图 5 原图 ↗</a></p></figure>`;
+}
+
+function denoiseStory() {
+  const chapters = denoiseCase.chapters;
+  const figuresByChapter = {
+    problem: () => sceneEvidence(),
+    research: () => publishedFigures('../') + ffdnetComparison(),
+    experiment: () => experimentFigure('dev'),
+    holdout: () => experimentFigure('holdout'),
+    data: () => examplePreview('P3', '../'),
+    review: () => counterexampleFigure(),
+  };
+  return `<div class="wrap story-page"><header class="story-hero">
+<p class="eyebrow">实战案例 · 夜景降噪</p><h1>暗墙要干净，<br>木纹和灯芯要留住</h1>
+<div class="story-lead">${paragraphs(denoiseCase.intro)}</div>
+<div class="actions"><a class="button primary" href="#problem">从失败样本读起 ↓</a><a class="button secondary" href="#appendix">附录 · 工具和任务包</a></div>
+</header>
+<div class="story-layout"><aside class="story-sidebar"><nav aria-label="案例章节"><strong>案例目录</strong><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a href="#appendix">附录</a></nav></aside>
+<article class="story-article" aria-label="夜景降噪案例正文">
+${chapters.map((chapter, index) => `<section class="story-chapter" id="${h(chapter.id)}"><h2><span class="chapter-index">${String(index + 1).padStart(2, '0')}</span>${h(chapter.title)}</h2>
+<p class="story-chapter-lead">${h(chapter.lead)}</p>
+${chapter.image ? storyIllustration(chapter.image) : ''}
+${paragraphs(chapter.paragraphs)}
+${figuresByChapter[chapter.id]?.() ?? ''}
+${chapter.artifact ? `<figure class="story-artifact"><figcaption>${h(chapter.artifact.title)}</figcaption><pre><code>${h(chapter.artifact.body)}</code></pre></figure>` : ''}
+${chapter.note ? `<p class="note workflow-limit">${h(chapter.note)}</p>` : ''}</section>`).join('')}
+<section id="appendix"><h2>附录 · 可选工具和本地任务</h2><p>需要复跑哪一段，就打开对应资料。</p>${projectCards('../')}</section></article></div></div>`;
+}
+
+function caseStartLink(id) {
+  const chapter = { P1: 'research', P2: 'experiment', P3: 'data', P4: 'review' }[id];
+  return `../#${chapter}`;
 }
 
 function guidedCase(guide) {
@@ -277,13 +346,15 @@ function projectDetail(guide) {
   const { example } = guide;
   return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${guide.id}</span></div>
 <header class="case-hero"><div><p class="eyebrow">${guide.id} · 算法团队工作流</p><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p>
-<div class="actions"><a class="button primary" href="#demo">开始交互 ↓</a><a class="button secondary" href="#practice">本地实操</a></div></div>
+<div class="actions"><a class="button primary" href="${caseStartLink(guide.id)}">阅读正文 ↗</a><a class="button secondary" href="#practice">本地实操</a></div></div>
 ${workflowEvidence(base, guide.id)}</header>
 ${stageNav(base, guide.id)}
 <article class="case-body">
 ${guidedCase(guide)}
-<section id="demo"><h2>${h(guide.interactionTitle || (guide.id === 'P4' ? '打开评审页，核对灯芯反例' : '动手试这份交付物'))}</h2><p class="interaction-intro">${h(guide.interactionIntro || stageIntros[guide.id])}</p>
+<section id="demo"><h2>复算工具与原始记录</h2>
+<details class="artifact-reference workflow-optional"><summary>${h(guide.interactionTitle || '打开复算工具')}</summary><p class="interaction-intro">${h(guide.interactionIntro || stageIntros[guide.id])}</p>
 <div class="workflow-workspace" data-workflow-id="${guide.id.toLowerCase()}"${workflowFixtures[guide.id] ? ` data-fixture="${base}assets/workflow-examples/${workflowFixtures[guide.id][1]}"` : ''}><p>正在载入交互工作台…</p></div><noscript><p>开启 JavaScript 后可操作工作台，示例和来源仍可查看。</p></noscript>
+</details>
 <details class="artifact-reference"${guide.id === 'P4' ? ' open' : ''}><summary>${h(example.title)}</summary>
 ${examplePreview(guide.id, base)}
 ${example.holdout ? '<div class="artifact-switch" data-workflow-switch hidden role="group" aria-label="结果数据范围"><button type="button" class="button" data-workflow-subset="dev" aria-pressed="true">开发集 · 筛选候选</button><button type="button" class="button" data-workflow-subset="holdout" aria-pressed="false">留出集 · 复核结论</button></div>' : ''}
@@ -342,7 +413,7 @@ await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
-await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><header class="case-hero case-index-hero"><div><p class="eyebrow">贯穿案例 · 夜景降噪</p><h1>暗墙要干净，<br>木纹要留下</h1><p class="intro">团队要在降噪和保纹理之间做取舍，同时留意灯罩高光。沿着一次研发评审，看 AI 怎样把论文、实验、数据和 Demo 交到同事手里。</p><div class="actions"><a class="button primary" href="${sample ? '#case-list' : 'p1/'}">从查论文开始 ↗</a><a class="button secondary" href="#case-list">查看四个环节</a></div></div>${workflowEvidence('../')}</header>${sample ? '' : sceneEvidence()}<section class="workflow-index" id="case-list"><h2>选择研发环节</h2>${stageNav('../')}${projectCards('../')}</section></div>`));
+await write('projects/index.html', shell('../', '实战案例 · 夜景降噪', 'projects', denoiseStory()));
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
   await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item)));
