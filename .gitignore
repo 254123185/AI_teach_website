@@ -7,3 +7,5 @@
 !/site/
 /site/output/
 /site/.playwright-cli/
+__pycache__/
+*.pyc

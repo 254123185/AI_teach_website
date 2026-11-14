@@ -63,32 +63,16 @@ if (search) {
   });
 }
 
-for (const quiz of document.querySelectorAll('[data-quiz]')) {
-  const feedback = quiz.querySelector('[data-quiz-feedback]');
-  quiz.addEventListener('change', () => { feedback.hidden = true; });
-  quiz.addEventListener('submit', event => {
-    event.preventDefault();
-    const correct = new FormData(quiz).get('option') === quiz.dataset.answer;
-    feedback.hidden = false;
-    feedback.dataset.correct = String(correct);
-    if (correct) {
-      feedback.textContent = '答对了。' + quiz.dataset.explanation;
-    } else {
-      const option = quiz.querySelectorAll('label span')[Number(quiz.dataset.answer)].textContent;
-      feedback.textContent = `参考选项是「${option}」。${quiz.dataset.explanation}`;
-    }
-  });
-}
-
 const processes = document.querySelectorAll('[data-process]');
 if (processes.length) {
   const { mountProcess } = await import('./process.mjs');
   for (const root of processes) mountProcess(root, root.dataset.process);
 }
-const caseFlow = document.querySelector('[data-case-flow]');
-if (caseFlow) {
-  const { mountCaseFlow, mountCasePrompt } = await import('./case-guide.mjs');
-  mountCaseFlow(caseFlow);
+const caseSession = document.querySelector('[data-case-session]');
+if (caseSession) {
+  const { mountCaseSession } = await import('./case-session.mjs');
+  const { mountCasePrompt } = await import('./case-guide.mjs');
+  mountCaseSession(caseSession, caseSession.dataset.caseSession);
   mountCasePrompt(document.querySelector('.case-prompt'));
 }
 const demos = document.querySelectorAll('[data-project-demo]');

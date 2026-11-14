@@ -1,0 +1,66 @@
+.case-session {
+  --session-surface: #eaf1e4;
+  --session-terminal: #172c24;
+  --session-terminal-text: #ecf2e4;
+  padding: clamp(.75rem, 2.3vw, 1.25rem);
+  border: 1px solid var(--line);
+  border-radius: .9rem;
+  background: var(--session-surface);
+}
+.session-context { color: var(--muted); font-size: .9rem; margin: 0 0 .8rem; }
+.session-timeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }
+.session-step {
+  display: grid;
+  gap: .13rem;
+  min-width: 0;
+  padding: .6rem .55rem;
+  color: var(--accent);
+  text-align: start;
+  border: 1px solid var(--line);
+  border-radius: .5rem;
+  background: var(--white);
+  overflow-wrap: anywhere;
+}
+.session-step[aria-pressed="true"] { color: var(--white); background: var(--accent); border-color: var(--accent); }
+.session-step:hover:not(:disabled):not([aria-pressed="true"]) { border-color: var(--accent); }
+.session-step:disabled { opacity: .5; }
+.session-step-owner { font-size: .78rem; }
+.session-view { min-width: 0; padding: clamp(.75rem, 2vw, 1rem); border-radius: .65rem; border: 1px solid var(--line); background: var(--white); }
+.case-session h3.session-view-title { margin: 0 0 .5rem; }
+.session-view > .button, .session-review-options { margin-top: .65rem; }
+.session-artifact {
+  min-width: 0;
+  overflow: hidden;
+  margin-top: .7rem;
+  border-radius: .45rem;
+  color: var(--session-terminal-text);
+  background: var(--session-terminal);
+}
+.session-artifact-label { margin: 0; padding: .45rem .7rem; border-bottom: 1px solid #3d5348; color: #d0ddd0; font-size: .78rem; }
+.session-artifact pre {
+  margin: 0;
+  padding: .6rem .7rem;
+  font: .89rem/1.6 var(--mono);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.session-added { color: #c7f3c7; background: #254934; }
+.session-removed { color: #ffd9cc; background: #492f2d; }
+.session-controls, .session-review-options { display: flex; flex-wrap: wrap; gap: .4rem; }
+.session-controls { margin-top: .65rem; }
+.session-controls button:disabled { opacity: .45; }
+.session-review-options [aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.session-review-answer { margin-top: .6rem; padding: .55rem .65rem; border-radius: .45rem; color: var(--accent); background: var(--accent-soft); }
+.session-review-caution { color: #704415; background: #f8e6c7; }
+.session-live {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 520px) {
+  .session-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
+  .session-artifact pre { font-size: .81rem; }
+}

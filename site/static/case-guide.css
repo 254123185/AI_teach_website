@@ -23,30 +23,8 @@
 .case-contract > div, .case-comparison > div { border: 1px solid var(--line); border-radius: .65rem; background: var(--white); padding: .75rem .85rem; }
 .case-contract dt, .case-comparison dt { color: var(--accent); font-weight: 750; font-size: .9rem; }
 .case-contract dd, .case-comparison dd { margin: .2rem 0 0; }
-.case-flow { margin: 0; padding: clamp(.7rem, 2vw, 1.25rem); border: 1px solid var(--line); border-radius: .85rem; background: #edf1e7; }
-.case-flow-nodes { --arrow-space: 1.5rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 0; gap: var(--arrow-space); list-style: none; margin: 0 0 .75rem; }
-.case-flow-nodes:has(button[hidden]) { display: none; }
-.case-flow-nodes li { position: relative; min-width: 0; }
-.case-flow-nodes li:not(:last-child)::after { content: "→"; display: grid; place-items: center; position: absolute; top: 50%; left: 100%; width: var(--arrow-space); transform: translateY(-50%); color: #527053; font-weight: 700; pointer-events: none; }
-.flow-engineer { --role-bg: #e6ead9; --role-ink: #344829; }
-.flow-ai { --role-bg: #d3ebde; --role-ink: #1c493a; }
-.flow-verify { --role-bg: #fae7cb; --role-ink: #694218; }
-.case-flow-nodes button { min-height: 5rem; height: 100%; width: 100%; display: grid; align-content: center; justify-items: start; gap: .25rem; padding: .6rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--white); color: var(--role-ink); text-align: start; line-height: 1.35; }
-.case-flow-nodes button:hover, .case-flow-nodes button[aria-pressed="true"] { border-color: var(--role-ink); background: var(--role-bg); }
-.case-flow-nodes button[aria-pressed="true"] { box-shadow: inset 0 -3px var(--role-ink); }
-.flow-role { font: 700 .77rem/1.5 var(--mono); }
-.flow-role > span { display: inline-grid; place-items: center; width: 1.28em; height: 1.28em; border-radius: 50%; color: white; background: var(--role-ink); }
-.case-evidence { display: grid; }
-.case-evidence.is-interactive > div { grid-area: 1 / 1; }
-.case-evidence.is-interactive > div[data-inactive] { visibility: hidden; }
-.case-panel { min-width: 0; border: 1px solid var(--line); border-inline-start: 4px solid var(--role-ink); border-radius: .55rem; background: var(--white); padding: .8rem 1rem; }
-.case-evidence:not(.is-interactive) { gap: .55rem; }
-.case-panel p + p { margin-top: .25rem; }
-.case-panel-owner { color: var(--role-ink); font-size: .88rem; font-weight: 750; }
-.case-panel pre, .case-prompt pre { margin: .55rem 0 0; padding: .55rem .65rem; border-radius: .4rem; background: #eef2e9; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font: .86rem/1.65 var(--mono); }
-.case-flow figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .4rem 1rem; margin-top: .65rem; color: var(--muted); font-size: .85rem; }
-.case-flow-controls { display: flex; flex-wrap: wrap; gap: .35rem; }
-.case-flow-controls button { min-height: 36px; padding: .3rem .65rem; font-size: .87rem; }
+.case-prompt pre { margin: .55rem 0 0; padding: .55rem .65rem; border-radius: .4rem; background: #eef2e9; color: var(--ink); white-space: pre-wrap; overflow-wrap: anywhere; font: .86rem/1.65 var(--mono); }
+.demo-boundary { color: var(--muted); margin-bottom: .7rem; }
 .case-prompt { margin-top: .75rem; border: 1px solid var(--line); border-radius: .6rem; background: var(--white); padding: .65rem .85rem; }
 .case-prompt summary { color: var(--accent); font-weight: 750; }
 .case-prompt button { margin: .6rem .6rem 0 0; }
@@ -54,8 +32,5 @@
   .case-hero { grid-template-columns: 1fr; gap: 1.05rem; padding-bottom: 1.45rem; }
   .case-hero .actions { margin-top: 1rem; }
   .case-contract { grid-template-columns: 1fr; }
-  .case-flow-nodes { grid-template-columns: 1fr; --arrow-space: .9rem; }
-  .case-flow-nodes button { min-height: 2.75rem; grid-template-columns: 4.4rem minmax(0, 1fr); align-items: center; }
-  .case-flow-nodes li:not(:last-child)::after { content: "↓"; top: 100%; left: 1rem; height: var(--arrow-space); line-height: 1; transform: none; }
   .case-comparison { grid-template-columns: 1fr; }
 }

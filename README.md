@@ -7,8 +7,8 @@ npm run build
 npm run preview
 ```
 
-本地需要 Node.js 22 或更新版本。打开终端打印的链接，使用与 GitHub 项目站点相同的子路径预览。构建检查课程覆盖、先修关系、图像声明和站内链接。
+本地需要 Node.js 22+ 和 Python 3.10+。构建检查课程覆盖、先修关系、图像和站内链接，并将 `site/labs/` 内的任务打包成 ZIP。打开终端打印的链接，使用与 GitHub 项目站点相同的子路径预览。
 
-修改课程结构和案例时编辑 `site/content/curriculum.json` 与 `site/content/projects.json`。讲解和练习放在 `site/content/lessons.json`，研究图及其来源放在 `site/content/figures.json`。课程进度保存在当前浏览器。
+课程大纲见 `site/content/curriculum.json`。LLM 两课的详细讲解与配图清单见 `site/content/llm-foundations.json` 和 `site/content/llm-selection.json`。案例的 AI 回放使用已标注的教学样例。课程进度保存在当前浏览器。
 
 GitHub 仓库的 Settings → Pages 将 Source 设为 GitHub Actions。推送 `main` 后工作流构建并发布 `dist/`。

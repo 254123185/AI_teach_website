@@ -141,16 +141,29 @@ article p + p { margin-top: .75rem; }
 .source-list { padding: 0; list-style: none; }
 .source-list li { padding: 8px 0; overflow-wrap: anywhere; }
 .source-list p { color: var(--muted); font-size: .88rem; }
-.quiz, .reference, .process { border: 1px solid var(--line); background: var(--white); border-radius: 10px; padding: 15px; }
-.quiz fieldset { border: 0; padding: 0; min-width: 0; margin: 0 0 11px; }
-.quiz legend { font-weight: 680; margin-bottom: 6px; }
-.quiz label { display: flex; align-items: baseline; gap: 6px; padding: 7px 0; cursor: pointer; }
-input:is([type="radio"],[type="range"]) { accent-color: var(--accent); }
-.quiz [data-quiz-feedback] { margin-top: 10px; padding: 8px 11px; background: var(--accent-soft); }
-.quiz [data-quiz-feedback][data-correct="false"] { background: #fff0d9; }
+.reference, .process { border: 1px solid var(--line); background: var(--white); border-radius: 10px; padding: 15px; }
+input[type="range"] { accent-color: var(--accent); }
 .reference { margin-top: 12px; }
 .reference summary { font-weight: 720; }
 .reference p { margin-top: 10px; }
+.lesson-note { margin-top: 1rem; }
+.llm-contents { margin-bottom: 28px; padding: 18px 21px; border-radius: 12px; background: var(--accent-soft); }
+.llm-contents h2 { font-size: 1.25rem; }
+.llm-contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .35rem 1.65rem; margin: .6rem 0; padding-left: 1.55rem; }
+.llm-contents li::marker { color: var(--accent); font-family: var(--mono); }
+.llm-chapter h2 { display: flex; align-items: baseline; gap: .55rem; }
+.chapter-index { color: var(--accent); font: 700 .8rem/1.5 var(--mono); padding: .2rem .34rem; border-radius: .3rem; background: var(--accent-soft); }
+.llm-intuition { font-size: 1.12rem; color: var(--accent); max-width: 48rem; }
+.llm-chapter .research-figure { position: relative; padding: 8px 8px 3px; }
+.llm-chapter .research-figure > a { display: block; }
+.figure-enlarge { white-space: nowrap; font-weight: 650; }
+.llm-chapter .research-figure figcaption { padding: 0 4px .5rem; }
+.llm-chapter img { max-height: none; height: auto; }
+.llm-example { margin-top: .9rem; background: var(--accent-soft); padding: .65rem .9rem; border-radius: 7px; }
+.llm-example strong { color: var(--accent); }
+.llm-sources { list-style: none; margin: .7rem 0 0; padding: 0; font-size: .87rem; overflow-wrap: anywhere; }
+.lab-section .actions { margin-top: .8rem; }
+.lab-section .text-list { margin-bottom: 0; }
 .process { margin-top: 15px; }
 .process-config, .process-controls { display: flex; flex-wrap: wrap; gap: .55rem; align-items: center; }
 .process-config label { min-width: 0; display: grid; gap: .15rem; font-size: .88rem; }
@@ -183,6 +196,7 @@ footer { border-top: 1px solid var(--line); margin-top: 63px; color: var(--muted
   .cards, .project-cards, .catalog-list { grid-template-columns: minmax(0,1fr); }
   .page-intro { padding: 35px 0 24px; }
   .process-steps { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .llm-contents ol { grid-template-columns: 1fr; }
   footer { margin-top: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,7 @@
+model,task,correct,ttft_ms,cost
+small,t1,1,120,0.002
+small,t2,0,100,0.002
+small,t3,1,130,0.002
+large,t1,1,220,0.008
+large,t2,1,260,0.008
+large,t3,1,210,0.008

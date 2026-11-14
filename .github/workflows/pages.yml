@@ -21,6 +21,9 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: "24"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - uses: actions/configure-pages@v5
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
