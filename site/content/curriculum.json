@@ -1163,7 +1163,7 @@
     {
       "id": "S18",
       "title": "PaperBench",
-      "url": "https://openai.com/index/paperbench/",
+      "url": "https://arxiv.org/abs/2504.01848",
       "type": "研究基准",
       "use": "论文复现的分解验收方法",
       "checked_at": "2026-11-14",
