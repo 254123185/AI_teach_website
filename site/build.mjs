@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, extname, join, resolve } from 'node:path';
+import { dirname, extname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { controlReview, denoiseOpening, fusionFlow, paperTextureRead, researchRecord, revisionRecord, fusionImage, fusionResults, fusionLinks, inspectFusionRegions } from './fusion-case.mjs';
 import { visualInputLesson } from './visual-input.mjs';
@@ -27,6 +27,7 @@ const sddBasics = await json('sdd-basics.json');
 const imageEvidenceBasics = await json('image-evidence-basics.json');
 const visualInputBasics = await json('visual-input-basics.json');
 const fusionPath = 'experiments/tea-shop/';
+const fusionSnapshot = process.env.TRAINING_FUSION_SNAPSHOT && resolve(process.env.TRAINING_FUSION_SNAPSHOT);
 const python = process.env.TRAINING_PYTHON || 'python';
 const stages = { P1: '论文证据', P2: '候选实验', P3: '样本补齐', P4: '评审 Demo' };
 const stageIntros = {
@@ -432,6 +433,9 @@ async function checkLinks() {
 }
 
 validateData();
+if (fusionSnapshot) {
+  assert(fusionSnapshot !== dist && !fusionSnapshot.startsWith(dist + sep), 'Store the fusion snapshot outside the generated dist directory');
+}
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(join(site, 'static'), join(dist, 'assets'), { recursive: true });
@@ -439,7 +443,11 @@ for (const [source, target] of Object.values(workflowFixtures)) {
   await cp(join(site, 'labs', source), join(dist, 'assets', 'workflow-examples', target));
 }
 const fusionOutput = join(dist, fusionPath);
-execFileSync(python, [join(site, 'labs', 'p4', 'solution.py'), '--out', fusionOutput], { stdio: 'inherit' });
+if (fusionSnapshot) {
+  await cp(fusionSnapshot, fusionOutput, { recursive: true });
+} else {
+  execFileSync(python, [join(site, 'labs', 'p4', 'solution.py'), '--out', fusionOutput], { stdio: 'inherit' });
+}
 const fusionResult = JSON.parse(await readFile(join(fusionOutput, 'result.json'), 'utf8'));
 assert(fusionResult.experiment_id && fusionResult.metrics.global && fusionResult.metrics.spatial && fusionResult.gates.length, 'Incomplete fusion experiment output');
 const lessonTasks = await mkdtemp(join(tmpdir(), 'training-tasks-'));
