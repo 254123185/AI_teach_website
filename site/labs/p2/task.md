@@ -1,7 +1,18 @@
-# 在预算内筛选候选并冻结选择
+# 一轮小实验筛掉会伤细节的去噪方案
 
-`candidates.csv` 保存开发分数和成本，`holdout.csv` 保存独立分数。两份分数均为教学设定。
+现场问题是平坦区有亮暗孤点，同时需要保住边缘和交替纹理。把下面的比较交给编码 Agent，让它一次写完候选、评估和报告。四条一维剖面构成一个开发批次，另四条构成保留批次。输入和干净参考已经对齐，全部为教学数据。
 
-实现 `select(candidates, budget)`，返回 `selected`（候选 ID）、`spent`、`tried`（已试 ID 列表）。按表中顺序检查，下一项放不下时结束。首行是零成本基线，F1 相同保留先出现的项。负预算抛出 ValueError。
+在 `solution.py` 实现 `apply_filter(values, mode)` 和 `compare(dataset)`。边界复制，三点窗口始终从原输入读取：
 
-实现 `validate(selection, holdout)`，仅查询锁定项和基线。保留 selection 原字段，增加 `holdout_f1`、`baseline_f1`、`adopt`（严格高于基线才为 true）。该函数不能改选。运行 `python -m unittest -v`，再执行 `python solution.py 8`，查看 `result.json` 并解释为什么保留基线。
+- `baseline` 返回输入的副本。
+- `mean3` 取三点算术均值，四舍五入到整数。
+- `median3` 将中心替换为三点中值。
+- `gated` 仅当两侧灰度差不大于 3 且中心与中值之差至少为 16 时替换中心。
+
+评估按区域汇总 MAE，即该区域的总绝对误差除以像素总数。只在开发批次选方案：平坦区 MAE ≤ 1，细节区 MAE ≤ 基线细节区 MAE + 0.5。若有多个候选达标，优先选平坦区 MAE 较低者，仍并列按 `MODES` 顺序。比较和门槛使用未舍入的值。保留批次只评估基线和锁定的候选，使用该批次的细节区基线重算门槛。没有候选过线时，`selected` 为 null，保留批次只测基线，`advance` 为 false。
+
+任务包把两个批次放在同一文件，方便复算。真实项目应单独保管留出数据，待候选和门槛冻结后才交给验证方。
+
+返回 JSON 含 `dev`（各方案的 `flat`、`detail`、`passes`）、`selected`、`holdout`（字段同开发批次）、`advance`。开发批次基线 3.89/0.41，门控中值约为 0.28/0.41。保留批次基线 3.33/0.45，门控中值约为 0.56/0.45。报告指标是依据像素计算的结果。
+
+运行 `python -m unittest -v` 和 `python solution.py`。验收后打开 `result.json`，指出哪些方案改善了平坦区却过不了细节门槛，解释为什么锁定门控中值，以及下一轮应该补哪一类场景。

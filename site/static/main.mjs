@@ -68,15 +68,20 @@ if (processes.length) {
   const { mountProcess } = await import('./process.mjs');
   for (const root of processes) mountProcess(root, root.dataset.process);
 }
-const caseSession = document.querySelector('[data-case-session]');
-if (caseSession) {
-  const { mountCaseSession } = await import('./case-session.mjs');
+const casePrompt = document.querySelector('.case-prompt');
+if (casePrompt) {
   const { mountCasePrompt } = await import('./case-guide.mjs');
-  mountCaseSession(caseSession, caseSession.dataset.caseSession);
-  mountCasePrompt(document.querySelector('.case-prompt'));
+  mountCasePrompt(casePrompt);
 }
-const demos = document.querySelectorAll('[data-project-demo]');
-if (demos.length) {
-  const { mountProject } = await import('./projects.mjs');
-  for (const root of demos) mountProject(root, root.dataset.projectDemo);
+const workflowSwitch = document.querySelector('[data-workflow-switch]');
+if (workflowSwitch) {
+  const buttons = [...workflowSwitch.querySelectorAll('button')];
+  const panels = document.querySelectorAll('[data-workflow-panel]');
+  function show(active) {
+    for (const button of buttons) button.setAttribute('aria-pressed', String(button.dataset.workflowSubset === active));
+    for (const panel of panels) panel.hidden = panel.dataset.workflowPanel !== active;
+  }
+  for (const button of buttons) button.addEventListener('click', () => show(button.dataset.workflowSubset));
+  show('dev');
+  workflowSwitch.hidden = false;
 }

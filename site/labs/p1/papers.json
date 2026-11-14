@@ -1,0 +1,41 @@
+[
+  {
+    "id": "ffdnet",
+    "location": "FFDNet · §IV-C、图 5",
+    "source": "https://arxiv.org/pdf/1710.04026#page=8",
+    "evidence": "空间噪声图能为不同区域施加不同强度。图 5 对照的是合成空间变化高斯噪声。",
+    "idea": "先试分区融合权重。复用区域控制的思路，沿用现有模型。",
+    "requires": [
+      "rendered_images",
+      "blend_weight_hook"
+    ],
+    "concerns": []
+  },
+  {
+    "id": "cbdnet",
+    "location": "CBDNet · §3.1 式 1–3、§3.4",
+    "source": "https://arxiv.org/pdf/1807.04686#page=4",
+    "evidence": "用信号相关噪声和 ISP 生成样本，训练还结合真实图像对。",
+    "idea": "排到数据建设阶段。记录该方案所需的标定和配对数据。",
+    "requires": [
+      "raw_calibration",
+      "paired_calibration_images",
+      "training_slot"
+    ],
+    "concerns": []
+  },
+  {
+    "id": "noise2void",
+    "location": "Noise2Void · §3.1、§3.4、图 6",
+    "source": "https://arxiv.org/pdf/1811.10980#page=5",
+    "evidence": "单张噪声图可以做自监督。邻域噪声独立与零均值是关键假设，结构噪声是已展示的限制。",
+    "idea": "先搁置。当前残差有条纹，需先核查空间相关性，且本轮没有训练预算。",
+    "requires": [
+      "rendered_images",
+      "training_slot"
+    ],
+    "concerns": [
+      "row_correlated_residual"
+    ]
+  }
+]

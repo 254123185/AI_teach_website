@@ -9,8 +9,8 @@ const dist = resolve(site, '../dist');
 const sample = process.argv.includes('--sample');
 const json = async (name) => JSON.parse((await readFile(join(site, 'content', name), 'utf8')).replace(/^\uFEFF/, ''));
 const { modules, sources, version } = await json('curriculum.json');
-const { projects } = await json('projects.json');
-const caseGuides = await json('case-guides.json');
+const projects = await Promise.all(['P1', 'P2', 'P3', 'P4'].map(async id =>
+  ({ id, ...await json(`workflows/${id.toLowerCase()}.json`) })));
 const llmChapters = { A1: await json('llm-foundations.json'), A2: await json('llm-selection.json') };
 const lessons = sample ? {} : await json('lessons.json');
 const figures = sample ? {} : await json('figures.json');
@@ -20,10 +20,6 @@ const pageCourseIds = sample ? ['A9'] : modules.map(item => item.id);
 const labDescriptions = {
   A1: '实现数值稳定的 softmax 和贪心解码，验收极大分数与并列分数。',
   A2: '汇总配对任务的正确率、首 token 延迟与成本，按门槛筛选模型。',
-  P1: '把双边滤波写成五像素函数，用常量和台阶边缘验证。',
-  P2: '在开发预算内冻结候选，生成对照基线的独立验证报告。',
-  P3: '在三张对齐的灰度图上计算局部误差，生成 ROI 报告。',
-  P4: '用同批激活对比两种 INT8 范围，输出饱和计数与最大误差。',
 };
 const tracks = {
   A: { title: '通用主干', text: '从 LLM 的基本原理，到能调用工具、交接和恢复的 Agent。', sign: '⌘' },
@@ -35,12 +31,6 @@ const routes = [
   { key: 'build', name: '做一个领域工具', text: '把已有脚本接到 AI 工作流，学习怎样留下运行记录、验证结果和处理失败。', ids: ['A6','A9','A10','A11','A12','B7','B9'] },
   { key: 'platform', name: '建设团队能力', text: '关心长任务、评测、协作和服务化时，从这里开始。', ids: ['A11','A12','A13','A14','A15','C4'] },
 ];
-const caseTitles = {
-  P1: '把论文公式变成可测代码',
-  P2: '在固定预算内筛选实验',
-  P3: '定位降噪带来的细节损失',
-  P4: '定位 INT8 量化误差',
-};
 const demoCaptions = {
   A9: '切换故障和执行模式，再逐步看日志里哪条线索改变了下一步。示例日志为教学构造。',
   A11: '逐步提交、保存和恢复。看同一个幂等键如何找回第一次已经提交的任务。教学示意。',
@@ -56,7 +46,6 @@ const h = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp
 const courseUrl = (id) => `courses/${id.toLowerCase()}/`;
 const projectUrl = (id) => `projects/${id.toLowerCase()}/`;
 const paragraphs = (items) => items.map(item => `<p>${h(item)}</p>`).join('');
-const list = (items, tag = 'ul') => `<${tag} class="text-list">${items.map(item => `<li>${h(item)}</li>`).join('')}</${tag}>`;
 const courseChip = (id, base) => {
   const item = courseMap.get(id);
   return pageCourseIds.includes(id) ? `<a class="chip" href="${base + courseUrl(id)}">${id} <span>${h(item.title)}</span></a>`
@@ -67,7 +56,6 @@ function validateData() {
   const expected = [...Object.entries({ A: 15, B: 12, C: 5 }).flatMap(([key, count]) => Array.from({length: count}, (_, index) => key + (index + 1)))];
   assert.deepEqual([...courseMap.keys()], expected);
   assert.deepEqual(projects.map(item => item.id), ['P1', 'P2', 'P3', 'P4']);
-  assert.deepEqual(Object.keys(caseGuides).sort(), projects.map(project => project.id));
   const completed = new Set();
   function visit(id, trail = new Set()) {
     assert(courseMap.has(id), `Missing prerequisite ${id}`);
@@ -80,15 +68,19 @@ function validateData() {
     visit(item.id);
     for (const reference of item.references) assert(sourceMap.has(reference), `Missing source ${reference}`);
   }
-  for (const project of projects) {
-    for (const id of project.modules) assert(courseMap.has(id), `Missing module ${id}`);
-    const guide = caseGuides[project.id];
-    for (const key of ['task','handoff','deliverable','verification','before','withAI','limit','prompt']) {
-      assert(typeof guide[key] === 'string' && guide[key].trim(), `Missing ${key} in ${project.id}`);
+  for (const guide of projects) {
+    assert(Array.isArray(guide.modules) && guide.modules.length > 0, `Missing related courses in ${guide.id}`);
+    for (const id of guide.modules) assert(courseMap.has(id), `Missing module ${id}`);
+    for (const key of ['title','tagline','problem','inputs','delegation','deliverable','decision','prompt','limit','lab']) {
+      assert(typeof guide[key] === 'string' && guide[key].trim(), `Missing ${key} in ${guide.id}`);
     }
-    assert(guide.steps.length === 4 && guide.steps.some(step => step.role === 'AI') && guide.steps.some(step => step.role === '验证'), `Incomplete workflow in ${project.id}`);
-    for (const step of guide.steps) {
-      assert(['工程师','AI','验证'].includes(step.role) && step.title && step.detail && step.evidence, `Invalid workflow step in ${project.id}`);
+    assert(guide.workflow.length === 3 && guide.workflow.every(step => step.title && step.detail), `Incomplete workflow in ${guide.id}`);
+    const { title, caption, headers, rows, holdout } = guide.example;
+    const tableIsValid = (body) => body.length && body.every(row => row.length === headers.length && row.every(cell => typeof cell === 'string'));
+    assert(title && caption && headers.length > 1 && tableIsValid(rows), `Incomplete example in ${guide.id}`);
+    if (holdout) assert(holdout.caption && tableIsValid(holdout.rows), `Incomplete holdout in ${guide.id}`);
+    for (const source of guide.sources ?? []) {
+      assert(source.title && /^https:\/\//.test(source.url) && source.note, `Invalid source in ${guide.id}`);
     }
   }
   if (sample) return;
@@ -117,8 +109,8 @@ function shell(base, title, active, main) {
   const links = [['home','', '首页'], ['paths','paths/', '学习路线'], ['courses','courses/', '课程目录'], ['projects','projects/', '实战案例']];
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f6ed">
-<meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、演示、练习与四个综合案例。">
-<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}${active === 'projects' && !sample ? `<link rel="stylesheet" href="${base}assets/projects.css"><link rel="stylesheet" href="${base}assets/case-session.css">` : ''}
+<meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、实战工作流和本地任务包。">
+<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}
 <script type="module" src="${base}assets/main.mjs"></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="masthead"><div class="wrap header-inner">
 <a class="brand" href="${base}index.html"><img src="${base}assets/mark.svg" alt="" width="34" height="34"><span>AI 辅助研发训练手册</span></a>
@@ -174,8 +166,8 @@ function figureMarkup(item, base) {
   }).join('');
 }
 
-function localLab(id, base) {
-  return `<section id="practice" class="lab-section"><h2>本地实操</h2><p>${labDescriptions[id]}</p>
+function localLab(id, base, description = labDescriptions[id]) {
+  return `<section id="practice" class="lab-section"><h2>本地实操</h2><p>${h(description)}</p>
 <p>任务包内含任务单、示例数据、待实现代码和验收测试。需要 Python 3.10+。</p>
 <ol class="text-list"><li>下载并解压 ZIP，在包含 <code>task.md</code> 的目录打开终端。</li>
 <li>启动 <code>opencode</code>，或用其他编码 Agent 打开该目录。输入「先读 task.md 和测试，完成任务并运行验收」。</li>
@@ -213,33 +205,47 @@ ${related.length ? `<h3>相关案例</h3><ul class="text-list">${related.map(pro
 }
 
 function projectCards(base) {
-  return `<div class="project-cards illustrated-cards">${projects.map(item => {
-    const guide = caseGuides[item.id];
-    return `<a class="project-card illustrated-card" href="${base + (sample ? 'projects/' : projectUrl(item.id))}">
+  return `<div class="project-cards illustrated-cards">${projects.map(item =>
+    `<a class="project-card illustrated-card" href="${base + (sample ? 'projects/' : projectUrl(item.id))}">
 <div class="case-card-art"><img src="${base}assets/case-art/${item.id.toLowerCase()}.svg" width="460" height="214" alt="" loading="lazy"></div>
 <div class="case-card-text"><div class="case-card-label"><span class="project-code">${item.id}</span><span aria-hidden="true">↗</span></div>
-<h3>${caseTitles[item.id]}</h3><p>AI 交付：${h(guide.deliverable)}</p></div></a>`;
-  }).join('')}</div>`;
+<h3>${h(item.title)}</h3><p>${h(item.tagline)}</p></div></a>`).join('')}</div>`;
 }
 
-function projectDetail(item) {
+function artifactTable(headers, rows, caption, subset) {
+  return `<div class="artifact-table" data-workflow-panel="${subset}" tabindex="0" role="region" aria-label="${subset === 'holdout' ? '留出集结果' : '示例结果'}">
+<table><caption>${h(caption)}</caption><thead><tr>${headers.map(header => `<th scope="col">${h(header)}</th>`).join('')}</tr></thead>
+<tbody>${rows.map(([name, ...cells]) => `<tr><th scope="row">${h(name)}</th>${cells.map(cell => `<td>${h(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+function examplePreview(id, base) {
+  if (id === 'P3') return `<figure class="workflow-preview"><a href="${base}assets/workflow-examples/p3-samples.svg"><img src="${base}assets/workflow-examples/p3-samples.svg" alt="查看三组样本大图：暗区噪声、细纹理和高光截断" loading="lazy"></a><figcaption>每类各展示一对样本，左侧为参考图，右侧为退化输入。<a class="figure-enlarge" href="${base}assets/workflow-examples/p3-samples.svg">查看大图 ↗</a></figcaption></figure>`;
+  if (id === 'P4') return `<p class="artifact-action"><a class="button primary" href="${base}assets/workflow-examples/p4-demo.html">打开 A/B Demo ↗</a><a class="text-link" href="${base}assets/workflow-examples/p4-demo.html" download>下载独立 HTML ↓</a></p>`;
+  return '';
+}
+
+function projectDetail(guide) {
   const base = '../../';
-  const guide = caseGuides[item.id];
-  return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${item.id}</span></div>
-<header class="case-hero"><div><p class="eyebrow">${item.id} · 实战案例</p><h1>${caseTitles[item.id]}</h1><p class="intro">${h(guide.task)}</p>
-<div class="actions"><a class="button primary" href="#steps">查看 AI 操作回放 ↓</a><a class="button secondary" href="#practice">本地实操</a></div></div>
-<div class="case-hero-art"><img src="${base}assets/case-art/${item.id.toLowerCase()}.svg" width="460" height="214" alt=""></div></header>
+  const { example } = guide;
+  return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${guide.id}</span></div>
+<header class="case-hero"><div><p class="eyebrow">${guide.id} · 算法团队工作流</p><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p>
+<div class="actions"><a class="button primary" href="#demo">看示例产物 ↓</a><a class="button secondary" href="#practice">本地实操</a></div></div>
+<div class="case-hero-art"><img src="${base}assets/case-art/${guide.id.toLowerCase()}.svg" width="460" height="214" alt=""></div></header>
 <article class="case-body">
-<section id="steps"><div class="section-heading"><h2>AI 操作回放</h2></div>
-<dl class="case-contract"><div><dt>交给 AI</dt><dd>${h(guide.handoff)}</dd></div><div><dt>AI 交付</dt><dd>${h(guide.deliverable)}</dd></div><div><dt>工程师验收</dt><dd>${h(guide.verification)}</dd></div></dl>
-<div data-case-session="${item.id}"></div><noscript><p>启用 JavaScript 后可查看操作回放。</p></noscript>
-<details class="case-prompt"><summary>实际项目的任务单示例</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>
-${localLab(item.id, base)}
-<section id="demo"><h2>算法对照演示</h2><p class="demo-boundary">这里单独展示算法和数据的变化。AI 读文件、改代码和提交结果的步骤见上方回放。</p><div data-project-demo="${item.id}"></div><noscript><p>启用 JavaScript 后可操作案例。</p></noscript></section>
-<section id="checks"><h2>用到实际项目时</h2><dl class="case-comparison"><div><dt>原有工作</dt><dd>${h(guide.before)}</dd></div><div><dt>AI 接手</dt><dd>${h(guide.withAI)}</dd></div></dl>
-<p class="note">${h(guide.limit)}</p>
-<details class="reference"><summary>完整交付清单</summary>${list(item.deliverables)}${list(item.rubric)}</details></section>
-<section id="related"><h2>相关课程</h2><div class="prerequisites">${item.modules.map(id => courseChip(id, base)).join(' ')}</div></section>
+<section id="steps"><h2>团队工作流</h2>
+<ol class="team-flow">${guide.workflow.map((step, index) => `<li><span class="flow-index">${index + 1}</span><strong>${h(step.title)}</strong><p>${h(step.detail)}</p></li>`).join('')}</ol>
+<dl class="case-contract"><div><dt>团队提供</dt><dd>${h(guide.inputs)}</dd></div><div><dt>AI 承担</dt><dd>${h(guide.delegation)}</dd></div><div><dt>交付物</dt><dd>${h(guide.deliverable)}</dd></div></dl>
+<details class="case-prompt"><summary>可复用任务单</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>
+<section id="demo"><h2>${h(example.title)}</h2>
+${examplePreview(guide.id, base)}
+${example.holdout ? '<div class="artifact-switch" data-workflow-switch hidden role="group" aria-label="结果数据范围"><button type="button" class="button" data-workflow-subset="dev" aria-pressed="true">开发集 · 筛选候选</button><button type="button" class="button" data-workflow-subset="holdout" aria-pressed="false">留出集 · 复核结论</button></div>' : ''}
+${example.headers.length > 3 ? '<p class="artifact-scroll-hint">横向滑动查看全部列</p>' : ''}
+${artifactTable(example.headers, example.rows, example.caption, 'dev')}
+${example.holdout ? artifactTable(example.headers, example.holdout.rows, example.holdout.caption, 'holdout') : ''}
+${guide.sources?.length ? `<ul class="source-list">${guide.sources.map(source => `<li><a href="${h(source.url)}">${h(source.title)} ↗</a><p>${h(source.note)}</p></li>`).join('')}</ul>` : ''}</section>
+<section id="checks"><h2>团队决定什么</h2><p>${h(guide.decision)}</p><p class="note workflow-limit">${h(guide.limit)}</p></section>
+${localLab(guide.id, base, guide.lab)}
+<section id="related"><h2>相关课程</h2><div class="prerequisites">${guide.modules.map(id => courseChip(id, base)).join(' ')}</div></section>
 </article></div>`;
 }
 
@@ -285,13 +291,13 @@ await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
-await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><section class="page-intro"><h1>实战案例</h1><p class="intro">四个研发任务，分别演示 AI 接手的工作和工程师的验收步骤。</p></section>${projectCards('../')}</div>`));
+await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><section class="page-intro"><h1>AI 怎么帮算法团队提效</h1><p class="intro">按研发瓶颈挑案例。每个案例提供一套分工、可检查的产物和可下载的任务包。</p></section>${projectCards('../')}</div>`));
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
   await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item)));
 }
 if (!sample) {
-  for (const item of projects) await write(projectUrl(item.id) + 'index.html', shell('../../', caseTitles[item.id], 'projects', projectDetail(item)));
+  for (const item of projects) await write(projectUrl(item.id) + 'index.html', shell('../../', item.title, 'projects', projectDetail(item)));
 }
 const pages = await checkLinks();
 console.log(`Verified ${pages} HTML pages, ${pageCourseIds.length} courses and ${sample ? 0 : projects.length} project details.`);

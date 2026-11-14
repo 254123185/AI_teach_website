@@ -1,7 +1,0 @@
-id,cost,dev_f1
-baseline,0,0.720
-light,1,0.764
-normalize,2,0.802
-local,2,0.817
-strong,3,0.851
-edge,2,0.829

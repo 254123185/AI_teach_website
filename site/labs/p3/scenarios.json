@@ -1,0 +1,9 @@
+{
+  "width": 16,
+  "height": 8,
+  "scenarios": [
+    {"id": "dark-flat", "reference": "dark", "noise": 8, "offset": 0, "seeds": [101, 102]},
+    {"id": "fine-texture", "reference": "texture", "noise": 8, "offset": 0, "seeds": [201, 202]},
+    {"id": "highlight-clipping", "reference": "highlight", "noise": 0, "offset": 40, "seeds": [301]}
+  ]
+}

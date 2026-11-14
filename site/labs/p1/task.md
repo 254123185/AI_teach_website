@@ -1,5 +1,19 @@
-# 把双边滤波公式变成可验证代码
+# 把论文证据变成一个可验证的 idea
 
-读 `formula.md` 和 `fixtures.json`。在 `solution.py` 实现 `bilateral(values, center, range_sigma, spatial_sigma=1.25)`，返回 `(output, normalized_weights)`。两个尺度必须为正，中心索引必须在范围内。
+把这份任务交给本地编码 Agent。让它用项目约束筛选方案，交付能进评审的短备忘录。
 
-跑 `python -m unittest -v` 和 `python solution.py`。常量区域维持原灰度，灰度尺度调小后跨边缘邻居的总权重下降。把分子、分母和测试结果对应到代码行。该实现只包含一维窗口。
+## 给 Agent 的材料
+
+- `brief.json` 描述失败现象、已有接口和数据限制。
+- `papers.json` 是三份带原文定位的预读卡，分别写了论文发现和项目改造草案。
+- 可联网时，沿链接核查章节和图号。离线时可直接使用证据卡，在备忘录中标记「原文待复核」。
+
+## 交给 Agent
+
+用证据卡筛选方案，并把筛选条件留成脚本。实现 `shortlist(brief, papers)`，返回顺序与证据卡一致的列表。每项包含 `id`、`status`、`missing`、`conflicts`。必要条件都可用且没有已观察到的冲突时，状态为 `try`，其余为 `defer`。缺条件和冲突列表沿证据卡原顺序保存。
+
+运行 `python -m unittest -v` 和 `python solution.py`。基于 `shortlist.json` 写 `idea.md`，每个候选记四项：来源及原文位置、可借机制、缺口或风险、建议先跑的对照。只选一条首试，写清基线、候选、固定项与分区指标。
+
+## 人工验收
+
+核对首试是否只改一个已有接口。抽查一处原文，区分作者已发表的实验和本项目待验证的改造。项目实测结果留待跑完对照后补充。

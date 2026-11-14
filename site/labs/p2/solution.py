@@ -1,23 +1,23 @@
-import csv
 import json
 from pathlib import Path
-import sys
 
 
-def read_csv(name):
-    with Path(__file__).with_name(name).open(encoding="utf-8", newline="") as source:
-        return list(csv.DictReader(source))
+MODES = ("baseline", "mean3", "median3", "gated")
+FLAT_MAX = 1.0
+DETAIL_BUDGET = 0.5
 
 
-def select(candidates, budget):
-    raise NotImplementedError("仅用开发记录筛选并冻结候选")
+def apply_filter(values, mode):
+    """Return a new row of integers, using edge replication."""
+    raise NotImplementedError("实现四种方案")
 
 
-def validate(selection, holdout):
-    raise NotImplementedError("读取锁定候选与基线的独立分数")
+def compare(dataset):
+    """Compute grouped pixel errors, lock the development choice, then check holdout."""
+    raise NotImplementedError("计算分区 MAE，按门槛锁定并复验")
 
 
 if __name__ == "__main__":
-    chosen = select(read_csv("candidates.csv"), int(sys.argv[1]))
-    report = validate(chosen, read_csv("holdout.csv"))
-    Path("result.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    dataset = json.loads(Path(__file__).with_name("fixtures.json").read_text(encoding="utf-8"))
+    report = compare(dataset)
+    Path("result.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

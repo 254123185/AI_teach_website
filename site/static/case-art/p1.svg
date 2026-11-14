@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
-  <title id="title">从论文公式到可复核的实现</title>
-  <desc id="description">论文页经过 AI 助手梳理后，右侧出现对应代码和独立测试清单。</desc>
+  <title id="title">从多篇论文到待验证候选</title>
+  <desc id="description">多篇论文交给 AI 汇总，产出带来源的候选比较与首试建议。</desc>
   <style>
     @media (prefers-reduced-motion: no-preference) {
       .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }
@@ -30,7 +30,7 @@
     <path d="M312 72h110" stroke="#597967" stroke-width="2"/>
     <path d="M322 63h1m6 0h1m6 0h1" stroke="#f4b59b" stroke-width="3" stroke-linecap="round"/>
     <path d="m334 92-8 7 8 7m15-14 8 7-8 7m-9 8 5-31" fill="none" stroke="#c9e5a3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M366 92h38m-38 9h28m-28 9h32m-66 13h66" stroke="#9ebdaa" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M353 87h51m-51 10h40m-40 10h46m-46 13h35" stroke="#9ebdaa" stroke-width="2.5" stroke-linecap="round"/>
     <rect x="347" y="124" width="81" height="51" rx="8" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
     <path d="m357 139 4 4 7-8m-11 19 4 4 7-8m6-11h36m-36 15h27" fill="none" stroke="#3f7554" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
   <g>

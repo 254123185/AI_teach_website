@@ -1,0 +1,27 @@
+{
+  "problem": "夜景平坦区有残噪，调高全局融合强度会丢木纹与细字。",
+  "available": [
+    "rendered_images",
+    "blend_weight_hook"
+  ],
+  "unavailable": [
+    "raw_calibration",
+    "paired_calibration_images",
+    "training_slot"
+  ],
+  "observations": [
+    "row_correlated_residual"
+  ],
+  "baseline": "全局常量融合权重",
+  "candidate": "平坦区与纹理区可使用不同权重",
+  "fixed": [
+    "失败样本与保留样本",
+    "模型权重、输入和其他配置",
+    "原管线与原评价器"
+  ],
+  "metrics": [
+    "暗墙非边缘区残差",
+    "纹理和细字保真",
+    "掩码过渡区域接缝"
+  ]
+}

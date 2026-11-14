@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
-  <title id="title">从浮点模型到可检验的部署方案</title>
-  <desc id="description">AI 助手读取模型输出，整理量化前后差异，右侧是带数值对照的目标设备。</desc>
+  <title id="title">从已有算法到独立 A/B Demo</title>
+  <desc id="description">把已有算子和样本交给 AI，交付浏览器可打开的对照 Demo。</desc>
   <style>
     @media (prefers-reduced-motion: no-preference) {
       .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }

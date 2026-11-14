@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 214" width="460" height="214" role="img" aria-labelledby="title description">
-  <title id="title">从两张图到局部画质证据</title>
-  <desc id="description">工程师交给 AI 助手两版对齐图像。AI 标出局部，右侧汇总视觉观察和指标。</desc>
+  <title id="title">从失败样本到成对合成数据</title>
+  <desc id="description">AI 把团队定义的失败模式写成生成器，批量输出参考图、退化图和对应清单。</desc>
   <style>
     @media (prefers-reduced-motion: no-preference) {
       .spark { transform-box: fill-box; transform-origin: center; animation: twinkle 900ms ease-out 2; }
@@ -31,11 +31,12 @@
     <path d="M77 106v-10h8m22 0h8v10m0 12v10h-8m-22 0h-8v-10" fill="none" stroke="#ffc194" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M64 150h22m9 0h29" stroke="#567861" stroke-width="3" stroke-linecap="round"/>
     <rect x="316" y="57" width="108" height="107" rx="11" fill="#fff9ee" stroke="#254535" stroke-width="2.5"/>
-    <rect x="327" y="69" width="85" height="25" rx="5" fill="#e2efd4"/>
-    <path d="M334 82h9m-5-5v10m14-5h48m-65 29h65m-65 14h55m-55 14h62" stroke="#395e4b" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="399" cy="145" r="19" fill="#f6bfa7" stroke="#254535" stroke-width="2.7"/>
-    <path d="m414 160 11 11" stroke="#254535" stroke-width="5" stroke-linecap="round"/>
-    <rect x="392" y="138" width="14" height="14" rx="2" fill="none" stroke="#254535" stroke-width="2" stroke-dasharray="3 2"/>
+    <g stroke="#254535" stroke-width="1.5">
+      <rect x="327" y="69" width="36" height="27" rx="4" fill="#497467"/><rect x="377" y="69" width="36" height="27" rx="4" fill="#759387"/>
+      <rect x="327" y="103" width="36" height="27" rx="4" fill="#d9dfb6"/><rect x="377" y="103" width="36" height="27" rx="4" fill="#b8c4a4"/>
+    </g>
+    <path d="M334 110v13m7-13v13m7-13v13m7-13v13m-21 18h71m-71 12h51" stroke="#395e4b" stroke-width="2" stroke-linecap="round"/>
+    <path d="M368 82h5m-5 34h5m10-2h24m-24 6h24" stroke="#f6bfa7" stroke-width="2" stroke-linecap="round"/>
   <g>
     <path d="M211 145v22m39-22v22m-43 0h11m28 0h11m-27-96V57" fill="none" stroke="#254535" stroke-width="3" stroke-linecap="round"/>
     <circle cx="230" cy="56" r="6.4" fill="#f2a992" stroke="#254535" stroke-width="2.5"/>

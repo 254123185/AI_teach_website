@@ -1,22 +1,36 @@
+import json
+from pathlib import Path
 import unittest
 
-from solution import bilateral
+from solution import shortlist
 
 
-class BilateralTest(unittest.TestCase):
-    def test_constant(self):
-        output, weights = bilateral([96] * 5, 2, 30)
-        self.assertAlmostEqual(output, 96)
-        self.assertAlmostEqual(sum(weights), 1)
+def fixture(name):
+    return json.loads(Path(__file__).with_name(name + ".json").read_text(encoding="utf-8"))
 
-    def test_edge(self):
-        samples = [53, 59, 62, 190, 196]
-        output, narrow = bilateral(samples, 2, 30)
-        _, wide = bilateral(samples, 2, 120)
-        self.assertAlmostEqual(output, 59.7129027575, places=5)
-        self.assertLess(sum(narrow[3:]), sum(wide[3:]))
 
-    def test_invalid(self):
-        for center, scale in ((0, 0), (4, 30), (-1, 30)):
-            with self.assertRaises(ValueError):
-                bilateral([1, 2], center, scale)
+class ResearchTriageTest(unittest.TestCase):
+    def test_current_project(self):
+        self.assertEqual(shortlist(fixture("brief"), fixture("papers")), [
+            {"id": "ffdnet", "status": "try", "missing": [], "conflicts": []},
+            {"id": "cbdnet", "status": "defer",
+             "missing": ["raw_calibration", "paired_calibration_images", "training_slot"],
+             "conflicts": []},
+            {"id": "noise2void", "status": "defer", "missing": ["training_slot"],
+             "conflicts": ["row_correlated_residual"]},
+        ])
+
+    def test_conflict_still_matters_with_training(self):
+        brief = fixture("brief")
+        brief["available"].append("training_slot")
+        [candidate] = shortlist(brief, [fixture("papers")[-1]])
+        self.assertEqual(candidate["missing"], [])
+        self.assertEqual(candidate["conflicts"], ["row_correlated_residual"])
+        self.assertEqual(candidate["status"], "defer")
+
+    def test_missing_interface_blocks_first_idea(self):
+        brief = fixture("brief")
+        brief["available"].remove("blend_weight_hook")
+        [candidate] = shortlist(brief, fixture("papers")[:1])
+        self.assertEqual(candidate["status"], "defer")
+        self.assertEqual(candidate["missing"], ["blend_weight_hook"])
