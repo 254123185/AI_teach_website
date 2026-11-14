@@ -11,6 +11,19 @@ const json = async (name) => JSON.parse((await readFile(join(site, 'content', na
 const { modules, sources, version } = await json('curriculum.json');
 const projects = await Promise.all(['P1', 'P2', 'P3', 'P4'].map(async id =>
   ({ id, ...await json(`workflows/${id.toLowerCase()}.json`) })));
+const workflowFixtures = {
+  P2: ['p2/fixtures.json', 'p2-fixtures.json'],
+  P3: ['p3/scenarios.json', 'p3-scenarios.json'],
+  P4: ['p2/fixtures.json', 'p2-fixtures.json'],
+};
+const nightProfiles = await json('../labs/p2/fixtures.json');
+const stages = { P1: '论文证据', P2: '候选实验', P3: '样本补齐', P4: '评审 Demo' };
+const stageIntros = {
+  P1: '改变能用的数据与训练资源，看看哪条论文机制仍值得先试。',
+  P2: '动手筛候选。开发集用来试，锁定后再看留出结果。',
+  P3: '调整退化和种子，观察生成的配对图、覆盖条件和清单。',
+  P4: '同一个门控，中间那一格亮点在暗墙上是噪声，在灯边可能是真信号。切换位置核对。',
+};
 const llmChapters = { A1: await json('llm-foundations.json'), A2: await json('llm-selection.json') };
 const lessons = sample ? {} : await json('lessons.json');
 const figures = sample ? {} : await json('figures.json');
@@ -75,6 +88,7 @@ function validateData() {
       assert(typeof guide[key] === 'string' && guide[key].trim(), `Missing ${key} in ${guide.id}`);
     }
     assert(guide.workflow.length === 3 && guide.workflow.every(step => step.title && step.detail), `Incomplete workflow in ${guide.id}`);
+    assert(guide.walkthrough.length >= 3 && guide.walkthrough.every(step => step.title && step.text && step.look && step.decision), `Incomplete guided case in ${guide.id}`);
     const { title, caption, headers, rows, holdout } = guide.example;
     const tableIsValid = (body) => body.length && body.every(row => row.length === headers.length && row.every(cell => typeof cell === 'string'));
     assert(title && caption && headers.length > 1 && tableIsValid(rows), `Incomplete example in ${guide.id}`);
@@ -110,7 +124,7 @@ function shell(base, title, active, main) {
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f6ed">
 <meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、实战工作流和本地任务包。">
-<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}
+<title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}${active === 'projects' && !sample ? `<link rel="stylesheet" href="${base}assets/workflow-examples/p34-interaction.css">` : ''}
 <script type="module" src="${base}assets/main.mjs"></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="masthead"><div class="wrap header-inner">
 <a class="brand" href="${base}index.html"><img src="${base}assets/mark.svg" alt="" width="34" height="34"><span>AI 辅助研发训练手册</span></a>
@@ -207,9 +221,43 @@ ${related.length ? `<h3>相关案例</h3><ul class="text-list">${related.map(pro
 function projectCards(base) {
   return `<div class="project-cards illustrated-cards">${projects.map(item =>
     `<a class="project-card illustrated-card" href="${base + (sample ? 'projects/' : projectUrl(item.id))}">
-<div class="case-card-art"><img src="${base}assets/case-art/${item.id.toLowerCase()}.svg" width="460" height="214" alt="" loading="lazy"></div>
-<div class="case-card-text"><div class="case-card-label"><span class="project-code">${item.id}</span><span aria-hidden="true">↗</span></div>
-<h3>${h(item.title)}</h3><p>${h(item.tagline)}</p></div></a>`).join('')}</div>`;
+<div class="case-card-text"><div class="case-card-label"><span class="project-code">${stages[item.id]}</span><span aria-hidden="true">↗</span></div>
+<h3>${h(item.title)}</h3><p>${h(item.tagline)}</p><span class="case-card-output">${h(item.deliverable)}</span></div></a>`).join('')}</div>`;
+}
+
+function stageNav(base, current) {
+  return `<nav class="workflow-journey" aria-label="案例进度">${projects.map((item, index) =>
+    `<a href="${base + (sample ? 'projects/' : projectUrl(item.id))}"${item.id === current ? ' aria-current="step"' : ''}><span>${index + 1}</span> ${stages[item.id]} <span aria-hidden="true">↗</span></a>`).join('')}</nav>`;
+}
+
+function workflowEvidence(base, current) {
+  const evidence = [
+    ['P1', '论文 → 候选方案', '从 FFDNet 图 5 提取“空间控制”这个可试机制。', '交付：带出处的候选表'],
+    ['P2', '候选 → 分区误差', '开发剖面：门控中值暗墙 0.28，木纹 0.41 灰度级。', '交付：曲线和筛选报告'],
+    ['P3', '缺口 → 配对数据', '暗区、木纹、灯罩各有单独的退化规格。', '交付：参考图、退化图、清单'],
+    ['P4', '结果 → 评审 Demo', '团队能换候选、核对门槛，再决定哪些要补真图。', '交付：可复核的评审快照'],
+  ];
+  return `<figure class="workflow-evidence"><figcaption><strong>同一个夜景问题，四份可交接的产物</strong><p>论文提供线索。对照数据决定是否进入真图验证。</p></figcaption>
+<ol>${evidence.map(([id, title, text, output], index) => `<li><a href="${base + (sample ? 'projects/' : projectUrl(id))}"${id === current ? ' aria-current="step"' : ''}><span class="guide-index">${index + 1}</span><strong>${title}</strong><span>${text}</span><small>${output}</small></a></li>`).join('')}</ol></figure>`;
+}
+
+function sceneEvidence() {
+  const [wall, wood] = nightProfiles.dev;
+  const regions = [
+    ['暗墙', wall, '第 4 个点从参考 42 跳到 73。该去掉的是孤立尖峰。'],
+    ['木纹', wood, '94 与 104 的交替也出现在参考里。该保留的是原有反差。'],
+  ];
+  const strip = (points) => `<span class="evidence-strip" style="--point-count:${points.length}">${points.map(level => `<span style="--level:${level}">${level}</span>`).join('')}</span>`;
+  return `<figure class="profile-evidence"><figcaption><h2>先分清噪声和纹理</h2><p>下图取自 P2 的两条教学剖面。每格是一个灰度值，原始输入和参考使用同一灰度尺度。</p></figcaption>
+<div class="profile-grid">${regions.map(([name, profile, note]) => `<div><h3>${name}</h3><dl><div><dt>参考</dt><dd>${strip(profile.reference)}</dd></div><div><dt>输入</dt><dd>${strip(profile.noisy)}</dd></div></dl><p>${note}</p></div>`).join('')}</div>
+<p class="profile-foot">还有第三类：灯罩里的亮峰也可能是有效信号。<a href="p4/#demo">在评审 Demo 里验证这个反例 ↗</a></p></figure>`;
+}
+
+function guidedCase(guide) {
+  return `<section id="steps"><h2>跟着这次评审走一遍</h2>
+<ol class="guided-workflow">${guide.walkthrough.map((step, index) => `<li><span class="guide-index">${index + 1}</span><div><h3>${h(step.title)}</h3><p>${h(step.text)}</p><dl><div><dt>看什么</dt><dd>${h(step.look)}</dd></div><div><dt>据此做什么</dt><dd>${h(step.decision)}</dd></div></dl></div></li>`).join('')}</ol>
+<dl class="case-contract"><div><dt>团队提供</dt><dd>${h(guide.inputs)}</dd></div><div><dt>AI 承担</dt><dd>${h(guide.delegation)}</dd></div><div><dt>交付物</dt><dd>${h(guide.deliverable)}</dd></div></dl>
+<details class="case-prompt"><summary>复制给团队 Agent 的任务单</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>`;
 }
 
 function artifactTable(headers, rows, caption, subset) {
@@ -229,19 +277,19 @@ function projectDetail(guide) {
   const { example } = guide;
   return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${guide.id}</span></div>
 <header class="case-hero"><div><p class="eyebrow">${guide.id} · 算法团队工作流</p><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p>
-<div class="actions"><a class="button primary" href="#demo">看示例产物 ↓</a><a class="button secondary" href="#practice">本地实操</a></div></div>
-<div class="case-hero-art"><img src="${base}assets/case-art/${guide.id.toLowerCase()}.svg" width="460" height="214" alt=""></div></header>
+<div class="actions"><a class="button primary" href="#demo">开始交互 ↓</a><a class="button secondary" href="#practice">本地实操</a></div></div>
+${workflowEvidence(base, guide.id)}</header>
+${stageNav(base, guide.id)}
 <article class="case-body">
-<section id="steps"><h2>团队工作流</h2>
-<ol class="team-flow">${guide.workflow.map((step, index) => `<li><span class="flow-index">${index + 1}</span><strong>${h(step.title)}</strong><p>${h(step.detail)}</p></li>`).join('')}</ol>
-<dl class="case-contract"><div><dt>团队提供</dt><dd>${h(guide.inputs)}</dd></div><div><dt>AI 承担</dt><dd>${h(guide.delegation)}</dd></div><div><dt>交付物</dt><dd>${h(guide.deliverable)}</dd></div></dl>
-<details class="case-prompt"><summary>可复用任务单</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>
-<section id="demo"><h2>${h(example.title)}</h2>
+${guidedCase(guide)}
+<section id="demo"><h2>${h(guide.interactionTitle || (guide.id === 'P4' ? '打开评审页，核对灯芯反例' : '动手试这份交付物'))}</h2><p class="interaction-intro">${h(guide.interactionIntro || stageIntros[guide.id])}</p>
+<div class="workflow-workspace" data-workflow-id="${guide.id.toLowerCase()}"${workflowFixtures[guide.id] ? ` data-fixture="${base}assets/workflow-examples/${workflowFixtures[guide.id][1]}"` : ''}><p>正在载入交互工作台…</p></div><noscript><p>开启 JavaScript 后可操作工作台，示例和来源仍可查看。</p></noscript>
+<details class="artifact-reference"${guide.id === 'P4' ? ' open' : ''}><summary>${h(example.title)}</summary>
 ${examplePreview(guide.id, base)}
 ${example.holdout ? '<div class="artifact-switch" data-workflow-switch hidden role="group" aria-label="结果数据范围"><button type="button" class="button" data-workflow-subset="dev" aria-pressed="true">开发集 · 筛选候选</button><button type="button" class="button" data-workflow-subset="holdout" aria-pressed="false">留出集 · 复核结论</button></div>' : ''}
 ${example.headers.length > 3 ? '<p class="artifact-scroll-hint">横向滑动查看全部列</p>' : ''}
 ${artifactTable(example.headers, example.rows, example.caption, 'dev')}
-${example.holdout ? artifactTable(example.headers, example.holdout.rows, example.holdout.caption, 'holdout') : ''}
+${example.holdout ? artifactTable(example.headers, example.holdout.rows, example.holdout.caption, 'holdout') : ''}</details>
 ${guide.sources?.length ? `<ul class="source-list">${guide.sources.map(source => `<li><a href="${h(source.url)}">${h(source.title)} ↗</a><p>${h(source.note)}</p></li>`).join('')}</ul>` : ''}</section>
 <section id="checks"><h2>团队决定什么</h2><p>${h(guide.decision)}</p><p class="note workflow-limit">${h(guide.limit)}</p></section>
 ${localLab(guide.id, base, guide.lab)}
@@ -286,12 +334,15 @@ validateData();
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 await cp(join(site, 'static'), join(dist, 'assets'), { recursive: true });
+for (const [source, target] of Object.values(workflowFixtures)) {
+  await cp(join(site, 'labs', source), join(dist, 'assets', 'workflow-examples', target));
+}
 if (!sample) execFileSync(process.env.TRAINING_PYTHON || 'python', [join(site, 'package-labs.py'), join(dist, 'downloads')], { stdio: 'inherit' });
 await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
-await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><section class="page-intro"><h1>AI 怎么帮算法团队提效</h1><p class="intro">按研发瓶颈挑案例。每个案例提供一套分工、可检查的产物和可下载的任务包。</p></section>${projectCards('../')}</div>`));
+await write('projects/index.html', shell('../', '实战案例', 'projects', `<div class="wrap"><header class="case-hero case-index-hero"><div><p class="eyebrow">贯穿案例 · 夜景降噪</p><h1>暗墙要干净，<br>木纹要留下</h1><p class="intro">团队要在降噪和保纹理之间做取舍，同时留意灯罩高光。沿着一次研发评审，看 AI 怎样把论文、实验、数据和 Demo 交到同事手里。</p><div class="actions"><a class="button primary" href="${sample ? '#case-list' : 'p1/'}">从查论文开始 ↗</a><a class="button secondary" href="#case-list">查看四个环节</a></div></div>${workflowEvidence('../')}</header>${sample ? '' : sceneEvidence()}<section class="workflow-index" id="case-list"><h2>选择研发环节</h2>${stageNav('../')}${projectCards('../')}</section></div>`));
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
   await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item)));

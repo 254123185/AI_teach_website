@@ -73,6 +73,17 @@ if (casePrompt) {
   const { mountCasePrompt } = await import('./case-guide.mjs');
   mountCasePrompt(casePrompt);
 }
+const workspace = document.querySelector('[data-workflow-id]');
+if (workspace) {
+  try {
+    const name = workspace.dataset.workflowId;
+    const { mountWorkflow } = await import(`./workflow-examples/${name}-interaction.mjs`);
+    await mountWorkflow(workspace);
+  } catch (error) {
+    workspace.textContent = '交互工作台暂未载入。可以刷新页面，或展开下方的示例产物。';
+    console.error(error);
+  }
+}
 const workflowSwitch = document.querySelector('[data-workflow-switch]');
 if (workflowSwitch) {
   const buttons = [...workflowSwitch.querySelectorAll('button')];

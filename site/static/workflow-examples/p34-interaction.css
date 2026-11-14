@@ -1,0 +1,49 @@
+.sample-studio, .review-studio {
+  --board-border: #c2d3c7;
+  --board-surface: #f2f6eb;
+  --graph-input: #9c4d2d;
+  --graph-reference: #5b6c65;
+  --graph-candidate: #166548;
+}
+.study-board { display: grid; gap: 1rem; padding: clamp(.85rem,3vw,1.3rem); background: var(--board-surface); border: 1px solid var(--board-border); border-radius: 1rem; min-width: 0; }
+.study-controls, .study-inspector, .study-downloads { display: flex; align-items: flex-end; flex-wrap: wrap; gap: .7rem; }
+.study-controls label, .study-inspector label { display: grid; gap: .25rem; flex: 1 1 8.5rem; min-width: 0; color: #2f5341; font-weight: 650; }
+.study-controls select { appearance: auto; width: 100%; min-width: 0; min-height: 2.6rem; color: #213a2c; background: #fffefa; border: 1px solid #a7bead; border-radius: .45rem; padding: .25rem .5rem; }
+.study-inspector input { width: 100%; margin: 0; }
+.study-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .65rem; }
+.study-pair figure, .study-chart { margin: 0; min-width: 0; }
+.study-pixels { position: relative; overflow: hidden; border: 1px solid #436252; border-radius: .5rem; }
+.study-pixels canvas { width: 100%; height: auto; display: block; image-rendering: pixelated; cursor: crosshair; }
+.study-pixels > span { position: absolute; pointer-events: none; border: 2px solid #f1a469; box-shadow: inset 0 0 0 1px #21372b; left: var(--point-x); top: var(--point-y); width: var(--point-w); height: var(--point-h); }
+.study-pair figcaption { color: var(--muted); font-size: .86rem; margin-top: .25rem; }
+.study-status { color: #193d2d; font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: .87rem; }
+.study-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .55rem; margin: 0; }
+.study-metrics > div { min-width: 0; padding: .55rem .65rem; background: #fffefa; border: 1px solid var(--board-border); border-radius: .55rem; }
+.study-metrics dt { color: var(--muted); font-size: .82rem; }
+.study-metrics dd { color: #193d2d; font-weight: 750; font-size: clamp(.82rem,2vw,1.06rem); margin: .13rem 0 0; overflow-wrap: anywhere; }
+.study-metrics dd[data-result="fail"] { color: #963e2f; }
+.study-note { color: var(--muted); font-size: .89rem; }
+.study-note:empty { display: none; }
+.study-downloads .button { min-height: 2.5rem; }
+.study-chart svg { display: block; width: 100%; height: auto; background: #fffefa; border: 1px solid var(--board-border); border-radius: .55rem; }
+.study-chart polyline { fill: none; stroke-width: 2.6; stroke-linejoin: round; }
+.study-plot-ref { stroke: var(--graph-reference); stroke-dasharray: 6 3; }
+.study-plot-in { stroke: var(--graph-input); stroke-dasharray: 2 3; stroke-linecap: round; }
+.study-plot-out { stroke: var(--graph-candidate); }
+.study-legend { display: flex; flex-wrap: wrap; gap: .25rem .85rem; color: var(--muted); font-size: .82rem; }
+.study-legend > span { display: inline-flex; align-items: center; gap: .3rem; margin-top: .3rem; }
+.study-legend > span::before { content: ""; width: 1.1rem; border-top: 3px solid var(--graph-candidate); }
+.study-legend > .legend-ref::before { border-top: 2px dashed var(--graph-reference); }
+.study-legend > .legend-in::before { border-top: 2px dotted var(--graph-input); }
+.study-strip-group p { color: var(--muted); font-size: .85rem; margin: 0 0 .25rem; }
+.study-strip-group p:not(:first-child) { margin-top: .5rem; }
+.study-strip { display: flex; gap: 2px; }
+.study-strip span { background: rgb(var(--level) var(--level) var(--level)); color: var(--label-ink); border: 1px solid #46594e; border-radius: .2rem; display: grid; place-items: center; flex: 1 1 0; min-width: 0; padding: .45rem 0; font-family: var(--mono); font-size: clamp(.58rem,2.6vw,.87rem); line-height: 1.15; }
+.study-active-pixel { outline: 2px solid #e59b5b; outline-offset: -2px; }
+@media(max-width:500px) {
+  .study-board { gap: .7rem; }
+  .study-controls label { flex-basis: 100%; }
+  .study-metrics > div { padding: .4rem; }
+  .study-metrics dt { font-size: .74rem; }
+  .study-pair { gap: .4rem; }
+}
