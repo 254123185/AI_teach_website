@@ -11,4 +11,6 @@ npm run preview
 
 课程大纲见 `site/content/curriculum.json`。LLM 两课的详细讲解与配图清单见 `site/content/llm-foundations.json` 和 `site/content/llm-selection.json`。团队工作流及产物示例见 `site/content/workflows/`。课程进度保存在当前浏览器。
 
+基础课按 [开发规格](SPEC.md) 推进。每批先写教学目标、交付位置和验收方式，再改页面。
+
 GitHub 仓库的 Settings → Pages 将 Source 设为 GitHub Actions。推送 `main` 后工作流构建并发布 `dist/`。

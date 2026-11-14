@@ -4,6 +4,7 @@
 !/.github/
 !/package.json
 !/README.md
+!/SPEC.md
 !/site/
 /site/output/
 /site/.playwright-cli/
