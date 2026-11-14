@@ -270,7 +270,7 @@ async function checkLinks() {
     const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
     assert.equal(new Set(ids).size, ids.length, `Duplicate id on ${path}`);
     for (const [, attribute] of html.matchAll(/\b(?:src|href)="([^"]+)"/g)) {
-      if (/^https:\/\//.test(attribute)) continue;
+      if (attribute === 'data:,' || /^https:\/\//.test(attribute)) continue;
       const url = new URL(attribute, from);
       assert(url.pathname.startsWith('/AI_teach_website/'), `Link leaves base path on ${path}: ${attribute}`);
       const relative = url.pathname.slice('/AI_teach_website/'.length);
