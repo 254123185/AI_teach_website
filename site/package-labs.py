@@ -5,6 +5,7 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 root = Path(__file__).resolve().parent / "labs"
 out = Path(sys.argv[1])
+fusion_output = Path(sys.argv[2]) if len(sys.argv) > 2 else None
 out.mkdir(parents=True, exist_ok=True)
 for lab in sorted(root.iterdir()):
     if not lab.is_dir():
@@ -12,6 +13,11 @@ for lab in sorted(root.iterdir()):
     shared = {"README.md": root / "README.md", "AGENTS.md": root / "AGENTS.md"}
     files = {**shared, **{file.name: file for file in lab.iterdir() if file.is_file()}}
     assert {"task.md", "solution.py", "test_solution.py"} <= files.keys(), lab.name
+    if lab.name == "p4" and fusion_output:
+        files.update({
+            f"published/{file.relative_to(fusion_output).as_posix()}": file
+            for file in fusion_output.rglob("*") if file.is_file()
+        })
     with ZipFile(out / f"{lab.name}.zip", "w") as archive:
         for name, file in sorted(files.items()):
             entry = ZipInfo(f"{lab.name}/{name}")

@@ -2,7 +2,7 @@
   {
     "id": "ffdnet",
     "location": "FFDNet · §IV-C、图 5",
-    "source": "https://arxiv.org/pdf/1710.04026#page=8",
+    "source": "https://arxiv.org/pdf/1710.04026#page=9",
     "evidence": "空间噪声图能为不同区域施加不同强度。图 5 对照的是合成空间变化高斯噪声。",
     "idea": "先试分区融合权重。复用区域控制的思路，沿用现有模型。",
     "requires": [
@@ -26,8 +26,8 @@
   },
   {
     "id": "noise2void",
-    "location": "Noise2Void · §3.1、§3.4、图 6",
-    "source": "https://arxiv.org/pdf/1811.10980#page=5",
+    "location": "Noise2Void · §3.1、§4.4、图 6",
+    "source": "https://arxiv.org/pdf/1811.10980#page=8",
     "evidence": "单张噪声图可以做自监督。邻域噪声独立与零均值是关键假设，结构噪声是已展示的限制。",
     "idea": "先搁置。当前残差有条纹，需先核查空间相关性，且本轮没有训练预算。",
     "requires": [

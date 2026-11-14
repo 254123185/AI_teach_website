@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "experiment_id": "tea-shop-fusion-01",
+  "claim": "在已有弱、强两路输出上，只改强支路混合权重，检验预置分区能否同时减少暗墙残噪、保留木纹与灯芯，且不加重过渡处误差。",
+  "scene": {
+    "id": "tea-shop-synthetic-01",
+    "seed": 20261114,
+    "width": 128,
+    "height": 80,
+    "domain": "8 位渲染灰度，0–255",
+    "split": "单张合成场景的受控算例；无独立留出帧",
+    "rois": {
+      "wall": [7, 14, 32, 48],
+      "wood": [52, 14, 32, 48],
+      "lamp": [99, 19, 22, 38]
+    },
+    "lamp_peak_xy": [109, 37],
+    "seam_y_range": [14, 62],
+    "seam_x_centers": [46, 92],
+    "seam_half_width": 3
+  },
+  "weak": {"operator": "mix noisy and 3x3 edge-replicated box mean", "box_weight": 20},
+  "strong": {"operator": "7x7 edge-replicated box mean"},
+  "global": {"strong_weight": 50},
+  "spatial": {
+    "basis": "合成场景预置的几何布局，手工指定；融合函数不读取参考图、退化输入的像素或评估 ROI。",
+    "left_weight": 85,
+    "center_weight": 15,
+    "right_weight": 8,
+    "transition_x": [[41, 50], [87, 96]]
+  },
+  "diagnostic": {
+    "mean_matched": "追加的强支路总占比对照，用分区权重图的精确全图均值作为常量权重。保留 A 的 50% 基线与原有门槛；本对照不参与验收。"
+  },
+  "gates": [
+    {"id": "wall_residual_std", "metric": "wall_residual_std", "label": "暗墙残差标准差", "op": "<=", "limit_rule": "global * 0.90"},
+    {"id": "wood_mae", "metric": "wood_mae", "label": "木纹区 MAE", "op": "<=", "limit_rule": "global + 0.60"},
+    {"id": "wood_contrast", "metric": "wood_contrast_ratio", "label": "木纹相邻列反差保留比", "op": ">=", "limit_rule": "global"},
+    {"id": "lamp_peak", "metric": "lamp_peak_loss", "label": "固定灯芯坐标亮度损失", "op": "<=", "limit_rule": "min(28, global)"},
+    {"id": "seam_gradient", "metric": "seam_excess_step_mae", "label": "分区交界梯度误差 MAE", "op": "<=", "limit_rule": "global + 1.50"}
+  ]
+}

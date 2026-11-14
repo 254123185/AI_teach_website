@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { experimentFigure, counterexampleFigure } from './case-evidence.mjs';
+import { fusionFlow, paperTextureRead, researchRecord, revisionRecord, fusionImage, fusionResults, fusionLinks } from './fusion-case.mjs';
 
 const site = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(site, '../dist');
@@ -15,17 +15,18 @@ const projects = await Promise.all(['P1', 'P2', 'P3', 'P4'].map(async id =>
 const workflowFixtures = {
   P2: ['p2/fixtures.json', 'p2-fixtures.json'],
   P3: ['p3/scenarios.json', 'p3-scenarios.json'],
-  P4: ['p2/fixtures.json', 'p2-fixtures.json'],
 };
-const nightProfiles = await json('../labs/p2/fixtures.json');
 const denoiseCase = await json('denoise-case.json');
 const denoisePapers = [await json('denoise-paper.json')].flat();
+const fusionSelection = await json('fusion-selection.json');
+const fusionRevision = await json('fusion-revision.json');
+const fusionPath = 'experiments/tea-shop/';
+const python = process.env.TRAINING_PYTHON || 'python';
 const stages = { P1: '论文证据', P2: '候选实验', P3: '样本补齐', P4: '评审 Demo' };
 const stageIntros = {
   P1: '改变能用的数据与训练资源，看看哪条论文机制仍值得先试。',
   P2: '动手筛候选。开发集用来试，锁定后再看留出结果。',
   P3: '调整退化和种子，观察生成的配对图、覆盖条件和清单。',
-  P4: '同一个门控，中间那一格亮点在暗墙上是噪声，在灯边可能是真信号。切换位置核对。',
 };
 const llmChapters = { A1: await json('llm-foundations.json'), A2: await json('llm-selection.json') };
 const lessons = sample ? {} : await json('lessons.json');
@@ -191,12 +192,13 @@ function figureMarkup(item, base) {
   }).join('');
 }
 
-function localLab(id, base, description = labDescriptions[id]) {
+function localLab(id, base, description = labDescriptions[id], reproducible = false) {
   return `<section id="practice" class="lab-section"><h2>本地实操</h2><p>${h(description)}</p>
-<p>任务包内含任务单、示例数据、待实现代码和验收测试。需要 Python 3.10+。</p>
+<p>${reproducible ? '任务包内含完整实现、实验协议、验收测试和本站发布的产物。需要 Python 3.10+。' : '任务包内含任务单、示例数据、待实现代码和验收测试。需要 Python 3.10+。'}</p>
+ ${reproducible ? '<ol class="text-list"><li>解压 ZIP，并在包含 <code>solution.py</code> 的目录打开终端。</li><li>运行 <code>python -m unittest -v</code> 和 <code>python solution.py --out reproduced</code>。</li><li>打开生成的 <code>demo.html</code>。把结果和 ZIP 中的 <code>published/</code> 对照。</li></ol>' : `
 <ol class="text-list"><li>下载并解压 ZIP，在包含 <code>task.md</code> 的目录打开终端。</li>
 <li>启动 <code>opencode</code>，或用其他编码 Agent 打开该目录。输入「先读 task.md 和测试，完成任务并运行验收」。</li>
-<li>自己运行 <code>python -m unittest -v</code>，核对 Agent 的改动与输出。</li></ol>
+<li>自己运行 <code>python -m unittest -v</code>，核对 Agent 的改动与输出。</li></ol>`}
 <div class="actions"><a class="button primary" href="${base}downloads/${id.toLowerCase()}.zip" download>下载 ${id} 任务包 · ZIP</a><a class="text-link" href="https://opencode.ai/docs/cli/">OpenCode 使用说明 ↗</a></div></section>`;
 }
 
@@ -244,30 +246,17 @@ function stageNav(base, current) {
 function workflowEvidence(base, current) {
   const evidence = [
     ['P1', '论文 → 候选方案', '从 FFDNet 图 5 提取“空间控制”这个可试机制。', '交付：带出处的候选表'],
-    ['P2', '候选 → 分区误差', '开发剖面：门控中值暗墙 0.28，木纹 0.41 灰度级。', '交付：曲线和筛选报告'],
-    ['P3', '缺口 → 配对数据', '暗区、木纹、灯罩各有单独的退化规格。', '交付：参考图、退化图、清单'],
-    ['P4', '结果 → 评审 Demo', '团队能换候选、核对门槛，再决定哪些要补真图。', '交付：可复核的评审快照'],
+    ['P2', '补充练习 · 一维筛选', '同口径比较门控中值、普通中值和均值。', '交付：可复算的剖面报告'],
+    ['P3', '补充练习 · 数据生成', '可复跑的暗区、木纹和高光退化。', '交付：参考图、退化图、清单'],
+    ['P4', '正文复现 · 二维分区融合', '从同样的弱、强输出复跑固定与分区权重。', '交付：报告、Demo 和任务包'],
   ];
-  return `<figure class="workflow-evidence"><figcaption><strong>同一个夜景问题，四份可交接的产物</strong><p>论文提供线索。对照数据决定是否进入真图验证。</p></figcaption>
+  return `<figure class="workflow-evidence"><figcaption><strong>案例阅读与复现资料</strong><p>从 P1 查论文依据，从 P4 复跑正文实验。</p></figcaption>
 <ol>${evidence.map(([id, title, text, output], index) => `<li><a href="${base + (sample ? 'projects/' : projectUrl(id))}"${id === current ? ' aria-current="step"' : ''}><span class="guide-index">${index + 1}</span><strong>${title}</strong><span>${text}</span><small>${output}</small></a></li>`).join('')}</ol></figure>`;
-}
-
-function sceneEvidence(heading = 'h3') {
-  const [wall, wood] = nightProfiles.dev;
-  const regions = [
-    ['暗墙', wall, '第 4 个点从参考 42 跳到 73。该去掉的是孤立尖峰。'],
-    ['木纹', wood, '94 与 104 的交替也出现在参考里。该保留的是原有反差。'],
-  ];
-  const strip = (points) => `<span class="evidence-strip" style="--point-count:${points.length}">${points.map(level => `<span style="--level:${level}">${level}</span>`).join('')}</span>`;
-  return `<figure class="profile-evidence"><figcaption><${heading}>同样是亮点，信号和噪声要分开</${heading}><p>两条教学剖面。每格是一个灰度值，原始输入和参考使用同一灰度尺度。</p></figcaption>
-<div class="profile-grid">${regions.map(([name, profile, note]) => `<div><h3>${name}</h3><dl><div><dt>参考</dt><dd>${strip(profile.reference)}</dd></div><div><dt>输入</dt><dd>${strip(profile.noisy)}</dd></div></dl><p>${note}</p></div>`).join('')}</div>
-<p class="profile-foot">灯罩里也可能有孤立亮峰。后面的反例会用参考真值区分它和暗墙噪点。</p></figure>`;
 }
 
 const caseIllustrations = {
   intake: { height: 480, alt: '工程师标出暗墙、木纹和灯芯，AI 整理论文、曲线和样本，团队据此安排下一轮', caption: '先把三处关注点和限制交给 AI。论文、对照脚本、生成数据和评审快照都是交付物，每份都能单独复核。' },
   research: { height: 480, alt: '工程师交付场景与限制，AI 在论文里找实验条件，再把证据转成待测对照', caption: 'AI 把论文中的机制和前提写在同一张证据卡上，再标出当前管线能改哪一项。' },
-  review: { height: 720, alt: '同一个滤波门控消除暗墙噪点，也误伤了灯芯，工程师圈出需要复测的反例', caption: '两路使用同一个门控。上路的亮点来自噪声，下路的亮点来自真实信号。曲线和具体数值见同节算例。' },
 };
 
 function storyIllustration(name) {
@@ -287,34 +276,38 @@ function ffdnetComparison() {
   const values = [['均匀噪声图（取真值图均值）', 27.45], ['空间变化的真值噪声图', 30.08]];
   return `<figure class="story-figure ffdnet-chart"><figcaption><strong>FFDNet 图 5 的两项读数</strong><p>同一个模型、同一张带噪合成图，只替换模型的噪声图输入。</p></figcaption>
 <dl>${values.map(([label, score]) => `<div><dt>${label}</dt><dd><span class="ffdnet-bar" style="--psnr:${score / 35 * 100}%" aria-hidden="true"></span><strong>${score.toFixed(2)} dB</strong></dd></div>`).join('')}</dl>
-<p>按作者图 5 的读数重绘，比较标尺为 0–35 dB。<a href="https://arxiv.org/pdf/1710.04026#page=9">查看 FFDNet 图 5 原图 ↗</a></p></figure>`;
+<p>按作者图 5 的读数重绘，比较标尺为 0–35 dB。<a href="https://arxiv.org/html/1710.04026v2#S4.F5">查看 FFDNet 图 5 原图 ↗</a></p></figure>`;
 }
 
-function denoiseStory() {
+function denoiseStory(result) {
   const chapters = denoiseCase.chapters;
   const figuresByChapter = {
-    problem: () => sceneEvidence(),
-    research: () => publishedFigures('../') + ffdnetComparison(),
-    experiment: () => experimentFigure('dev'),
-    holdout: () => experimentFigure('holdout'),
-    data: () => examplePreview('P3', '../'),
-    review: () => counterexampleFigure(),
+    problem: () => fusionImage('../', 'comparison.svg', '同输入的参考、带噪输入、弱和强降噪、固定和分区融合以及权重图', '同一帧、同一灰度尺度。先比较弱、强两路，再核对从这两路生成的固定和分区融合。', h),
+    research: () => researchRecord(fusionSelection, h),
+    transfer: () => fusionFlow(),
+    experiment: () => fusionResults(result, h),
+    data: () => fusionImage('../', 'roi-comparison.svg', '暗墙、木纹、灯芯与接缝的同坐标对照', '各列使用同一 ROI、同一灰度尺度。局部就是本次实验的输出像素，可对应结果表复核。', h),
+    review: () => fusionLinks('../'),
   };
   return `<div class="wrap story-page"><header class="story-hero">
 <p class="eyebrow">实战案例 · 夜景降噪</p><h1>暗墙要干净，<br>木纹和灯芯要留住</h1>
 <div class="story-lead">${paragraphs(denoiseCase.intro)}</div>
 <div class="actions"><a class="button primary" href="#problem">从失败样本读起 ↓</a><a class="button secondary" href="#appendix">附录 · 工具和任务包</a></div>
 </header>
-<div class="story-layout"><aside class="story-sidebar"><nav aria-label="案例章节"><strong>案例目录</strong><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a href="#appendix">附录</a></nav></aside>
+<div class="story-layout"><aside class="story-sidebar"><nav aria-label="案例章节"><strong>案例目录</strong><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a href="#revision">AI 交付与人工修订</a><br><a href="#appendix">附录</a></nav></aside>
 <article class="story-article" aria-label="夜景降噪案例正文">
 ${chapters.map((chapter, index) => `<section class="story-chapter" id="${h(chapter.id)}"><h2><span class="chapter-index">${String(index + 1).padStart(2, '0')}</span>${h(chapter.title)}</h2>
 <p class="story-chapter-lead">${h(chapter.lead)}</p>
 ${chapter.image ? storyIllustration(chapter.image) : ''}
-${paragraphs(chapter.paragraphs)}
+${chapter.id === 'research'
+    ? paragraphs(chapter.paragraphs.slice(0, 1)) + publishedFigures('../') + paperTextureRead('../', denoisePapers[0], h)
+      + paragraphs(chapter.paragraphs.slice(1, 3)) + ffdnetComparison() + paragraphs(chapter.paragraphs.slice(3))
+    : paragraphs(chapter.paragraphs)}
 ${figuresByChapter[chapter.id]?.() ?? ''}
 ${chapter.artifact ? `<figure class="story-artifact"><figcaption>${h(chapter.artifact.title)}</figcaption><pre><code>${h(chapter.artifact.body)}</code></pre></figure>` : ''}
 ${chapter.note ? `<p class="note workflow-limit">${h(chapter.note)}</p>` : ''}</section>`).join('')}
-<section id="appendix"><h2>附录 · 可选工具和本地任务</h2><p>需要复跑哪一段，就打开对应资料。</p>${projectCards('../')}</section></article></div></div>`;
+${revisionRecord(fusionRevision, h)}
+<section id="appendix"><h2>附录 · 复现与拓展</h2><p>正文实验的复现入口在 P4。P2 和 P3 分别是一维候选筛选和独立的合成数据练习。</p>${projectCards('../')}</section></article></div></div>`;
 }
 
 function caseStartLink(id) {
@@ -337,25 +330,26 @@ function artifactTable(headers, rows, caption, subset) {
 
 function examplePreview(id, base) {
   if (id === 'P3') return `<figure class="workflow-preview"><a href="${base}assets/workflow-examples/p3-samples.svg"><img src="${base}assets/workflow-examples/p3-samples.svg" alt="查看三组样本大图：暗区噪声、细纹理和高光截断" loading="lazy"></a><figcaption>每类各展示一对样本，左侧为参考图，右侧为退化输入。<a class="figure-enlarge" href="${base}assets/workflow-examples/p3-samples.svg">查看大图 ↗</a></figcaption></figure>`;
-  if (id === 'P4') return `<p class="artifact-action"><a class="button primary" href="${base}assets/workflow-examples/p4-demo.html">打开 A/B Demo ↗</a><a class="text-link" href="${base}assets/workflow-examples/p4-demo.html" download>下载独立 HTML ↓</a></p>`;
   return '';
 }
 
 function projectDetail(guide) {
   const base = '../../';
   const { example } = guide;
+  if (guide.id === 'P4') return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>P4</span></div><header class="story-hero"><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p><a href="../#review">回到正文评审 ↗</a></header><article class="case-body"><section id="demo"><h2>同一实验的输出</h2><p>报告、像素图与 Demo 由同一条命令生成。</p>${fusionLinks(base)}</section>${localLab('P4', base, guide.lab, true)}${guidedCase(guide)}<section id="checks"><h2>验收边界</h2><p>${h(guide.limit)}</p></section></article></div>`;
   return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${guide.id}</span></div>
 <header class="case-hero"><div><p class="eyebrow">${guide.id} · 算法团队工作流</p><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p>
 <div class="actions"><a class="button primary" href="${caseStartLink(guide.id)}">阅读正文 ↗</a><a class="button secondary" href="#practice">本地实操</a></div></div>
 ${workflowEvidence(base, guide.id)}</header>
 ${stageNav(base, guide.id)}
 <article class="case-body">
+${guide.id === 'P1' ? '<p>这次真实的 AI 调研还核查了 Mertens 的后融合实验。<a href="../#research">查看四条路线的原文和取舍 ↗</a></p>' : ''}
 ${guidedCase(guide)}
 <section id="demo"><h2>复算工具与原始记录</h2>
 <details class="artifact-reference workflow-optional"><summary>${h(guide.interactionTitle || '打开复算工具')}</summary><p class="interaction-intro">${h(guide.interactionIntro || stageIntros[guide.id])}</p>
 <div class="workflow-workspace" data-workflow-id="${guide.id.toLowerCase()}"${workflowFixtures[guide.id] ? ` data-fixture="${base}assets/workflow-examples/${workflowFixtures[guide.id][1]}"` : ''}><p>正在载入交互工作台…</p></div><noscript><p>开启 JavaScript 后可操作工作台，示例和来源仍可查看。</p></noscript>
 </details>
-<details class="artifact-reference"${guide.id === 'P4' ? ' open' : ''}><summary>${h(example.title)}</summary>
+<details class="artifact-reference"><summary>${h(example.title)}</summary>
 ${examplePreview(guide.id, base)}
 ${example.holdout ? '<div class="artifact-switch" data-workflow-switch hidden role="group" aria-label="结果数据范围"><button type="button" class="button" data-workflow-subset="dev" aria-pressed="true">开发集 · 筛选候选</button><button type="button" class="button" data-workflow-subset="holdout" aria-pressed="false">留出集 · 复核结论</button></div>' : ''}
 ${example.headers.length > 3 ? '<p class="artifact-scroll-hint">横向滑动查看全部列</p>' : ''}
@@ -389,7 +383,7 @@ async function checkLinks() {
     const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
     assert.equal(new Set(ids).size, ids.length, `Duplicate id on ${path}`);
     for (const [, attribute] of html.matchAll(/\b(?:src|href)="([^"]+)"/g)) {
-      if (attribute === 'data:,' || /^https:\/\//.test(attribute)) continue;
+      if (attribute === 'data:,' || /^data:image\/png;base64,[A-Za-z0-9+/=]+$|^https:\/\//.test(attribute)) continue;
       const url = new URL(attribute, from);
       assert(url.pathname.startsWith('/AI_teach_website/'), `Link leaves base path on ${path}: ${attribute}`);
       const relative = url.pathname.slice('/AI_teach_website/'.length);
@@ -408,12 +402,16 @@ await cp(join(site, 'static'), join(dist, 'assets'), { recursive: true });
 for (const [source, target] of Object.values(workflowFixtures)) {
   await cp(join(site, 'labs', source), join(dist, 'assets', 'workflow-examples', target));
 }
-if (!sample) execFileSync(process.env.TRAINING_PYTHON || 'python', [join(site, 'package-labs.py'), join(dist, 'downloads')], { stdio: 'inherit' });
+const fusionOutput = join(dist, fusionPath);
+execFileSync(python, [join(site, 'labs', 'p4', 'solution.py'), '--out', fusionOutput], { stdio: 'inherit' });
+const fusionResult = JSON.parse(await readFile(join(fusionOutput, 'result.json'), 'utf8'));
+assert(fusionResult.experiment_id && fusionResult.metrics.global && fusionResult.metrics.spatial && fusionResult.gates.length, 'Incomplete fusion experiment output');
+execFileSync(python, [join(site, 'package-labs.py'), join(dist, 'downloads'), fusionOutput], { stdio: 'inherit' });
 await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
-await write('projects/index.html', shell('../', '实战案例 · 夜景降噪', 'projects', denoiseStory()));
+await write('projects/index.html', shell('../', '实战案例 · 夜景降噪', 'projects', denoiseStory(fusionResult)));
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
   await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item)));
