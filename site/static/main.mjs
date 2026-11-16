@@ -48,7 +48,6 @@ if (search) {
   search.addEventListener('input', () => {
     const terms = search.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     let total = 0;
-    let onboarding = false;
     let publicCourses = false;
     for (const group of groups) {
       let visible = 0;
@@ -58,12 +57,11 @@ if (search) {
         if (!card.hidden) visible += 1;
       }
       group.hidden = visible === 0;
-      if (group.dataset.courseGroup === 'onboarding') onboarding = visible > 0;
-      else if (group.dataset.courseGroup === 'public') publicCourses = visible > 0;
+      if (group.dataset.courseGroup === 'public') publicCourses = visible > 0;
       else total += visible;
     }
-    count.textContent = `${total} 门课程${onboarding ? ' · 1 个入门类目' : ''}${publicCourses ? ' · 公开课程推荐' : ''}`;
-    empty.hidden = total > 0 || onboarding || publicCourses;
+    count.textContent = `${total} 门课程${publicCourses ? ' · 公开课程推荐' : ''}`;
+    empty.hidden = total > 0 || publicCourses;
   });
 }
 

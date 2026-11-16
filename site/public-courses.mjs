@@ -7,7 +7,7 @@ export const publicCourseUrl = id => `${publicCourseDirectory}${id}/`;
 const filled = value => typeof value === 'string' && value.trim().length > 0;
 const strings = (items, minimum) => Array.isArray(items) && items.length >= minimum && items.every(filled);
 
-export function validatePublicCourses(items, courseMap) {
+export function validatePublicCourses(items, groups, courseMap) {
   assert(items.length > 0 && new Set(items.map(item => item.id)).size === items.length, 'Missing or duplicate public courses');
   for (const item of items) {
     assert(/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id), `Invalid public course ID: ${item.id}`);
@@ -17,21 +17,40 @@ export function validatePublicCourses(items, courseMap) {
     assert(item.links.length && item.links.every(link => filled(link.title) && /^https:\/\//.test(link.url)), `Missing public source: ${item.id}`);
     assert(strings(item.courses, 1) && item.courses.every(id => courseMap.has(id)), `Invalid related course: ${item.id}`);
   }
+  assert(groups.length > 0 && new Set(groups.map(group => group.id)).size === groups.length, 'Missing or duplicate public course groups');
+  for (const group of groups) {
+    assert(/^[a-z]+(?:-[a-z]+)*$/.test(group.id) && filled(group.title) && filled(group.audience) && group.items.length > 0, `Invalid public course group: ${group.id}`);
+    assert(group.items.every(item => strings([item.id, item.fit, item.requirements], 3)), `Incomplete fit description: ${group.id}`);
+  }
+  const groupedIds = groups.flatMap(group => group.items.map(item => item.id));
+  assert.deepEqual(groupedIds.toSorted(), items.map(item => item.id).toSorted(), 'Every public course must appear in exactly one fit group');
 }
 
-export function publicCoursesEntry(count) {
+export function publicCoursesEntry(count, groups, h) {
   return `<section class="public-courses-entry" aria-labelledby="public-courses-heading"><div>
 <h2 id="public-courses-heading">${publicCourseLabel}</h2>
-<p>从大模型通识、提示词与知识库，到工具调用、Agent 和评测。先了解每门课讲什么，再按经验和可用环境选课。</p></div>
-<a class="button primary" href="${publicCourseDirectory}">浏览 ${count} 门公开课程 <span aria-hidden="true">↗</span></a></section>`;
+<p>先按学习目的选方向。完整表格可以比较 ${count} 门课的语言、内容和跟做条件。</p></div>
+<a class="button primary" href="${publicCourseDirectory}">查看公开课程适配表 <span aria-hidden="true">↗</span></a>
+<table class="public-fit-summary" aria-label="公开课程的学习方向"><thead><tr><th scope="col">学习方向</th><th scope="col">适合谁</th></tr></thead>
+<tbody>${groups.map(group => `<tr><th scope="row"><a href="${publicCourseDirectory}#fit-${h(group.id)}">${h(group.title)}</a></th><td>${h(group.audience)}</td></tr>`).join('')}</tbody></table></section>`;
 }
 
-export function publicCoursesIndex(items, h) {
+export function publicCoursesIndex(items, groups, h) {
+  const courses = new Map(items.map(item => [item.id, item]));
   return `<div class="wrap"><header class="page-intro public-courses-intro"><h1>${publicCourseLabel}</h1>
-<p class="intro">面向新员工的 ${items.length} 门外部课程。每张卡片都可以打开独立介绍，查看课程大纲、建议先读的章节和跟做条件。</p></header>
-<ul class="public-course-list">${items.map(item => `<li><a class="public-course-card" href="${h(item.id)}/">
-<span class="public-course-meta">${h(item.provider)} · ${h(item.language)} · ${h(item.level)}</span>
-<h2>${h(item.title)}</h2><p>${h(item.summary)}</p><span class="text-link">查看课程介绍 <span aria-hidden="true">↗</span></span></a></li>`).join('')}</ul></div>`;
+<p class="intro">按你想完成的学习任务选课。点课程名看大纲、选读建议和原课入口。</p></header>
+<nav class="tabs public-fit-nav" aria-label="按学习目标查看公开课程">${groups.map(group => `<a href="#fit-${h(group.id)}">${h(group.title)}</a>`).join('')}</nav>
+<p class="public-fit-scroll-hint" id="public-fit-scroll-hint">在窄屏上可以横向滑动，看语言和跟做条件。</p>
+<div class="public-fit-wrap" role="region" aria-labelledby="public-fit-caption" aria-describedby="public-fit-scroll-hint" tabindex="0"><table class="public-fit-table">
+<caption id="public-fit-caption">${items.length} 门公开课适配表</caption>
+<colgroup><col class="public-fit-course"><col class="public-fit-use"><col class="public-fit-language"><col class="public-fit-requirements"></colgroup>
+<thead><tr><th scope="col">课程</th><th scope="col">适合谁、学什么</th><th scope="col">语言</th><th scope="col">跟做条件</th></tr></thead>
+${groups.map(group => `<tbody><tr class="public-fit-group" id="fit-${h(group.id)}"><th scope="rowgroup" colspan="4">${h(group.title)}</th></tr>
+${group.items.map(entry => {
+    const item = courses.get(entry.id);
+    return `<tr><th scope="row"><a href="${h(item.id)}/">${h(item.title)}</a><small>${h(item.provider)}</small></th><td>${h(entry.fit)}</td><td>${h(item.language)}</td><td>${h(entry.requirements)}</td></tr>`;
+  }).join('')}</tbody>`).join('')}
+</table></div></div>`;
 }
 
 export function publicCourseDetail(item, h, courseChip) {

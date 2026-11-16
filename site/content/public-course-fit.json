@@ -1,0 +1,100 @@
+[
+  {
+    "id": "foundations",
+    "title": "全员通识与办公",
+    "audience": "刚接触大模型，想先学提示词、知识库和日常办公场景。",
+    "items": [
+      {
+        "id": "easy-data-x-ai",
+        "fit": "产品、运营和研发共学大模型，再按岗位选读业务设计或 RAG 开发。",
+        "requirements": "公共篇、产品篇零代码，开发示例需 Python，D3 有离线评测。"
+      },
+      {
+        "id": "aliyun-aca",
+        "fit": "零编程新员工练提示词、知识库和桌面 Agent，适合用周报做起步案例。",
+        "requirements": "课纲与实验说明公开，完整课时和在线实验以账号权限为准。"
+      },
+      {
+        "id": "hylee-genai-2025",
+        "fit": "喜欢看视频的新人先建立生成、上下文和评估直觉，可选看前四讲。",
+        "requirements": "公开视频与课件可直接看，前四讲选读无需先搭开发环境。"
+      },
+      {
+        "id": "microsoft-generative-ai",
+        "fit": "新人先读大模型与提示词，研发再跟做首次模型调用或问答应用。",
+        "requirements": "讲义可直接读，代码需 Python 或 TypeScript 及可用模型环境。"
+      }
+    ]
+  },
+  {
+    "id": "model-engineering",
+    "title": "模型原理与工程专题",
+    "audience": "想看懂 Transformer、模型训练、推理效率或长上下文。",
+    "items": [
+      {
+        "id": "happy-llm",
+        "fit": "想看懂 Transformer 和预训练的研发，可进阶动手做小模型或微调。",
+        "requirements": "教材、课件可直接读，训练需 Python、PyTorch 和相应算力。"
+      },
+      {
+        "id": "hylee-ml-2026",
+        "fit": "有工具调用基础的研发按专题补推理效率、长上下文或 Agent Harness。",
+        "requirements": "公开视频与讲义可直接看，作业按课次备齐模型环境和算力。"
+      }
+    ]
+  },
+  {
+    "id": "agent-development",
+    "title": "Agent 开发与工具调用",
+    "audience": "会读代码，想接模型 API、工具、人工确认和任务循环。",
+    "items": [
+      {
+        "id": "hello-agents",
+        "fit": "有 Python 和模型 API 基础的研发，手写 ReAct 循环和小型 Agent 框架。",
+        "requirements": "讲义、代码公开。跟做需 Python 3.10+ 和可用模型服务。"
+      },
+      {
+        "id": "microsoft-ai-agents",
+        "fit": "会读 Python 的研发按需学习工具、检索、人工审批和多 Agent 协作。",
+        "requirements": "GitHub 可直接读。主线用 Python 和 Foundry，部分实验需 Azure 资源。"
+      },
+      {
+        "id": "columbia-designing-llm-agents",
+        "fit": "会 Python 的研发或讲师，按大学课程顺序学习生成、检索、规划和工具。",
+        "requirements": "讲义、部分代码与作业开放阅读。跟做需 Python，正式提交另有校方权限。"
+      },
+      {
+        "id": "claude-platform-101",
+        "fit": "读得懂基础代码的研发，短时间跑通 Agent 循环并比较手写与托管方案。",
+        "requirements": "可免费学习。跟做需 Claude Console 账号、API Key 和额度。"
+      },
+      {
+        "id": "building-with-claude-api",
+        "fit": "准备把 Claude 接进应用的开发者，系统练消息、工具回传、检索和评测。",
+        "requirements": "可免费学习。跟做需 Python、JSON 和 Claude API Key，调用按量计费。"
+      }
+    ]
+  },
+  {
+    "id": "project-practice",
+    "title": "知识库与项目实训",
+    "audience": "已有开发基础，想跟完一个项目，做到可评估和可交付。",
+    "items": [
+      {
+        "id": "aliyun-acp",
+        "fit": "研发新人用答疑机器人贯通知识库、Agent 和部署，观察每步的评测。",
+        "requirements": "GitHub 教程可直接读。项目需 Python、Git 和百炼 API 额度，认证另收费。"
+      },
+      {
+        "id": "llm-zoomcamp-2026",
+        "fit": "已有开发基础的研发完成知识库问答项目，或给现有原型补评估和监控。",
+        "requirements": "资料公开。完整项目需 Python、命令行与 Docker，模型调用可能收费。"
+      },
+      {
+        "id": "google-kaggle-agents-2026",
+        "fit": "已有模型应用基础的研发，可用五天材料做工具接入、人工确认和部署演练。",
+        "requirements": "材料可免费自学，部分实验需 Kaggle 账号、AI Studio API Key 或 Antigravity。"
+      }
+    ]
+  }
+]
