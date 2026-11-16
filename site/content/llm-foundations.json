@@ -31,7 +31,19 @@
       "alt": "教学分词器把检查 日志切成三个片段，再分别映射为 41、73、86",
       "caption": "观察第二个片段前的空格。图中的词表和编号用于教学，实际切分以所用模型的分词器为准。"
     },
-    "sources": [{ "title": "Sennrich 等 · Neural Machine Translation of Rare Words with Subword Units", "url": "https://arxiv.org/abs/1508.07909" }]
+    "table": {
+      "caption": "用 tiktoken 0.12.0 的两套编码直接计算。这里只计表中的原始字符串，完整请求还可能含消息模板和特殊 token。",
+      "headers": ["原始文本", "cl100k_base", "o200k_base"],
+      "rows": [
+        ["检查日志", "4 个", "2 个"],
+        ["检查 日志", "4 个", "3 个"],
+        ["/data/train.csv", "3 个", "3 个"]
+      ]
+    },
+    "sources": [
+      { "title": "Sennrich 等 · Neural Machine Translation of Rare Words with Subword Units", "url": "https://arxiv.org/abs/1508.07909" },
+      { "title": "OpenAI · tiktoken v0.12.0", "url": "https://github.com/openai/tiktoken/tree/0.12.0" }
+    ]
   },
   {
     "id": "embedding",
@@ -95,7 +107,7 @@
   {
     "id": "training",
     "title": "训练：把后一个 token 当作答案",
-    "intuition": "预训练从文本本身得到监督信号。遮住某个位置之后的内容，要求模型给真实的下一个 token 较高概率。大量这样的预测共同调整模型参数。",
+    "intuition": "预训练从文本本身得到监督信号。因果掩码让每个位置只能利用当前和更早的 token，模型据此预测下一个 token。大量这样的预测共同调整模型参数。",
     "details": [
       "以 [41, 73, 86, EOS] 为例，训练可把前三个编号送入模型，在三个位置分别用 [73, 86, EOS] 当目标。EOS 是序列结束标记。因果掩码使第二个位置能利用 41 和 73，但看不到它要预测的 86。",
       "给定位置的损失可以写成 −ln p(真实目标)。模型为真实目标分配的概率越低，损失越大。训练通常对多个有效位置的损失求平均，再通过反向传播算出梯度，由优化器更新权重。模型靠反复更新形成可迁移的语言和任务能力。",
@@ -159,11 +171,20 @@
       "带工具的 Agent 由程序实际执行读取、搜索或测试，模型根据返回结果选择下一步。判断「测试通过」应查看命令退出码和测试结果，确认测试覆盖了要判断的行为。",
       "上下文里有互相冲突的记录时，先列出冲突和版本信息。线索不足时，保留未确认项，并选择低成本的只读检查缩小范围。"
     ],
-    "example": "日志只写了 FileNotFoundError: /data/train.csv。可以确认打开该路径失败。目录未挂载、配置指向旧路径都值得检查。先核对配置和文件是否可读，再决定修复什么。",
+    "example": "训练日志报 FileNotFoundError: /data/train.csv。把报错行、当次启动命令和生效配置交给 Agent，请它引用证据并拟出两条只读检查。在报错所用的容器中核对两个路径后，发现配置仍指向旧目录，而新目录下的文件可读。可以先修配置并重跑数据加载测试。",
     "figure": {
       "src": "llm-flow/grounding.svg",
       "alt": "从日志提取可定位的证据，写出受到证据支持的结论，再记录待查的原因",
       "caption": "日志原文支持「打开该路径失败」。挂载是否缺失，留给后续检查。"
+    },
+    "table": {
+      "caption": "教学排查记录。每一步只更新它能回答的判断。",
+      "headers": ["检查所得", "可以据此判断"],
+      "rows": [
+        ["启动日志打印 resolved_data_path=/data/train.csv", "当前运行实际使用旧路径。"],
+        ["同一容器中旧路径查找失败，新路径 /mnt/datasets/train.csv 是可读文件", "改用新路径值得验证。"],
+        ["改配置后，同一个容器的数据加载测试读到 1 个批次并正常退出", "本次启动路径已修复。这次检查只覆盖数据加载。"]
+      ]
     },
     "sources": [{ "title": "Lewis 等 · Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks", "url": "https://arxiv.org/abs/2005.11401" }]
   }

@@ -6,7 +6,8 @@ import { dirname, extname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { controlReview, denoiseOpening, fusionFlow, paperTextureRead, researchRecord, revisionRecord, fusionImage, fusionResults, fusionLinks, inspectFusionRegions } from './fusion-case.mjs';
 import { visualInputLesson } from './visual-input.mjs';
-import { deepContent, deepTask, taskMarkdown, validateDeepLesson } from './deep-lesson.mjs';
+import { deepContent, deepTask, evidenceTable, lessonFlow, taskMarkdown, validateDeepLesson } from './deep-lesson.mjs';
+import { showSkillExamples, skillExamples } from './skill-lesson.mjs';
 
 const site = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(site, '../dist');
@@ -134,7 +135,9 @@ function validateData() {
     assert(chapters.length >= 3 && new Set(chapters.map(chapter => chapter.id)).size === chapters.length, `Incomplete chapters for ${id}`);
     for (const chapter of chapters) {
       assert(chapter.title && chapter.intuition && chapter.details.length >= 2 && chapter.example, `Incomplete chapter ${chapter.id}`);
-      assert(/^llm-flow\/[a-z0-9-]+\.svg$/.test(chapter.figure.src) && chapter.figure.alt && chapter.figure.caption, `Missing chapter figure ${chapter.id}`);
+      assert(chapter.figure.caption && (chapter.figure.src
+        ? /^llm-flow\/[a-z0-9-]+\.svg$/.test(chapter.figure.src) && chapter.figure.alt
+        : chapter.figure.nodes?.length >= 2), `Missing chapter figure ${chapter.id}`);
     }
   }
   for (const [id, entries] of Object.entries(figures)) {
@@ -222,9 +225,10 @@ function llmChapter(chapter, index, base) {
   const src = base + 'assets/' + h(figure.src);
   return `<section class="llm-chapter" id="${h(chapter.id)}"><h2><span class="chapter-index">${String(index + 1).padStart(2, '0')}</span>${h(chapter.title)}</h2>
 <p class="llm-intuition">${h(chapter.intuition)}</p>
-<figure class="research-figure"><a href="${src}" aria-label="查看大图：${h(figure.alt)}"><img src="${src}" alt="${h(figure.alt)}" loading="lazy"></a><figcaption>${h(figure.caption)} <a class="figure-enlarge" href="${src}">查看大图 ↗</a></figcaption></figure>
+${figure.src ? `<figure class="research-figure"><a href="${src}" aria-label="查看大图：${h(figure.alt)}"><img src="${src}" alt="${h(figure.alt)}" loading="lazy"></a><figcaption>${h(figure.caption)} <a class="figure-enlarge" href="${src}">查看大图 ↗</a></figcaption></figure>` : lessonFlow(figure, h)}
 <h3>技术细节</h3>${paragraphs(chapter.details)}
 <div class="llm-example"><strong>算例与应用</strong><p>${h(chapter.example)}</p></div>
+${chapter.table ? evidenceTable(chapter.table, h) : ''}
 ${chapter.sources?.length ? `<ul class="llm-sources">${chapter.sources.map(source => `<li><a href="${h(source.url)}">${h(source.title)} ↗</a></li>`).join('')}</ul>` : ''}</section>`;
 }
 
@@ -248,7 +252,7 @@ ${sections.map(section => `<section id="${h(section.id)}"><h3>${h(section.title)
   return '';
 }
 
-function course(item, fusionResult) {
+function course(item, fusionResult, extras) {
   const base = '../../';
   const lesson = lessons[item.id] ?? sampleLesson;
   const chapters = llmChapters[item.id];
@@ -260,8 +264,8 @@ function course(item, fusionResult) {
   return `<div class="wrap"><div class="breadcrumbs"><a href="../">课程目录</a><span>/</span><a href="../#track-${item.track}">${tracks[item.track].title}</a><span>/</span><span>${item.id}</span></div>
 <div class="reading-layout"><article><header class="lesson-header"><p class="eyebrow">${item.id} · ${h(item.level)}</p><h1>${h(item.title)}</h1>${visual ? '' : deep ? `<p class="intro">${h(deep.intro)}</p>` : `<p class="intro">${h(lesson.question)}</p><p>${h(item.goal)}</p>`}
 ${item.prerequisites.length ? `<div class="prerequisites"><strong>先修</strong> ${item.prerequisites.map(id => courseChip(id, base)).join(' ')}</div>` : ''}</header>
-${visual ? visualInputLesson(visualInputBasics, fusionResult, base, h) : deep ? deepContent(deep, h) : chapters ? `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a class="text-link" href="#practice">本地实操 ↓</a></nav>${chapters.map((chapter, index) => llmChapter(chapter, index, base)).join('')}` : `<section id="concept"><h2>原理与示例</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}<p class="note lesson-note"><b>常见误区</b>　${h(item.failure)}</p></section>`}
 ${courseFoundation(item.id, base)}
+${visual ? visualInputLesson(visualInputBasics, fusionResult, base, h) : deep ? deepContent(deep, h, extras) : chapters ? `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a class="text-link" href="#practice">本地实操 ↓</a></nav>${chapters.map((chapter, index) => llmChapter(chapter, index, base)).join('')}` : `<section id="concept"><h2>原理与示例</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}<p class="note lesson-note"><b>常见误区</b>　${h(item.failure)}</p></section>`}
 ${deep && figures[item.id]?.length ? `<section id="research-figures"><h2>论文图解</h2>${figureMarkup(item, base)}</section>` : ''}
 ${demoCaptions[item.id] ? `<section id="demo"><h2>分步演示</h2><p>${demoCaptions[item.id]}</p><div data-process="${item.id}"></div><noscript><p>启用 JavaScript 后可单步操作演示。</p></noscript></section>` : ''}
 ${visual ? deepTask(item.id, visualTask, base, h) : deep ? deepTask(item.id, deep.task, base, h) : chapters ? localLab(item.id, base) : ''}
@@ -463,9 +467,10 @@ await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
 await write('projects/index.html', shell('../', '低照度图像的分区降噪', 'projects', denoiseStory(fusionResult)));
+const lessonExtras = sample ? {} : { A8: { 'exact-ids': showSkillExamples(await skillExamples(site, python), h) } };
 for (const id of pageCourseIds) {
   const item = courseMap.get(id);
-  await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item, fusionResult), Boolean(foundationAnchors[id] || deepLessons[id])));
+  await write(courseUrl(id) + 'index.html', shell('../../', item.title, 'courses', course(item, fusionResult, lessonExtras[id]), Boolean(foundationAnchors[id] || deepLessons[id] || llmChapters[id])));
 }
 if (!sample) {
   for (const item of projects) await write(projectUrl(item.id) + 'index.html', shell('../../', item.title, 'projects', projectDetail(item)));

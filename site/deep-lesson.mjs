@@ -5,8 +5,8 @@ const identifier = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export function validateDeepLesson(id, lesson) {
   const { intro, sections, task, sources } = lesson;
-  assert(filled(intro) && Array.isArray(sections) && sections.length >= 3, `Incomplete lesson ${id}`);
-  assert(sections.some(section => section.figure) && sections.some(section => section.example), `Missing flow or example in ${id}`);
+  assert(filled(intro) && Array.isArray(sections) && sections.length >= 5, `Incomplete lesson ${id}`);
+  assert(sections.filter(section => section.figure).length >= 2 && sections.some(section => section.example), `Missing flows or example in ${id}`);
   assert(new Set(sections.map(section => section.id)).size === sections.length, `Duplicate chapter in ${id}`);
   for (const section of sections) {
     assert(identifier.test(section.id) && filled(section.title) && section.paragraphs.length >= 2 && section.paragraphs.every(filled), `Incomplete chapter in ${id}`);
@@ -15,9 +15,25 @@ export function validateDeepLesson(id, lesson) {
       assert(filled(caption) && nodes.length >= 2 && nodes.every(node => filled(node.title) && filled(node.text)), `Incomplete flow in ${id}/${section.id}`);
     }
     if (section.example) assert(filled(section.example.title) && filled(section.example.text), `Incomplete example in ${id}/${section.id}`);
+    if (section.code) assert(filled(section.code.title) && filled(section.code.text), `Incomplete code in ${id}/${section.id}`);
+    if (section.table) {
+      const { caption, headers, rows } = section.table;
+      assert(filled(caption) && headers.length >= 2 && headers.every(filled) && rows.length && rows.every(row => row.length === headers.length && row.every(filled)), `Incomplete table in ${id}/${section.id}`);
+    }
   }
   assert(task && [task.input, task.prompt, task.deliverable].every(filled) && task.check.length >= 2 && task.check.every(filled), `Incomplete task in ${id}`);
   assert(sources.length && sources.every(source => filled(source.title) && /^https:\/\//.test(source.url)), `Missing sources in ${id}`);
+}
+
+export function evidenceTable(table, h) {
+  return `<div class="selection-table" role="region" aria-label="${h(table.caption)}" tabindex="0"><table><caption>${h(table.caption)}</caption>
+<thead><tr>${table.headers.map(cell => `<th scope="col">${h(cell)}</th>`).join('')}</tr></thead>
+<tbody>${table.rows.map(([label, ...cells]) => `<tr><th scope="row">${h(label)}</th>${cells.map(cell => `<td>${h(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+export function lessonFlow(figure, h) {
+  return `<figure class="deep-figure"><figcaption>${h(figure.caption)}</figcaption><ol class="deep-flow">
+${figure.nodes.map(node => `<li><strong>${h(node.title)}</strong><p>${h(node.text)}</p></li>`).join('')}</ol></figure>`;
 }
 
 export function taskMarkdown(id, title, task) {
@@ -32,14 +48,16 @@ export function taskMarkdown(id, title, task) {
   ].join('\n\n') + '\n';
 }
 
-export function deepContent(lesson, h) {
+export function deepContent(lesson, h, extras = {}) {
   return `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>
 ${lesson.sections.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a href="#practice">本地任务</a></nav>
 ${lesson.sections.map(chapter => `<section id="${h(chapter.id)}" class="deep-chapter"><h2>${h(chapter.title)}</h2>
 ${chapter.paragraphs.map(paragraph => `<p>${h(paragraph)}</p>`).join('')}
-${chapter.figure ? `<figure class="deep-figure"><figcaption>${h(chapter.figure.caption)}</figcaption><ol class="deep-flow">
-${chapter.figure.nodes.map(node => `<li><strong>${h(node.title)}</strong><p>${h(node.text)}</p></li>`).join('')}</ol></figure>` : ''}
-${chapter.example ? `<aside class="deep-example"><h3>${h(chapter.example.title)}</h3><p>${h(chapter.example.text)}</p></aside>` : ''}</section>`).join('')}`;
+${chapter.figure ? lessonFlow(chapter.figure, h) : ''}
+${chapter.example ? `<aside class="deep-example"><h3>${h(chapter.example.title)}</h3><p>${h(chapter.example.text)}</p></aside>` : ''}
+${chapter.code ? `<figure class="deep-code"><figcaption>${h(chapter.code.title)}</figcaption><pre><code>${h(chapter.code.text)}</code></pre></figure>` : ''}
+${chapter.table ? evidenceTable(chapter.table, h) : ''}
+${extras[chapter.id] ?? ''}</section>`).join('')}`;
 }
 
 export function deepTask(id, task, base, h) {

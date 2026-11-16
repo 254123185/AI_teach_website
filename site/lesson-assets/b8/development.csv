@@ -1,0 +1,5 @@
+candidate,total_mae,critical_mae,minutes,status
+A,4.90,6.8,20,done
+B,4.70,7.3,20,done
+C,4.84,6.9,20,done
+D,,,20,timeout

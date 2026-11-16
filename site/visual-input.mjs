@@ -1,3 +1,5 @@
+import { evidenceTable, lessonFlow } from './deep-lesson.mjs';
+
 export function visualInputLesson(content, result, base, h) {
   const assets = base + 'assets/visual-input/low-light-';
   const frames = base + 'experiments/tea-shop/';
@@ -27,10 +29,19 @@ ${view('wood-crop', '原尺寸裁片', '32×48', '从参考全图固定坐标直
     ['灯芯指定坐标的灰度值', 'lamp_peak_value'],
   ];
   const verification = `<figure class="visual-scan"><figcaption><strong>脚本对这两版输出的读数</strong></figcaption><div class="selection-table" role="region" aria-label="弱强降噪的像素测量" tabindex="0"><table><thead><tr><th scope="col">指标</th><th scope="col">A · 弱降噪</th><th scope="col">B · 强降噪</th></tr></thead><tbody>${readings.map(([label, key]) => `<tr><th scope="row">${label}</th>${['weak', 'strong'].map(method => `<td>${result.metrics[method][key].toFixed(key === 'lamp_peak_value' ? 0 : 3)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p>强降噪输出的木纹误差更大，反差比也更低。把这两项与裁片合起来看，能核对条纹变淡的观察。数值来自本站已有的合成样本结果。</p></figure>`;
-  const extras = { locate: gallery, thumbnail: scanline, crop: attachments + copy, verify: verification };
+  const modelView = lessonFlow({ caption: '上传到回答，中间要经过哪些处理', nodes: [
+    { title: '文件与版本', text: '记录源图像素与裁片坐标' },
+    { title: '模型预处理', text: '模型可按配置改尺寸、裁剪或分块' },
+    { title: '视觉特征', text: '与文字一起进入模型，产生定性回答' },
+    { title: '回到原图核对', text: '从原始像素测量，记录无法确认的环节' },
+  ] }, h);
+  const alignment = evidenceTable({ caption: '同一张参考图，像素误差也会随裁框改变', headers: ['窗口 A', '窗口 B', 'MAE（灰度级）'],
+    rows: [['[52,14,32,48]', '[52,14,32,48]', '0.000'], ['[52,14,32,48]', '[53,14,32,48]', '16.534'], ['[52,14,32,48]', '[54,14,32,48]', '27.822']],
+  }, h);
+  const extras = { locate: gallery, thumbnail: scanline, 'model-view': modelView, crop: attachments + copy, alignment, verify: verification };
   return `<div class="visual-lesson"><p class="visual-intro">${h(intro)}</p>
 <nav id="concept" class="visual-contents" aria-label="本课章节">${sections.map(section => `<a href="#${h(section.id)}">${h(section.title)}</a>`).join('')}</nav>
 <div id="visual-input">${sections.map(section => `<section class="visual-section" id="${h(section.id)}"><h2>${h(section.title)}</h2>${section.paragraphs.map(line => `<p>${h(line)}</p>`).join('')}
 ${extras[section.id] ?? ''}${section.id === 'verify' ? `<p><a href="${base}experiments/tea-shop/demo.html#wood">打开木纹 Demo，可切换弱、强输出</a> · <a href="${base}courses/b9/#denoise-evidence">B9 · 读懂降噪对照图</a></p>` : ''}</section>`).join('')}</div>
-<aside class="visual-source"><p>多图编号、版本和比较维度参考 <a href="${h(source.url)}">${h(source.title)}</a>。图像与像素值来自本站的低照度合成样本。</p></aside></div>`;
+<aside class="visual-source"><p>多图编号、版本和比较维度参考 <a href="${h(source.url)}">${h(source.title)}</a>。预处理见 <a href="https://huggingface.co/docs/transformers/main/en/image_processors">Transformers 图像预处理文档</a>。图像与像素值来自本站的低照度合成样本。</p></aside></div>`;
 }

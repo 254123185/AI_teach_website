@@ -30,6 +30,13 @@ if lesson_tasks:
     for task in sorted(lesson_tasks.glob("*.md")):
         name = task.stem
         files = {"task.md": task}
+        assets = root.parent / "lesson-assets" / name
+        if assets.is_dir():
+            files.update({
+                file.relative_to(assets).as_posix(): file
+                for file in assets.rglob("*")
+                if file.is_file() and "__pycache__" not in file.parts and file.suffix != ".pyc"
+            })
         if name == "a3":
             images = root.parent / "static" / "visual-input"
             files.update({file.name: file for file in images.glob("*.png")})
