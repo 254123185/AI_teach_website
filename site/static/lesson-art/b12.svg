@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="422" viewBox="0 0 720 422" role="img" aria-labelledby="title desc">
+<title id="title">故障图像右边缘坐标与两次回退读数</title>
+<desc id="desc">ROI 的四列为 x=637 到 640，y=80 到 111。对原基线及两次单项回退，异常像素计数依次是 15、15 和 0。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#486257"/></marker></defs>
+<rect x="1" y="1" width="718" height="420" rx="20" fill="#fcfdf6" stroke="#c7d5c9" stroke-width="2"/>
+<g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+<text x="30" y="46" font-size="30" fill="#1b3026" font-weight="650" text-anchor="start">IMG-17 · 右边缘裁剪对照</text>
+<rect x="42" y="91" width="279" height="209" rx="10" fill="#e5edf1" stroke="#c7d5c9" stroke-width="2"/>
+<rect x="304" y="134" width="17" height="77" rx="0" fill="#f7e3cc" stroke="#9d571d" stroke-width="2"/>
+<text x="70" y="126" font-size="23" fill="#486257" font-weight="650" text-anchor="start">641 × 479 原图示意</text>
+<text x="65" y="264" font-size="22" fill="#486257" font-weight="650" text-anchor="start">右边距局部放大</text>
+<path d="M321 135 L357 115" fill="none" stroke="#9d571d" stroke-width="2" stroke-linecap="round"/>
+<path d="M321 210 L357 246" fill="none" stroke="#9d571d" stroke-width="2" stroke-linecap="round"/>
+<rect x="370" y="136" width="58" height="110" rx="3" fill="#f7e3cc" stroke="#9d571d" stroke-width="2"/>
+<text x="399" y="121" font-size="20" fill="#1b3026" font-weight="700" text-anchor="middle">637</text>
+<rect x="447" y="136" width="58" height="110" rx="3" fill="#f7e3cc" stroke="#9d571d" stroke-width="2"/>
+<text x="476" y="121" font-size="20" fill="#1b3026" font-weight="700" text-anchor="middle">638</text>
+<rect x="524" y="136" width="58" height="110" rx="3" fill="#f7e3cc" stroke="#9d571d" stroke-width="2"/>
+<text x="553" y="121" font-size="20" fill="#1b3026" font-weight="700" text-anchor="middle">639</text>
+<rect x="601" y="136" width="58" height="110" rx="3" fill="#f7e3cc" stroke="#9d571d" stroke-width="2"/>
+<text x="630" y="121" font-size="20" fill="#1b3026" font-weight="700" text-anchor="middle">640</text>
+<text x="373" y="286" font-size="23" fill="#486257" font-weight="650" text-anchor="start">4 列 × 32 行，y=80…111</text>
+<rect x="30" y="325" width="210" height="67" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="46" y="367" font-size="22" fill="#1b3026" font-weight="650" text-anchor="start">r102</text>
+<text x="210" y="369" font-size="28" fill="#1b3026" font-weight="740" text-anchor="end">15</text>
+<rect x="256" y="325" width="210" height="67" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="272" y="367" font-size="22" fill="#1b3026" font-weight="650" text-anchor="start">回退填充</text>
+<text x="436" y="369" font-size="28" fill="#1b3026" font-weight="740" text-anchor="end">15</text>
+<rect x="482" y="325" width="210" height="67" rx="10" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="498" y="367" font-size="22" fill="#1b3026" font-weight="650" text-anchor="start">回退裁剪</text>
+<text x="662" y="369" font-size="28" fill="#1b3026" font-weight="740" text-anchor="end">0</text>
+</g>
+</svg>

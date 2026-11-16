@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="424" viewBox="0 0 720 424" role="img" aria-labelledby="title desc">
+<title id="title">开发候选按关键场景误差门槛筛选</title>
+<desc id="desc">B 的总体误差 4.70 最低，但其关键场景误差 7.3 超过 7.0。A 与 C 过门槛，C 总体误差更低。D 超时不入图。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#486257"/></marker></defs>
+<rect x="1" y="1" width="718" height="422" rx="20" fill="#fcfdf6" stroke="#c7d5c9" stroke-width="2"/>
+<g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+<text x="30" y="46" font-size="30" fill="#1b3026" font-weight="650" text-anchor="start">两个 MAE 先过门槛，再选最低</text>
+<rect x="118" y="85" width="552" height="111" rx="0" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<rect x="118" y="196" width="552" height="118" rx="0" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<path d="M118 314 L670 314" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<path d="M118 85 L118 314" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<path d="M118 196 L670 196" fill="none" stroke="#9d571d" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 6"/>
+<text x="652" y="184" font-size="22" fill="#9d571d" font-weight="700" text-anchor="end">门槛 7.0</text>
+<text x="647" y="133" font-size="20" fill="#9d571d" font-weight="650" text-anchor="end">关键场景超限</text>
+<circle cx="370" cy="225" r="8" fill="#257253" stroke="#257253" stroke-width="3"/>
+<text x="386" y="233" font-size="22" fill="#257253" font-weight="700" text-anchor="start">C  4.84 / 6.9</text>
+<circle cx="451" cy="254" r="8" fill="#38667c" stroke="#38667c" stroke-width="3"/>
+<text x="467" y="262" font-size="22" fill="#38667c" font-weight="700" text-anchor="start">A  4.90 / 6.8</text>
+<circle cx="181" cy="109" r="8" fill="#9d571d" stroke="#9d571d" stroke-width="3"/>
+<text x="197" y="117" font-size="22" fill="#9d571d" font-weight="700" text-anchor="start">B  4.70 / 7.3</text>
+<text x="35" y="77" font-size="20" fill="#486257" font-weight="650" text-anchor="start">关键 MAE</text>
+<text x="652" y="352" font-size="21" fill="#486257" font-weight="650" text-anchor="end">总体 MAE → 越右越高</text>
+<text x="33" y="395" font-size="24" fill="#1b3026" font-weight="650" text-anchor="start">D 超时，无读数；C 冻结后才读留出结果</text>
+</g>
+</svg>

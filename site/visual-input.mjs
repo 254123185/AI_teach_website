@@ -38,7 +38,16 @@ ${view('wood-crop', '原尺寸裁片', '32×48', '从参考全图固定坐标直
   const alignment = evidenceTable({ caption: '同一张参考图，像素误差也会随裁框改变', headers: ['窗口 A', '窗口 B', 'MAE（灰度级）'],
     rows: [['[52,14,32,48]', '[52,14,32,48]', '0.000'], ['[52,14,32,48]', '[53,14,32,48]', '16.534'], ['[52,14,32,48]', '[54,14,32,48]', '27.822']],
   }, h);
-  const extras = { locate: gallery, thumbnail: scanline, 'model-view': modelView, crop: attachments + copy, alignment, verify: verification };
+  const reviewQueue = evidenceTable({
+    caption: '一条模型观察怎样进入评审队列',
+    headers: ['模型记录（教学示例）', '程序证据', '工程师打开哪里'],
+    rows: [
+      ['B 的木条边界比 A 难分辨', '同坐标木纹裁片的反差比和 MAE', '同尺寸 A/B 裁片，核对条纹与对齐'],
+      ['灯芯边界看不清，暂存不确定', '灯芯固定坐标灰度读数', '原图灯芯与指定点，分开看位置和亮度'],
+      ['两图中的亮点像是错位', '输出尺寸、裁框和几何变换记录', '回到同一帧核对位置，对齐前暂缓保真比较'],
+    ],
+  }, h);
+  const extras = { locate: gallery, thumbnail: scanline, 'model-view': modelView, crop: attachments + copy, alignment, verify: verification + reviewQueue };
   return `<div class="visual-lesson"><p class="visual-intro">${h(intro)}</p>
 <nav id="concept" class="visual-contents" aria-label="本课章节">${sections.map(section => `<a href="#${h(section.id)}">${h(section.title)}</a>`).join('')}</nav>
 <div id="visual-input">${sections.map(section => `<section class="visual-section" id="${h(section.id)}"><h2>${h(section.title)}</h2>${section.paragraphs.map(line => `<p>${h(line)}</p>`).join('')}

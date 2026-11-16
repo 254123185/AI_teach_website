@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 594 450" font-family="system-ui, Microsoft YaHei, sans-serif" role="img"><title>17×31 张量在 8×8 分块下的尾块与失败索引</title>
+<rect x="0" y="0" width="594" height="450" rx="20" fill="#fffdf6" stroke="none" />
+<text x="20" y="34" fill="#182923" font-size="27" font-weight="700" text-anchor="start">17 × 31 的右下尾块</text>
+<rect x="24" y="63" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="136" y="63" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="248" y="63" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="360" y="63" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="24" y="175" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="136" y="175" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="248" y="175" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="360" y="175" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="24" y="287" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="136" y="287" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="248" y="287" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="360" y="287" width="112" height="112" rx="0" fill="#e2eee5" stroke="#9eb4a6" />
+<rect x="24" y="301" width="448" height="98" rx="0" fill="#f6e6d9" stroke="#a2b6a9" />
+<rect x="458" y="63" width="14" height="238" rx="0" fill="#f6e6d9" stroke="#a2b6a9" />
+<path d="M24 287 L472 287" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="" />
+<rect x="444" y="287" width="14" height="14" rx="0" fill="#934529" stroke="none" />
+<path d="M451 295 L510 325" fill="none" stroke="#934529" stroke-width="2" stroke-dasharray="" />
+<text x="476" y="355" fill="#934529" font-size="20" font-weight="700" text-anchor="start">超差点</text>
+<text x="476" y="380" fill="#934529" font-size="18" font-weight="500" text-anchor="start">(16, 30)</text>
+<text x="23" y="429" fill="#4c655a" font-size="17" font-weight="500" text-anchor="start">绿色是有效数据，浅橙是补齐到分块边界的位置。</text>
+</svg>

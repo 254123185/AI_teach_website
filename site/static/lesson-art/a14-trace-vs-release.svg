@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="354" viewBox="0 0 720 354" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="352" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="28" y="94" text-anchor="start" font-size="24" fill="#162831" font-weight="700">原请求</text>
+<text x="28" y="169" text-anchor="start" font-size="24" fill="#162831" font-weight="700">预填充减半</text>
+<rect x="180" y="65" width="280" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="320.0" y="93.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">250</text>
+<rect x="460" y="65" width="134.4" height="42" rx="4" fill="#dceddf" stroke="#3d765e"/><text x="527.2" y="93.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">120</text>
+<rect x="594.4" y="65" width="33.6" height="42" rx="4" fill="#fde8ce" stroke="#a25622"/><text x="611.1999999999999" y="93.0" text-anchor="middle" font-size="20" fill="#162831" font-weight="700">30</text>
+<rect x="180" y="140" width="280" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="320.0" y="168.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">250</text>
+<rect x="460" y="140" width="67.2" height="42" rx="4" fill="#dceddf" stroke="#3d765e"/><text x="493.6" y="168.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">60</text>
+<rect x="527.2" y="140" width="33.6" height="42" rx="4" fill="#fde8ce" stroke="#a25622"/><text x="544.0" y="168.0" text-anchor="middle" font-size="20" fill="#162831" font-weight="700">30</text>
+<text x="642" y="94" text-anchor="start" font-size="22" fill="#162831" font-weight="700">400</text>
+<text x="576" y="169" text-anchor="start" font-size="22" fill="#162831" font-weight="700">340</text>
+<path d="M180 227 H628.0" fill="none" stroke="#405767" stroke-width="2"/><path d="M180.0 227 V235" fill="none" stroke="#405767" stroke-width="2"/><text x="180.0" y="259" text-anchor="middle" font-size="21" fill="#162831">0</text><path d="M292.0 227 V235" fill="none" stroke="#405767" stroke-width="2"/><text x="292.0" y="259" text-anchor="middle" font-size="21" fill="#162831">100</text><path d="M404.0 227 V235" fill="none" stroke="#405767" stroke-width="2"/><text x="404.0" y="259" text-anchor="middle" font-size="21" fill="#162831">200</text><path d="M516.0 227 V235" fill="none" stroke="#405767" stroke-width="2"/><text x="516.0" y="259" text-anchor="middle" font-size="21" fill="#162831">300</text><path d="M628.0 227 V235" fill="none" stroke="#405767" stroke-width="2"/><text x="628.0" y="259" text-anchor="middle" font-size="21" fill="#162831">400</text><text x="656.0" y="257" text-anchor="start" font-size="20" fill="#405767">ms</text>
+<rect x="118" y="296" width="28" height="24" rx="4" fill="#d6e8f1" stroke="#40769a"/>
+<text x="154" y="316" text-anchor="start" font-size="22" fill="#162831">排队</text>
+<rect x="282" y="296" width="28" height="24" rx="4" fill="#dceddf" stroke="#3d765e"/>
+<text x="318" y="316" text-anchor="start" font-size="22" fill="#162831">预填充</text>
+<rect x="474" y="296" width="28" height="24" rx="4" fill="#fde8ce" stroke="#a25622"/>
+<text x="510" y="316" text-anchor="start" font-size="22" fill="#162831">其他</text>
+</svg>

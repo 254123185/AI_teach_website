@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 610 302" font-family="system-ui, Microsoft YaHei, sans-serif" role="img"><title>同均值融合权重的两像素教学算例</title>
+<rect x="0" y="0" width="610" height="302" rx="20" fill="#fffdf6" stroke="none" />
+<text x="24" y="38" fill="#182923" font-size="29" font-weight="700" text-anchor="start">同为 0.5 的平均权重</text>
+<text x="24" y="70" fill="#4c655a" font-size="18" font-weight="500" text-anchor="start">输出 = 弱支路 + 权重 × (强支路 − 弱支路)</text>
+<rect x="24" y="93" width="270" height="189" rx="6" fill="#deeee0" stroke="none" />
+<text x="39" y="127" fill="#182923" font-size="24" font-weight="700" text-anchor="start">像素 1 · 暗墙</text>
+<text x="39" y="157" fill="#182923" font-size="19" font-weight="500" text-anchor="start">弱 20 → 强 40</text>
+<path d="M39 172 L278 172" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="" />
+<text x="39" y="203" fill="#182923" font-size="19" font-weight="500" text-anchor="start">固定 20 + 0.5 × 20 = 30</text>
+<text x="39" y="245" fill="#2d694f" font-size="17" font-weight="700" text-anchor="start">分区 20 + 0.75 × 20 = 35</text>
+<rect x="313" y="93" width="270" height="189" rx="6" fill="#deeee0" stroke="none" />
+<text x="328" y="127" fill="#182923" font-size="24" font-weight="700" text-anchor="start">像素 2 · 边界</text>
+<text x="328" y="157" fill="#182923" font-size="19" font-weight="500" text-anchor="start">弱 80 → 强 70</text>
+<path d="M328 172 L567 172" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="" />
+<text x="328" y="203" fill="#182923" font-size="19" font-weight="500" text-anchor="start">固定 80 + 0.5 × (−10) = 75</text>
+<text x="328" y="245" fill="#2d694f" font-size="17" font-weight="700" text-anchor="start">分区 80 + 0.25 × (−10) = 77.5</text>
+</svg>

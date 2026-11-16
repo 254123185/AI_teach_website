@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="401" viewBox="0 0 720 401" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="399" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="34" y="43" text-anchor="start" font-size="23" fill="#162831" font-weight="700">客户端</text>
+<text x="34" y="168" text-anchor="start" font-size="23" fill="#162831" font-weight="700">调度器</text>
+<text x="34" y="292" text-anchor="start" font-size="23" fill="#162831" font-weight="700">接续核验</text>
+<path d="M36 112 H678 M36 238 H678 M36 352 H678" fill="none" stroke="#405767" stroke-width="2" marker-end="url(#end)"/>
+<path d="M131 112 V238 M272 112 V238 M519 238 V352" fill="none" stroke="#9bb0ba" stroke-width="2" stroke-dasharray="7 5"/>
+<circle cx="131" cy="112" r="6" fill="#40769a"/>
+<circle cx="272" cy="112" r="6" fill="#a25622"/>
+<circle cx="519" cy="112" r="6" fill="#3d765e"/>
+<circle cx="131" cy="238" r="6" fill="#40769a"/>
+<circle cx="316" cy="238" r="6" fill="#40769a"/>
+<circle cx="519" cy="238" r="6" fill="#3d765e"/>
+<circle cx="519" cy="352" r="6" fill="#a25622"/>
+<text x="131" y="92" text-anchor="middle" font-size="22" fill="#162831">提交</text>
+<text x="272" y="92" text-anchor="middle" font-size="22" fill="#a25622">响应丢失</text>
+<text x="519" y="92" text-anchor="middle" font-size="22" fill="#162831">用原请求键查询</text>
+<text x="131" y="218" text-anchor="middle" font-size="22" fill="#162831">#042 已受理</text>
+<text x="316" y="218" text-anchor="middle" font-size="22" fill="#162831">游标已确认到 8</text>
+<text x="519" y="218" text-anchor="middle" font-size="22" fill="#162831">处理事件 9、10</text>
+<text x="519" y="332" text-anchor="middle" font-size="22" fill="#a25622">作业结束，文件 3 待核</text>
+<text x="360" y="381" text-anchor="middle" font-size="21" fill="#405767">请求键 noise-exp-17 始终与作业 #042 对应。</text>
+</svg>

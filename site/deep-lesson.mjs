@@ -14,6 +14,10 @@ export function validateDeepLesson(id, lesson) {
       const { caption, nodes } = section.figure;
       assert(filled(caption) && nodes.length >= 2 && nodes.every(node => filled(node.title) && filled(node.text)), `Incomplete flow in ${id}/${section.id}`);
     }
+    if (section.visual) {
+      const { src, alt, caption } = section.visual;
+      assert(/^lesson-art\/[a-z0-9-]+\.svg$/.test(src) && filled(alt) && filled(caption), `Incomplete visual in ${id}/${section.id}`);
+    }
     if (section.example) assert(filled(section.example.title) && filled(section.example.text), `Incomplete example in ${id}/${section.id}`);
     if (section.code) assert(filled(section.code.title) && filled(section.code.text), `Incomplete code in ${id}/${section.id}`);
     if (section.table) {
@@ -48,11 +52,12 @@ export function taskMarkdown(id, title, task) {
   ].join('\n\n') + '\n';
 }
 
-export function deepContent(lesson, h, extras = {}) {
+export function deepContent(lesson, base, h, extras = {}) {
   return `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>
 ${lesson.sections.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a href="#practice">本地任务</a></nav>
 ${lesson.sections.map(chapter => `<section id="${h(chapter.id)}" class="deep-chapter"><h2>${h(chapter.title)}</h2>
 ${chapter.paragraphs.map(paragraph => `<p>${h(paragraph)}</p>`).join('')}
+${chapter.visual ? `<figure class="research-figure lesson-visual"><a href="${base}assets/${h(chapter.visual.src)}"><img src="${base}assets/${h(chapter.visual.src)}" alt="${h(chapter.visual.alt)}" loading="lazy"></a><figcaption>${h(chapter.visual.caption)}</figcaption></figure>` : ''}
 ${chapter.figure ? lessonFlow(chapter.figure, h) : ''}
 ${chapter.example ? `<aside class="deep-example"><h3>${h(chapter.example.title)}</h3><p>${h(chapter.example.text)}</p></aside>` : ''}
 ${chapter.code ? `<figure class="deep-code"><figcaption>${h(chapter.code.title)}</figcaption><pre><code>${h(chapter.code.text)}</code></pre></figure>` : ''}

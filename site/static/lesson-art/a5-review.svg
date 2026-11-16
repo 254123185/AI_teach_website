@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="370" viewBox="0 0 720 370" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="368" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<rect x="206" y="26" width="308" height="58" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="360.0" y="63.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">解析器读到表头了吗？</text>
+<path d="M360 84 V101 H114 V132 M360 101 H452 V132" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<path d="M114 101 V132" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<rect x="28" y="133" width="172" height="68" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="114.0" y="163.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">无表头</text><text x="114.0" y="192.0" text-anchor="middle" font-size="22" fill="#162831">empty.csv</text>
+<rect x="257" y="133" width="390" height="68" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="452.0" y="163.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">有表头，继续核对必需列</text><text x="452.0" y="192.0" text-anchor="middle" font-size="22" fill="#162831">sample_id 与 mae</text>
+<path d="M114 201 V254 M452 201 V226 H294 V254 M452 226 H624 V254" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<path d="M294 226 V254 M459 226 V254" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<rect x="26" y="255" width="176" height="70" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="114.0" y="286.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">missing header</text><text x="114.0" y="315.0" text-anchor="middle" font-size="22" fill="#162831">退出码 2</text>
+<rect x="216" y="255" width="156" height="70" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="294.0" y="286.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">缺 mae 列</text><text x="294.0" y="315.0" text-anchor="middle" font-size="22" fill="#162831">退出码 2</text>
+<rect x="381" y="255" width="156" height="70" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="459.0" y="286.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">正常文件</text><text x="459.0" y="315.0" text-anchor="middle" font-size="22" fill="#162831">2 行 · 退出 0</text>
+<rect x="546" y="255" width="156" height="70" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="624.0" y="286.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">仅表头</text><text x="624.0" y="315.0" text-anchor="middle" font-size="22" fill="#162831">0 行 · 退出 0</text>
+<text x="360" y="352" text-anchor="middle" font-size="22" fill="#405767">蓝色分支是这次改动。</text>
+</svg>

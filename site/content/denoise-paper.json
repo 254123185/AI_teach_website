@@ -1,6 +1,6 @@
 {
   "src": "workflow-examples/papers/zhang-wu-kong-2019-fig6.png",
-  "alt": "Barbara 灰度测试图的六格对照。上排是原图、加噪图、NPGTV；下排是 NLGBT、经典总变差和非局部均值。",
+  "alt": "Barbara 灰度测试图的六格对照。上排是原图、加噪图、NPGTV；下排是 NLGTV、经典总变差和非局部均值。",
   "caption": "先在 (a) 找到左下桌布和围巾的重复条纹，再比较 (b) 的加噪输入、(e) 的经典总变差（TV）和 (c) 的非局部图总变差（NPGTV）。作者指出，经典 TV 会磨掉 NPGTV 保下来的一些纹理。作者给同一幅 Barbara 灰度图加入零均值高斯噪声，图中条件记为 σ = 30 dB。本案例借用同位置对照的读图方法。",
   "title": "Yan Zhang、Jiasong Wu、Youyong Kong、Gouenou Coatrieux、Huazhong Shu（2019），《Image denoising via a non-local patch graph total variation》，PLOS ONE，图 6",
   "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0226067#pone.0226067.g006",

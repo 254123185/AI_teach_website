@@ -47,7 +47,7 @@ export function evaluateProfiles(profiles, methodIds = Object.keys(methods), thr
   return { rows, detailGate };
 }
 
-function profilePlot({ region, noisy, reference }, output, candidate) {
+export function profilePlot({ region, noisy, reference }, output, candidate) {
   const min = Math.floor((Math.min(...noisy, ...reference, ...output) - 5) / 10) * 10;
   const max = Math.ceil((Math.max(...noisy, ...reference, ...output) + 5) / 10) * 10;
   const x = index => 41 + 305 * index / (noisy.length - 1);

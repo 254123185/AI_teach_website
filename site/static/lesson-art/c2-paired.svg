@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 586 306" font-family="system-ui, Microsoft YaHei, sans-serif" role="img"><title>旧、新策略配对结果</title>
+<rect x="0" y="0" width="586" height="306" rx="20" fill="#fffdf6" stroke="none" />
+<text x="22" y="39" fill="#182923" font-size="28" font-weight="700" text-anchor="start">10 个留出任务逐个对齐</text>
+<text x="23" y="95" fill="#2d694f" font-size="21" font-weight="700" text-anchor="start">两版都通过</text>
+<rect x="187" y="62" width="80" height="49" rx="6" fill="#deeee0" stroke="none" />
+<text x="227" y="94" fill="#2d694f" font-size="23" font-weight="700" text-anchor="middle">t1</text>
+<rect x="284" y="62" width="80" height="49" rx="6" fill="#deeee0" stroke="none" />
+<text x="324" y="94" fill="#2d694f" font-size="23" font-weight="700" text-anchor="middle">t2</text>
+<rect x="381" y="62" width="80" height="49" rx="6" fill="#deeee0" stroke="none" />
+<text x="421" y="94" fill="#2d694f" font-size="23" font-weight="700" text-anchor="middle">t3</text>
+<rect x="478" y="62" width="80" height="49" rx="6" fill="#deeee0" stroke="none" />
+<text x="518" y="94" fill="#2d694f" font-size="23" font-weight="700" text-anchor="middle">t4</text>
+<text x="23" y="152" fill="#934529" font-size="21" font-weight="700" text-anchor="start">只有旧版通过</text>
+<rect x="187" y="119" width="80" height="49" rx="6" fill="#f6e6d9" stroke="none" />
+<text x="227" y="151" fill="#934529" font-size="23" font-weight="700" text-anchor="middle">t5</text>
+<rect x="284" y="119" width="80" height="49" rx="6" fill="#f6e6d9" stroke="none" />
+<text x="324" y="151" fill="#934529" font-size="23" font-weight="700" text-anchor="middle">t6</text>
+<text x="23" y="209" fill="#294c6c" font-size="21" font-weight="700" text-anchor="start">只有新版通过</text>
+<rect x="187" y="176" width="80" height="49" rx="6" fill="#e2eaf4" stroke="none" />
+<text x="227" y="208" fill="#294c6c" font-size="23" font-weight="700" text-anchor="middle">t7</text>
+<rect x="284" y="176" width="80" height="49" rx="6" fill="#e2eaf4" stroke="none" />
+<text x="324" y="208" fill="#294c6c" font-size="23" font-weight="700" text-anchor="middle">t8</text>
+<text x="23" y="266" fill="#4c655a" font-size="21" font-weight="700" text-anchor="start">两版都失败</text>
+<rect x="187" y="233" width="80" height="49" rx="6" fill="#ebece7" stroke="none" />
+<text x="227" y="265" fill="#4c655a" font-size="23" font-weight="700" text-anchor="middle">t9</text>
+<rect x="284" y="233" width="80" height="49" rx="6" fill="#ebece7" stroke="none" />
+<text x="324" y="265" fill="#4c655a" font-size="23" font-weight="700" text-anchor="middle">t10</text>
+</svg>

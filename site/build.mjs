@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, extname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { controlReview, denoiseOpening, fusionFlow, paperTextureRead, researchRecord, revisionRecord, fusionImage, fusionResults, fusionLinks, inspectFusionRegions } from './fusion-case.mjs';
+import { blindSpotCheck, caseHandoff, controlReview, denoiseOpening, fusionFlow, pairedSample, paperTextureRead, profileEvidence, researchRecord, revisionRecord, fusionImage, fusionResults, fusionLinks, inspectFusionRegions } from './fusion-case.mjs';
 import { visualInputLesson } from './visual-input.mjs';
 import { deepContent, deepTask, evidenceTable, lessonFlow, taskMarkdown, validateDeepLesson } from './deep-lesson.mjs';
 import { showSkillExamples, skillExamples } from './skill-lesson.mjs';
@@ -20,6 +21,7 @@ const workflowFixtures = {
   P2: ['p2/fixtures.json', 'p2-fixtures.json'],
   P3: ['p3/scenarios.json', 'p3-scenarios.json'],
 };
+const profileFixtures = sample ? null : JSON.parse(await readFile(join(site, 'labs', workflowFixtures.P2[0]), 'utf8'));
 const denoiseCase = await json('denoise-case.json');
 const denoisePapers = [await json('denoise-paper.json')].flat();
 const fusionSelection = await json('fusion-selection.json');
@@ -109,6 +111,9 @@ function validateData() {
     }
     assert(guide.workflow.length === 3 && guide.workflow.every(step => step.title && step.detail), `Incomplete workflow in ${guide.id}`);
     assert(guide.walkthrough.length >= 3 && guide.walkthrough.every(step => step.title && step.text && step.look && step.decision), `Incomplete guided case in ${guide.id}`);
+    for (const key of ['title', 'intro', 'artifactTitle', 'artifact', 'check', 'saved']) {
+      assert(typeof guide.handoff?.[key] === 'string' && guide.handoff[key].trim(), `Missing handoff ${key} in ${guide.id}`);
+    }
     const { title, caption, headers, rows, holdout } = guide.example;
     const tableIsValid = (body) => body.length && body.every(row => row.length === headers.length && row.every(cell => typeof cell === 'string'));
     assert(title && caption && headers.length > 1 && tableIsValid(rows), `Incomplete example in ${guide.id}`);
@@ -265,7 +270,7 @@ function course(item, fusionResult, extras) {
 <div class="reading-layout"><article><header class="lesson-header"><p class="eyebrow">${item.id} · ${h(item.level)}</p><h1>${h(item.title)}</h1>${visual ? '' : deep ? `<p class="intro">${h(deep.intro)}</p>` : `<p class="intro">${h(lesson.question)}</p><p>${h(item.goal)}</p>`}
 ${item.prerequisites.length ? `<div class="prerequisites"><strong>先修</strong> ${item.prerequisites.map(id => courseChip(id, base)).join(' ')}</div>` : ''}</header>
 ${courseFoundation(item.id, base)}
-${visual ? visualInputLesson(visualInputBasics, fusionResult, base, h) : deep ? deepContent(deep, h, extras) : chapters ? `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a class="text-link" href="#practice">本地实操 ↓</a></nav>${chapters.map((chapter, index) => llmChapter(chapter, index, base)).join('')}` : `<section id="concept"><h2>原理与示例</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}<p class="note lesson-note"><b>常见误区</b>　${h(item.failure)}</p></section>`}
+${visual ? visualInputLesson(visualInputBasics, fusionResult, base, h) : deep ? deepContent(deep, base, h, extras) : chapters ? `<nav id="concept" class="llm-contents" aria-label="章节目录"><h2>章节目录</h2><ol>${chapters.map(chapter => `<li><a href="#${h(chapter.id)}">${h(chapter.title)}</a></li>`).join('')}</ol><a class="text-link" href="#practice">本地实操 ↓</a></nav>${chapters.map((chapter, index) => llmChapter(chapter, index, base)).join('')}` : `<section id="concept"><h2>原理与示例</h2><dl class="definition"><dt>${h(lesson.term.name)}</dt><dd>${h(lesson.term.meaning)}</dd></dl><p class="example">${h(lesson.example)}</p>${paragraphs(item.core)}${figureMarkup(item, base)}<p class="note lesson-note"><b>常见误区</b>　${h(item.failure)}</p></section>`}
 ${deep && figures[item.id]?.length ? `<section id="research-figures"><h2>论文图解</h2>${figureMarkup(item, base)}</section>` : ''}
 ${demoCaptions[item.id] ? `<section id="demo"><h2>分步演示</h2><p>${demoCaptions[item.id]}</p><div data-process="${item.id}"></div><noscript><p>启用 JavaScript 后可单步操作演示。</p></noscript></section>` : ''}
 ${visual ? deepTask(item.id, visualTask, base, h) : deep ? deepTask(item.id, deep.task, base, h) : chapters ? localLab(item.id, base) : ''}
@@ -329,8 +334,10 @@ function denoiseStory(result) {
       + (sample ? '' : '<p><a href="p1/#demo">试着改变数据和接口条件，看看哪些路线还能用</a></p>')
       + `<details class="artifact-reference"><summary>延伸读图 · 同坐标怎么看纹理损失</summary>${publishedFigures('../')}${paperTextureRead('../', denoisePapers[0], h)}</details>`,
     transfer: () => fusionFlow() + fusionImage('../', 'comparison.svg', '带噪输入、弱和强降噪、固定和分区融合以及权重图', '同一张合成图的各路输出。分区权重图越亮，采用的强降噪输出越多。', h),
+    data: () => pairedSample('../'),
     experiment: () => controlReview('../', result) + fusionResults(result, h),
     review: () => fusionImage('../', 'roi-comparison.svg', '暗墙、木纹、灯芯与接缝的同坐标对照', '每一行取同一个位置。先与参考图比较，再沿行看不同输出的差异。', h) + inspectFusionRegions('../'),
+    holdout: blindSpotCheck,
   };
   return `<div class="wrap story-page"><header class="story-hero">
 <div class="story-hero-copy"><p class="eyebrow">算法研发案例</p><h1>低照度图像的分区降噪</h1>
@@ -356,11 +363,20 @@ function caseStartLink(id) {
   return `../#${chapter}`;
 }
 
-function guidedCase(guide) {
+function guidedCase(guide, base) {
   const title = { P1: '从原文到对照方案', P4: '怎样复核评审材料' }[guide.id] || '工作示例';
+  const visual = {
+    P1: () => denoiseOpening(base),
+    P2: () => profileEvidence(profileFixtures.dev),
+    P3: () => examplePreview(guide.id, base),
+    P4: () => fusionImage(base, 'roi-comparison.svg', '对照固定和分区融合在暗墙、木纹、灯芯与交界的同坐标局部', '每一行都是同一位置。木纹一行可直接看细条如何从固定 50% 到分区融合。', h),
+  }[guide.id]();
   return `<section id="steps"><h2>${title}</h2>
+${lessonFlow({caption: '从问题到交付', nodes: guide.workflow.map(({title, detail}) => ({title, text: detail}))}, h)}
+${visual}
 <ol class="guided-workflow">${guide.walkthrough.map((step, index) => `<li><span class="guide-index">${index + 1}</span><div><h3>${h(step.title)}</h3><p>${h(step.text)}</p><dl><div><dt>看什么</dt><dd>${h(step.look)}</dd></div><div><dt>据此做什么</dt><dd>${h(step.decision)}</dd></div></dl></div></li>`).join('')}</ol>
 <dl class="case-contract"><div><dt>团队提供</dt><dd>${h(guide.inputs)}</dd></div><div><dt>AI 承担</dt><dd>${h(guide.delegation)}</dd></div><div><dt>交付物</dt><dd>${h(guide.deliverable)}</dd></div></dl>
+${caseHandoff(guide.handoff, h)}
 <details class="case-prompt"><summary>给 Agent 的任务示例</summary><pre><code data-copy-source>${h(guide.prompt)}</code></pre><button type="button" class="button secondary" data-copy-case hidden>复制任务单</button><span data-copy-status role="status"></span></details></section>`;
 }
 
@@ -378,20 +394,19 @@ function examplePreview(id, base) {
 function projectDetail(guide) {
   const base = '../../';
   const { example } = guide;
-  if (guide.id === 'P4') return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>P4</span></div><header class="story-hero"><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p><a href="../#review">回到正文评审 ↗</a></header><article class="case-body"><section id="demo"><h2>同一实验的输出</h2><p>报告、像素图与 Demo 由同一条命令生成。</p>${fusionLinks(base)}</section>${localLab('P4', base, guide.lab, true)}${guidedCase(guide)}<section id="checks"><h2>验收边界</h2><p>${h(guide.limit)}</p></section></article></div>`;
+  if (guide.id === 'P4') return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>P4</span></div><header class="story-hero"><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p><a href="../#review">回到正文评审 ↗</a></header><article class="case-body">${guidedCase(guide, base)}<section id="demo"><h2>同一实验的输出</h2><p>报告、像素图与 Demo 由同一条命令生成。</p>${fusionLinks(base)}${inspectFusionRegions(base)}</section><section id="checks"><h2>验收边界</h2><p>${h(guide.limit)}</p></section>${localLab('P4', base, guide.lab, true)}</article></div>`;
   return `<div class="wrap case-page"><div class="breadcrumbs"><a href="../">实战案例</a><span>/</span><span>${guide.id}</span></div>
 <header class="case-hero"><div><p class="eyebrow">${guide.id} · 算法团队工作流</p><h1>${h(guide.title)}</h1><p class="intro">${h(guide.problem)}</p>
 <div class="actions"><a class="button primary" href="${caseStartLink(guide.id)}">阅读正文 ↗</a><a class="button secondary" href="#practice">本地实操</a></div></div>
 ${workflowEvidence(base, guide.id)}</header>
 ${stageNav(base, guide.id)}
 <article class="case-body">
-${guidedCase(guide)}
+${guidedCase(guide, base)}
 <section id="demo"><h2>${guide.id === 'P1' ? '按项目条件筛选论文' : '复算工具与原始记录'}</h2>
 <details class="artifact-reference workflow-optional"${guide.id === 'P1' ? ' open' : ''}><summary>${h(guide.interactionTitle || '打开复算工具')}</summary><p class="interaction-intro">${h(guide.interactionIntro || stageIntros[guide.id])}</p>
 <div class="workflow-workspace" data-workflow-id="${guide.id.toLowerCase()}"${workflowFixtures[guide.id] ? ` data-fixture="${base}assets/workflow-examples/${workflowFixtures[guide.id][1]}"` : ''}><p>正在载入交互工作台…</p></div><noscript><p>开启 JavaScript 后可操作工作台，示例和来源仍可查看。</p></noscript>
 </details>
 <details class="artifact-reference"><summary>${h(example.title)}</summary>
-${examplePreview(guide.id, base)}
 ${example.holdout ? '<div class="artifact-switch" data-workflow-switch hidden role="group" aria-label="结果数据范围"><button type="button" class="button" data-workflow-subset="dev" aria-pressed="true">开发集 · 筛选候选</button><button type="button" class="button" data-workflow-subset="holdout" aria-pressed="false">留出集 · 复核结论</button></div>' : ''}
 ${example.headers.length > 3 ? '<p class="artifact-scroll-hint">横向滑动查看全部列</p>' : ''}
 ${artifactTable(example.headers, example.rows, example.caption, 'dev')}
@@ -439,6 +454,12 @@ async function checkLinks() {
 validateData();
 if (fusionSnapshot) {
   assert(fusionSnapshot !== dist && !fusionSnapshot.startsWith(dist + sep), 'Store the fusion snapshot outside the generated dist directory');
+  const manifest = JSON.parse(await readFile(join(fusionSnapshot, 'manifest.json'), 'utf8'));
+  for (const [name, { bytes, sha256 }] of Object.entries(manifest.artifacts)) {
+    assert(/^[a-z0-9_-]+\.[a-z0-9]+$/.test(name), `Invalid snapshot artifact name: ${name}`);
+    const file = await readFile(join(fusionSnapshot, name));
+    assert(file.length === bytes && createHash('sha256').update(file).digest('hex') === sha256, `Invalid snapshot artifact: ${name}`);
+  }
 }
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });

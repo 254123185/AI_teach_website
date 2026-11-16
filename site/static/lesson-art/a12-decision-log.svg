@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="318" viewBox="0 0 720 318" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="316" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="103" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">测试</text>
+<text x="313" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">工具返回</text>
+<text x="572" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">产物验收</text>
+<rect x="28" y="67" width="150" height="64" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="103.0" y="107.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">原权限</text>
+<rect x="188" y="67" width="250" height="64" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="313.0" y="107.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">写入被拒绝</text>
+<rect x="449" y="67" width="243" height="64" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="570.5" y="107.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">失败 · 无报告</text>
+<rect x="28" y="151" width="150" height="64" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="103.0" y="191.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">改目标权限</text>
+<rect x="188" y="151" width="250" height="64" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="313.0" y="191.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">写入成功</text>
+<rect x="449" y="151" width="243" height="64" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="570.5" y="191.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">通过 · 本次报告</text>
+<rect x="28" y="235" width="150" height="64" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="103.0" y="275.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">受限反例</text>
+<rect x="188" y="235" width="250" height="64" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="313.0" y="275.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">准确报告拒绝</text>
+<rect x="449" y="235" width="243" height="64" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="570.5" y="275.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">失败 · 无报告</text>
+</svg>

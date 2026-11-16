@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="356" viewBox="0 0 720 356" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="354" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="22" y="91" text-anchor="start" font-size="24" fill="#162831" font-weight="700">人工基线</text>
+<text x="22" y="166" text-anchor="start" font-size="24" fill="#162831" font-weight="700">AI 协作</text>
+<rect x="155" y="63" width="135" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="222.5" y="91.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">准备 15</text>
+<rect x="290" y="63" width="315" height="42" rx="4" fill="#e7eeee" stroke="#9bb0ba"/><text x="447.5" y="91.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">产出与复核 35</text>
+<rect x="155" y="138" width="90" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="200.0" y="166.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">10</text>
+<rect x="245" y="138" width="45" height="42" rx="4" fill="#e0e5f5" stroke="#8291c3"/><text x="267.5" y="166.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">5</text>
+<rect x="290" y="138" width="135" height="42" rx="4" fill="#dceddf" stroke="#3d765e"/><text x="357.5" y="166.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">15</text>
+<rect x="425" y="138" width="72" height="42" rx="4" fill="#fde8ce" stroke="#a25622"/><text x="461.0" y="166.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">8</text>
+<text x="619" y="91" text-anchor="start" font-size="22" fill="#162831" font-weight="700">50 分钟</text>
+<text x="510" y="166" text-anchor="start" font-size="22" fill="#162831" font-weight="700">38 分钟</text>
+<path d="M497 186 V212 H605 V113" fill="none" stroke="#405767" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="550" y="238" text-anchor="middle" font-size="22" fill="#162831">相差 12 分钟</text>
+<path d="M155 258 H605" fill="none" stroke="#405767" stroke-width="2"/><path d="M155 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="155" y="290" text-anchor="middle" font-size="21" fill="#162831">0</text><path d="M245 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="245" y="290" text-anchor="middle" font-size="21" fill="#162831">10</text><path d="M335 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="335" y="290" text-anchor="middle" font-size="21" fill="#162831">20</text><path d="M425 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="425" y="290" text-anchor="middle" font-size="21" fill="#162831">30</text><path d="M515 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="515" y="290" text-anchor="middle" font-size="21" fill="#162831">40</text><path d="M605 258 V266" fill="none" stroke="#405767" stroke-width="2"/><text x="605" y="290" text-anchor="middle" font-size="21" fill="#162831">50</text><text x="633" y="288" text-anchor="start" font-size="20" fill="#405767">分钟</text>
+<rect x="43" y="309" width="24" height="22" rx="4" fill="#d6e8f1" stroke="#40769a"/>
+<text x="76" y="327" text-anchor="start" font-size="21" fill="#162831">准备</text>
+<rect x="185" y="309" width="24" height="22" rx="4" fill="#e0e5f5" stroke="#8291c3"/>
+<text x="218" y="327" text-anchor="start" font-size="21" fill="#162831">操作</text>
+<rect x="333" y="309" width="24" height="22" rx="4" fill="#dceddf" stroke="#3d765e"/>
+<text x="366" y="327" text-anchor="start" font-size="21" fill="#162831">AI 组复核</text>
+<rect x="522" y="309" width="24" height="22" rx="4" fill="#fde8ce" stroke="#a25622"/>
+<text x="555" y="327" text-anchor="start" font-size="21" fill="#162831">返工</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="302" viewBox="0 0 720 302" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="300" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="197" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">检索命中</text>
+<text x="345" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">实际注入</text>
+<text x="488" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">最后答案</text>
+<text x="629" y="44" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">先查哪里</text>
+<text x="61" y="110" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">轨迹一</text>
+<text x="61" y="216" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">轨迹二</text>
+<rect x="126" y="67" width="140" height="72" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="196.0" y="111.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">D1、D2</text>
+<rect x="274" y="67" width="140" height="72" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="344.0" y="111.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">仅 D1</text>
+<rect x="422" y="67" width="132" height="72" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="488.0" y="111.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">5 毫秒</text>
+<rect x="562" y="67" width="134" height="72" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="629.0" y="111.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">组装阶段</text>
+<rect x="126" y="173" width="140" height="72" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="196.0" y="217.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">D1、D2</text>
+<rect x="274" y="173" width="140" height="72" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="344.0" y="217.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">D2</text>
+<rect x="422" y="173" width="132" height="72" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="488.0" y="217.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">5 毫秒</text>
+<rect x="562" y="173" width="134" height="72" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="629.0" y="217.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">生成阶段</text>
+<text x="360" y="278" text-anchor="middle" font-size="22" fill="#405767">D1 为旧版毫秒定义，D2 为新版秒定义。</text>
+</svg>

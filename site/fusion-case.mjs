@@ -1,3 +1,5 @@
+import { filterProfile, profilePlot } from './static/workflow-examples/p2-interaction.mjs';
+
 const paperCrop = { width: 1250, height: 839, cropWidth: 99, cropHeight: 87 };
 const texturePanels = [
   { x: 7, y: 146, label: '(a) 干净参考', reading: '先找到桌布上同向排列的细条。' },
@@ -16,10 +18,12 @@ export function paperTextureRead(base, paper, h) {
 }
 
 export function researchRecord(selection, h) {
-  const { queries, candidates, toolActions } = selection;
+  const { criteria, queries, candidates, toolActions } = selection;
   const points = (items) => items.map(item => `<li>${h(item)}</li>`).join('');
   return `<div class="fusion-research">
-<h3>文献笔记</h3>
+<h3>先看能不能接进项目，再看论文指标</h3>
+<ol class="deep-flow">${criteria.map(item => `<li><strong>${h(item.name)}</strong><p>${h(item.question)}</p></li>`).join('')}</ol>
+<h3>AI 整理的原文证据卡</h3>
 <ul class="paper-notes">${candidates.map(item => `<li><h4><a href="${h(item.source)}">${h(item.name)}</a></h4><p>${h(item.decision)}</p><details><summary>${h(item.locator)}</summary><p>${h(item.evidence)}</p><p>${h(item.interfaceFit)} ${h(item.resources)}</p><p>${h(item.risks)}</p></details></li>`).join('')}</ul>
 <details class="artifact-reference"><summary>检索词与原文核对记录</summary><ul>${points(queries)}</ul><ol>${points(toolActions)}</ol></details></div>`;
 }
@@ -30,6 +34,35 @@ export function denoiseOpening(base) {
 <a href="${path}weak.png"><img src="${path}weak.png" width="128" height="80" alt="弱降噪输出，墙面仍有颗粒，木百叶纹路清楚"><span>弱降噪</span></a>
 <a href="${path}strong.png"><img src="${path}strong.png" width="128" height="80" alt="强降噪输出，墙面较平整，木百叶纹路变淡"><span>强降噪</span></a>
 </div><figcaption>同一张合成图。左侧是暗墙，中间是木百叶，右侧是灯芯。两张图采用相同的灰度标尺。</figcaption></figure>`;
+}
+
+export function pairedSample(base) {
+  const path = base + fusionPath;
+  return `<figure class="opening-images"><div class="opening-grid">
+<a href="${path}reference.png"><img src="${path}reference.png" width="128" height="80" loading="lazy" alt="预先绘制的干净参考，有暗墙、木百叶和灯芯"><span>干净参考</span></a>
+<a href="${path}noisy.png"><img src="${path}noisy.png" width="128" height="80" loading="lazy" alt="同坐标含噪图，暗墙的亮暗起伏明显"><span>同坐标含噪输入</span></a>
+</div><figcaption>生成器先画参考，再从同一坐标生成含噪图。左图保留用于评分。暗墙的灰度起伏可追到加噪，木百叶的纹理和灯芯早在参考图里就有。</figcaption></figure>`;
+}
+
+export function caseHandoff(handoff, h) {
+  return `<section class="artifact-reference case-handoff"><h3>${h(handoff.title)}</h3>
+<p>${h(handoff.intro)}</p>
+<figure class="deep-code"><figcaption>${h(handoff.artifactTitle)}</figcaption><pre><code>${h(handoff.artifact)}</code></pre></figure>
+<dl class="case-contract"><div><dt>工程师怎么验</dt><dd>${h(handoff.check)}</dd></div><div><dt>少做哪些重复工作</dt><dd>${h(handoff.saved)}</dd></div></dl></section>`;
+}
+
+export function profileEvidence(development) {
+  const cases = [
+    [development[0], 'gated', '暗墙第 4 点', '在平坦邻域里，门控中值把 73 改为 42，回到参考附近。'],
+    [development[1], 'median3', '木纹第 6 点', '普通中值把输入的 104 压到 95，低于参考。门控阈值为 16 时，这个峰会留下。'],
+  ];
+  return `<figure class="story-figure profile-evidence"><figcaption><strong>同一种局部起伏，处理之前先看它出现在哪里</strong><p>横轴是剖面里的像素位置，纵轴为灰度级。蓝色虚线是参考，橙线是输入，绿点标出候选改动。两图灰度范围各自标在纵轴上。</p></figcaption>
+<div class="foundation-compare">${cases.map(([profile, method, label, note]) => `<div><h4>${label}</h4>${profilePlot(profile, filterProfile(profile.noisy, method), method)}<p>${note}</p></div>`).join('')}</div></figure>`;
+}
+
+export function blindSpotCheck() {
+  return `<figure class="story-figure fusion-diagram"><figcaption><strong>灯芯移动时，先核对它落在权重图的哪里</strong><p>待验证的反例。下图说明下一轮该怎么取样，暂无对应实验读数。</p></figcaption>
+<ol class="deep-flow"><li><strong>旧位置</strong><p>灯芯在右侧灯区，强档权重 0.08。</p></li><li><strong>换样本</strong><p>灯芯移到左侧，以原权重图运行时会落进 0.85 的强档区。</p></li><li><strong>复核</strong><p>记下灯芯新坐标、两版亮度和遗失的细节。有干净参考再量亮度损失。</p></li></ol></figure>`;
 }
 
 export function controlReview(base, result) {

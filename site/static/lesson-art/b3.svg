@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="407" viewBox="0 0 720 407" role="img" aria-labelledby="title desc">
+<title id="title">范围不为零与平场时的预期输出</title>
+<desc id="desc">变化输入 2、4、6 输出 0、0.5、1，平场输入 5、5、5 根据接口约定输出三个零。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#486257"/></marker></defs>
+<rect x="1" y="1" width="718" height="405" rx="20" fill="#fcfdf6" stroke="#c7d5c9" stroke-width="2"/>
+<g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+<text x="30" y="46" font-size="30" fill="#1b3026" font-weight="650" text-anchor="start">平场为什么需要单独的测试</text>
+<text x="30" y="100" font-size="23" fill="#486257" font-weight="650" text-anchor="start">变化输入</text>
+<text x="30" y="247" font-size="23" fill="#486257" font-weight="650" text-anchor="start">平场输入</text>
+<rect x="178" y="89" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="229" y="123" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">2</text>
+<path d="M229 145 L229 172" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="178" y="180" width="102" height="48" rx="10" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="229" y="213" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">0</text>
+<rect x="354" y="89" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="405" y="123" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">4</text>
+<path d="M405 145 L405 172" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="354" y="180" width="102" height="48" rx="10" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="405" y="213" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">0.5</text>
+<rect x="530" y="89" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="581" y="123" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">6</text>
+<path d="M581 145 L581 172" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="530" y="180" width="102" height="48" rx="10" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="581" y="213" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">1</text>
+<rect x="178" y="234" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="229" y="268" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">5</text>
+<path d="M229 290 L229 317" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="178" y="325" width="102" height="48" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="229" y="358" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">0</text>
+<rect x="354" y="234" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="405" y="268" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">5</text>
+<path d="M405 290 L405 317" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="354" y="325" width="102" height="48" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="405" y="358" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">0</text>
+<rect x="530" y="234" width="102" height="48" rx="10" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="581" y="268" font-size="26" fill="#1b3026" font-weight="740" text-anchor="middle">5</text>
+<path d="M581 290 L581 317" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="530" y="325" width="102" height="48" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="581" y="358" font-size="27" fill="#1b3026" font-weight="740" text-anchor="middle">0</text>
+<text x="32" y="177" font-size="22" fill="#257253" font-weight="650" text-anchor="start">范围为 4</text>
+<text x="32" y="201" font-size="19" fill="#486257" font-weight="650" text-anchor="start">照公式计算</text>
+<text x="32" y="322" font-size="22" fill="#9d571d" font-weight="650" text-anchor="start">范围为 0</text>
+<text x="32" y="345" font-size="19" fill="#486257" font-weight="650" text-anchor="start">按约定赋零</text>
+</g>
+</svg>

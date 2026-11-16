@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="309" viewBox="0 0 720 309" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="307" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<text x="32" y="58" text-anchor="start" font-size="24" fill="#162831" font-weight="700">串行</text>
+<text x="32" y="143" text-anchor="start" font-size="24" fill="#162831" font-weight="700">并行</text>
+<rect x="142" y="28" width="204" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="244.0" y="56.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">调研 · 12</text>
+<rect x="346" y="28" width="170" height="42" rx="4" fill="#dceddf" stroke="#3d765e"/><text x="431.0" y="56.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">核对 · 10</text>
+<rect x="516" y="28" width="102" height="42" rx="4" fill="#fde8ce" stroke="#a25622"/><text x="567.0" y="56.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">汇总 · 6</text>
+<rect x="142" y="106" width="204" height="42" rx="4" fill="#d6e8f1" stroke="#40769a"/><text x="244.0" y="134.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">调研 · 12</text>
+<rect x="142" y="155" width="170" height="42" rx="4" fill="#dceddf" stroke="#3d765e"/><text x="227.0" y="183.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">核对 · 10</text>
+<rect x="346" y="106" width="102" height="42" rx="4" fill="#fde8ce" stroke="#a25622"/><text x="397.0" y="134.0" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">汇总 · 6</text>
+<path d="M346 148 V221 M448 148 V221 M618 70 V221" fill="none" stroke="#9bb0ba" stroke-width="2" stroke-dasharray="7 5"/>
+<path d="M142 222 H618" fill="none" stroke="#405767" stroke-width="2"/><path d="M142 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="142" y="254" text-anchor="middle" font-size="21" fill="#162831">0</text><path d="M244 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="244" y="254" text-anchor="middle" font-size="21" fill="#162831">6</text><path d="M346 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="346" y="254" text-anchor="middle" font-size="21" fill="#162831">12</text><path d="M448 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="448" y="254" text-anchor="middle" font-size="21" fill="#162831">18</text><path d="M516 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="516" y="254" text-anchor="middle" font-size="21" fill="#162831">22</text><path d="M618 222 V230" fill="none" stroke="#405767" stroke-width="2"/><text x="618" y="254" text-anchor="middle" font-size="21" fill="#162831">28</text><text x="646" y="252" text-anchor="start" font-size="20" fill="#405767">分钟</text>
+<text x="360" y="290" text-anchor="middle" font-size="22" fill="#405767">教学墙钟时间，未加入额外协调。</text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="426" viewBox="0 0 720 426" role="img" aria-labelledby="title desc">
+<title id="title">训练步、输入和损失按同一步号对齐</title>
+<desc id="desc">三个教学步中 420 输入上限和损失同时升高；学习率相同。用 1023 作分母的输入结果 0.9384，损失未重放。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#486257"/></marker></defs>
+<rect x="1" y="1" width="718" height="424" rx="20" fill="#fcfdf6" stroke="#c7d5c9" stroke-width="2"/>
+<g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+<text x="30" y="46" font-size="30" fill="#1b3026" font-weight="650" text-anchor="start">步号 420 · 哪一条输入越界了</text>
+<rect x="342" y="70" width="145" height="274" rx="10" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="250" y="109" font-size="30" fill="#1b3026" font-weight="750" text-anchor="middle">419</text>
+<text x="250" y="142" font-size="22" fill="#486257" font-weight="650" text-anchor="middle">s073</text>
+<text x="414" y="109" font-size="30" fill="#1b3026" font-weight="750" text-anchor="middle">420</text>
+<text x="414" y="142" font-size="22" fill="#486257" font-weight="650" text-anchor="middle">s074</text>
+<text x="580" y="109" font-size="30" fill="#1b3026" font-weight="750" text-anchor="middle">421</text>
+<text x="580" y="142" font-size="22" fill="#486257" font-weight="650" text-anchor="middle">s075</text>
+<text x="30" y="207" font-size="23" fill="#486257" font-weight="650" text-anchor="start">输入最大值</text>
+<text x="250" y="207" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.9412</text>
+<text x="414" y="207" font-size="24" fill="#9d571d" font-weight="750" text-anchor="middle">3.7647</text>
+<text x="580" y="207" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.9216</text>
+<text x="30" y="274" font-size="23" fill="#486257" font-weight="650" text-anchor="start">损失</text>
+<text x="250" y="274" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.23</text>
+<text x="414" y="274" font-size="24" fill="#9d571d" font-weight="750" text-anchor="middle">1.41</text>
+<text x="580" y="274" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.24</text>
+<text x="30" y="326" font-size="23" fill="#486257" font-weight="650" text-anchor="start">学习率</text>
+<text x="250" y="326" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.0003</text>
+<text x="414" y="326" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.0003</text>
+<text x="580" y="326" font-size="24" fill="#1b3026" font-weight="750" text-anchor="middle">0.0003</text>
+<text x="32" y="399" font-size="22" fill="#1b3026" font-weight="650" text-anchor="start">960 ÷ 255 ≈ 3.7647；按 10 位满量程除得 0.9384</text>
+</g>
+</svg>

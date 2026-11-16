@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 592 320" font-family="system-ui, Microsoft YaHei, sans-serif" role="img"><title>检索结果的版本和状态筛选</title>
+<rect x="0" y="0" width="592" height="320" rx="20" fill="#fffdf6" stroke="none" />
+<text x="23" y="39" fill="#182923" font-size="28" font-weight="700" text-anchor="start">查 v2 的采集超时</text>
+<rect x="24" y="58" width="544" height="53" rx="6" fill="#edf0e9" stroke="none" />
+<text x="39" y="93" fill="#182923" font-size="23" font-weight="700" text-anchor="start">r12</text>
+<text x="134" y="93" fill="#182923" font-size="23" font-weight="500" text-anchor="start">v1 · 500 ms</text>
+<text x="385" y="93" fill="#4c655a" font-size="21" font-weight="500" text-anchor="start">版本不同</text>
+<rect x="24" y="120" width="544" height="53" rx="6" fill="#deeee0" stroke="none" />
+<text x="39" y="155" fill="#182923" font-size="23" font-weight="700" text-anchor="start">r18</text>
+<text x="134" y="155" fill="#182923" font-size="23" font-weight="500" text-anchor="start">v2 · 5 s</text>
+<text x="385" y="155" fill="#2d694f" font-size="21" font-weight="700" text-anchor="start">原文可证</text>
+<rect x="24" y="182" width="544" height="53" rx="6" fill="#edf0e9" stroke="none" />
+<text x="39" y="217" fill="#182923" font-size="23" font-weight="700" text-anchor="start">r19</text>
+<text x="134" y="217" fill="#182923" font-size="23" font-weight="500" text-anchor="start">v2 摘要</text>
+<text x="385" y="217" fill="#4c655a" font-size="21" font-weight="500" text-anchor="start">回链 r18</text>
+<rect x="24" y="244" width="544" height="53" rx="6" fill="#edf0e9" stroke="none" />
+<text x="39" y="279" fill="#182923" font-size="23" font-weight="700" text-anchor="start">r20</text>
+<text x="134" y="279" fill="#182923" font-size="23" font-weight="500" text-anchor="start">无原文</text>
+<text x="385" y="279" fill="#4c655a" font-size="21" font-weight="500" text-anchor="start">已撤销</text>
+</svg>

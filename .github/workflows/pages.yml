@@ -26,6 +26,8 @@ jobs:
           python-version: "3.11"
       - uses: actions/configure-pages@v5
       - run: npm run build
+        env:
+          TRAINING_FUSION_SNAPSHOT: site/experiment-snapshot
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

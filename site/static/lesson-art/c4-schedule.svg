@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 608 317" font-family="system-ui, Microsoft YaHei, sans-serif" role="img"><title>串行与并行准备的单 GPU 时间轴</title>
+<rect x="0" y="0" width="608" height="317" rx="20" fill="#fffdf6" stroke="none" />
+<text x="22" y="38" fill="#182923" font-size="28" font-weight="700" text-anchor="start">同一张 GPU，缩短的是哪一段？</text>
+<path d="M120.0 70 L120.0 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="120.0" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">0</text>
+<path d="M188.4 70 L188.4 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="188.4" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">6</text>
+<path d="M256.8 70 L256.8 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="256.8" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">12</text>
+<path d="M325.20000000000005 70 L325.20000000000005 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="325.20000000000005" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">18</text>
+<path d="M393.6 70 L393.6 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="393.6" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">24</text>
+<path d="M462.0 70 L462.0 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="462.0" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">30</text>
+<path d="M530.4000000000001 70 L530.4000000000001 239" fill="none" stroke="#a2b6a9" stroke-width="2" stroke-dasharray="4 5" />
+<text x="530.4000000000001" y="267" fill="#4c655a" font-size="19" font-weight="500" text-anchor="middle">36</text>
+<text x="22" y="135" fill="#182923" font-size="23" font-weight="700" text-anchor="start">串行</text>
+<rect x="120" y="103" width="136.8" height="46" rx="0" fill="#2d694f" stroke="#fffdf6" />
+<rect x="256.8" y="103" width="273.6" height="46" rx="0" fill="#60829a" stroke="#fffdf6" />
+<text x="539.4000000000001" y="134" fill="#182923" font-size="20" font-weight="700" text-anchor="start">36</text>
+<text x="22" y="210" fill="#182923" font-size="23" font-weight="700" text-anchor="start">并行</text>
+<rect x="120" y="178" width="34.2" height="46" rx="0" fill="#2d694f" stroke="#fffdf6" />
+<rect x="154.2" y="178" width="22.8" height="46" rx="0" fill="#cc8b46" stroke="#fffdf6" />
+<rect x="177.0" y="178" width="273.6" height="46" rx="0" fill="#60829a" stroke="#fffdf6" />
+<text x="459.6" y="209" fill="#182923" font-size="20" font-weight="700" text-anchor="start">29</text>
+<text x="550" y="267" fill="#4c655a" font-size="16" font-weight="500" text-anchor="start">分钟</text>
+<rect x="120" y="281" width="16" height="16" rx="6" fill="#2d694f" stroke="none" />
+<text x="145" y="296" fill="#182923" font-size="18" font-weight="500" text-anchor="start">准备</text>
+<rect x="235" y="281" width="16" height="16" rx="6" fill="#cc8b46" stroke="none" />
+<text x="260" y="296" fill="#182923" font-size="18" font-weight="500" text-anchor="start">合并</text>
+<rect x="350" y="281" width="16" height="16" rx="6" fill="#60829a" stroke="none" />
+<text x="375" y="296" fill="#182923" font-size="18" font-weight="500" text-anchor="start">GPU</text>
+</svg>

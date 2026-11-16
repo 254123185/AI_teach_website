@@ -1,0 +1,350 @@
+{
+  "experiment_id": "tea-shop-fusion-01",
+  "scene": {
+    "id": "tea-shop-synthetic-01",
+    "seed": 20261114,
+    "width": 128,
+    "height": 80,
+    "domain": "8 位渲染灰度，0–255",
+    "split": "单张合成场景的受控算例；无独立留出帧",
+    "rois": {
+      "wall": [
+        7,
+        14,
+        32,
+        48
+      ],
+      "wood": [
+        52,
+        14,
+        32,
+        48
+      ],
+      "lamp": [
+        99,
+        19,
+        22,
+        38
+      ]
+    },
+    "lamp_peak_xy": [
+      109,
+      37
+    ],
+    "seam_y_range": [
+      14,
+      62
+    ],
+    "seam_x_centers": [
+      46,
+      92
+    ],
+    "seam_half_width": 3
+  },
+  "protocol": {
+    "schema_version": 1,
+    "experiment_id": "tea-shop-fusion-01",
+    "claim": "在已有弱、强两路输出上，只改强支路混合权重，检验预置分区能否同时减少暗墙残噪、保留木纹与灯芯，且不加重过渡处误差。",
+    "scene": {
+      "id": "tea-shop-synthetic-01",
+      "seed": 20261114,
+      "width": 128,
+      "height": 80,
+      "domain": "8 位渲染灰度，0–255",
+      "split": "单张合成场景的受控算例；无独立留出帧",
+      "rois": {
+        "wall": [
+          7,
+          14,
+          32,
+          48
+        ],
+        "wood": [
+          52,
+          14,
+          32,
+          48
+        ],
+        "lamp": [
+          99,
+          19,
+          22,
+          38
+        ]
+      },
+      "lamp_peak_xy": [
+        109,
+        37
+      ],
+      "seam_y_range": [
+        14,
+        62
+      ],
+      "seam_x_centers": [
+        46,
+        92
+      ],
+      "seam_half_width": 3
+    },
+    "weak": {
+      "operator": "mix noisy and 3x3 edge-replicated box mean",
+      "box_weight": 20
+    },
+    "strong": {
+      "operator": "7x7 edge-replicated box mean"
+    },
+    "global": {
+      "strong_weight": 50
+    },
+    "spatial": {
+      "basis": "合成场景预置的几何布局，手工指定；融合函数不读取参考图、退化输入的像素或评估 ROI。",
+      "left_weight": 85,
+      "center_weight": 15,
+      "right_weight": 8,
+      "transition_x": [
+        [
+          41,
+          50
+        ],
+        [
+          87,
+          96
+        ]
+      ]
+    },
+    "diagnostic": {
+      "mean_matched": "追加的强支路总占比对照，用分区权重图的精确全图均值作为常量权重。保留 A 的 50% 基线与原有门槛；本对照不参与验收。"
+    },
+    "gates": [
+      {
+        "id": "wall_residual_std",
+        "metric": "wall_residual_std",
+        "label": "暗墙残差标准差",
+        "op": "<=",
+        "limit_rule": "global * 0.90"
+      },
+      {
+        "id": "wood_mae",
+        "metric": "wood_mae",
+        "label": "木纹区 MAE",
+        "op": "<=",
+        "limit_rule": "global + 0.60"
+      },
+      {
+        "id": "wood_contrast",
+        "metric": "wood_contrast_ratio",
+        "label": "木纹相邻列反差保留比",
+        "op": ">=",
+        "limit_rule": "global"
+      },
+      {
+        "id": "lamp_peak",
+        "metric": "lamp_peak_loss",
+        "label": "固定灯芯坐标亮度损失",
+        "op": "<=",
+        "limit_rule": "min(28, global)"
+      },
+      {
+        "id": "seam_gradient",
+        "metric": "seam_excess_step_mae",
+        "label": "分区交界梯度误差 MAE",
+        "op": "<=",
+        "limit_rule": "global + 1.50"
+      }
+    ]
+  },
+  "methods": {
+    "reference": "干净参考",
+    "noisy": "共同加噪输入",
+    "weak": "弱支路",
+    "strong": "强支路",
+    "global": "A · 固定权重",
+    "spatial": "B · 分区权重",
+    "weights": "B · 强支路权重图",
+    "mean_matched": "均值匹配诊断"
+  },
+  "metrics": {
+    "noisy": {
+      "wall_mae": 8.862630208333334,
+      "wall_residual_std": 10.878835242979667,
+      "wood_mae": 4.211588541666667,
+      "wood_contrast_ratio": 1.106994517361688,
+      "lamp_mae": 2.661483253588517,
+      "lamp_peak_loss": 2,
+      "lamp_peak_value": 229,
+      "seam_excess_step_mae": 7.273809523809524,
+      "global_mae": 5.5169921875
+    },
+    "weak": {
+      "wall_mae": 7.330078125,
+      "wall_residual_std": 9.002425043679818,
+      "wood_mae": 3.7298177083333335,
+      "wood_contrast_ratio": 0.9431383950822396,
+      "lamp_mae": 2.561004784688995,
+      "lamp_peak_loss": 2,
+      "lamp_peak_value": 229,
+      "seam_excess_step_mae": 6.431547619047619,
+      "global_mae": 4.69111328125
+    },
+    "strong": {
+      "wall_mae": 1.4186197916666667,
+      "wall_residual_std": 1.786248464462822,
+      "wood_mae": 15.934244791666666,
+      "wood_contrast_ratio": 0.1405549094533976,
+      "lamp_mae": 7.340909090909091,
+      "lamp_peak_loss": 17,
+      "lamp_peak_value": 214,
+      "seam_excess_step_mae": 16.811011904761905,
+      "global_mae": 7.0931640625
+    },
+    "global": {
+      "wall_mae": 3.869140625,
+      "wall_residual_std": 4.791534289314436,
+      "wood_mae": 8.783854166666666,
+      "wood_contrast_ratio": 0.4115716896494434,
+      "lamp_mae": 4.533492822966507,
+      "lamp_peak_loss": 9,
+      "lamp_peak_value": 222,
+      "seam_excess_step_mae": 9.989583333333334,
+      "global_mae": 5.083984375
+    },
+    "spatial": {
+      "wall_mae": 1.794921875,
+      "wall_residual_std": 2.2532347044718657,
+      "wood_mae": 4.429036458333333,
+      "wood_contrast_ratio": 0.7841003488951653,
+      "lamp_mae": 2.8660287081339715,
+      "lamp_peak_loss": 3,
+      "lamp_peak_value": 228,
+      "seam_excess_step_mae": 7.532738095238095,
+      "global_mae": 3.3462890625
+    },
+    "mean_matched": {
+      "wall_mae": 4.673828125,
+      "wall_residual_std": 5.774321015164535,
+      "wood_mae": 7.090494791666667,
+      "wood_contrast_ratio": 0.5387107492939027,
+      "lamp_mae": 3.9569377990430623,
+      "lamp_peak_loss": 8,
+      "lamp_peak_value": 223,
+      "seam_excess_step_mae": 8.691964285714286,
+      "global_mae": 4.7755859375
+    }
+  },
+  "gates": [
+    {
+      "id": "wall_residual_std",
+      "metric": "wall_residual_std",
+      "label": "暗墙残差标准差",
+      "op": "<=",
+      "limit_rule": "global * 0.90",
+      "baseline": 4.791534289314436,
+      "candidate": 2.2532347044718657,
+      "limit": 4.3123808603829925,
+      "passed": true
+    },
+    {
+      "id": "wood_mae",
+      "metric": "wood_mae",
+      "label": "木纹区 MAE",
+      "op": "<=",
+      "limit_rule": "global + 0.60",
+      "baseline": 8.783854166666666,
+      "candidate": 4.429036458333333,
+      "limit": 9.383854166666666,
+      "passed": true
+    },
+    {
+      "id": "wood_contrast",
+      "metric": "wood_contrast_ratio",
+      "label": "木纹相邻列反差保留比",
+      "op": ">=",
+      "limit_rule": "global",
+      "baseline": 0.4115716896494434,
+      "candidate": 0.7841003488951653,
+      "limit": 0.4115716896494434,
+      "passed": true
+    },
+    {
+      "id": "lamp_peak",
+      "metric": "lamp_peak_loss",
+      "label": "固定灯芯坐标亮度损失",
+      "op": "<=",
+      "limit_rule": "min(28, global)",
+      "baseline": 9,
+      "candidate": 3,
+      "limit": 9,
+      "passed": true
+    },
+    {
+      "id": "seam_gradient",
+      "metric": "seam_excess_step_mae",
+      "label": "分区交界梯度误差 MAE",
+      "op": "<=",
+      "limit_rule": "global + 1.50",
+      "baseline": 9.989583333333334,
+      "candidate": 7.532738095238095,
+      "limit": 11.489583333333334,
+      "passed": true
+    }
+  ],
+  "all_gates_pass": true,
+  "diagnostics": {
+    "mean_matched": {
+      "strong_weight": 38.1875,
+      "weight_numerator": 4888,
+      "weight_denominator": 12800,
+      "used_for_gates": false
+    }
+  },
+  "artifacts": {
+    "frames": {
+      "reference": "reference.pgm",
+      "noisy": "noisy.pgm",
+      "weak": "weak.pgm",
+      "strong": "strong.pgm",
+      "global": "global.pgm",
+      "spatial": "spatial.pgm",
+      "weights": "weights.pgm",
+      "mean_matched": "mean_matched.pgm"
+    },
+    "images": {
+      "reference": "reference.png",
+      "noisy": "noisy.png",
+      "weak": "weak.png",
+      "strong": "strong.png",
+      "global": "global.png",
+      "spatial": "spatial.png",
+      "weights": "weights.png",
+      "mean_matched": "mean_matched.png"
+    },
+    "report": "report.md",
+    "demo": "demo.html",
+    "comparison": "comparison.svg",
+    "roi_comparison": "roi-comparison.svg",
+    "manifest": "manifest.json"
+  },
+  "provenance": {
+    "source_sha256": {
+      "protocol.json": "0096715f02cb549751b8e70efc67fc2cae66f00b41f6ea009ea04ebadef04311",
+      "scene.py": "84c4e196d0bba3eb89b0a52883229619ad1e495032e776d210de54cc5cbee3f9",
+      "solution.py": "d255ebc96556daddb6d205895540f1d95056aaaeefec4850f2461c58ef8c0812",
+      "render.py": "5336b9faf761d5f6c17838e59bada6992b0f785a31fdc205eeda79b5e34c3b49",
+      "test_solution.py": "ad649d8ea563f4c2778e10b9470932bcb6f219c6511ed878473486b303c17477",
+      "task.md": "654519ecdcc7b9c7eb79cb7332db62f5da3143bf93cc255e6506325311293cb0"
+    },
+    "source_line_endings": "文本 SHA-256 统一以 LF 计算；生成的输出按文件字节计算。",
+    "frame_sha256": {
+      "reference.pgm": "559babdf2caeb087788c134a2aededab685b15f1c7afbbaf19670a8c1489917e",
+      "noisy.pgm": "41cfd248e8567e597471b882ee2114a866eda394efc811b5e506aa167e0211ea",
+      "weak.pgm": "d1a79a4f3e2d5c51509306539329faaccd251c16e471e1c73ec634fb0865bcbb",
+      "strong.pgm": "bbd6e4d817f2d2901643a13b52e48d221b47e940afbcbfefa39dc06cb7b38b67",
+      "global.pgm": "6597702f30a8bfb1945b9f409035a11da943510f3987878041ea6b88f2685dd3",
+      "spatial.pgm": "1fb998cb6a54fc7c95bee93b82a5aa3ed1cbecc3ad2a5456d91392ef3ef64740",
+      "weights.pgm": "e3b4df5d21622f22f12f352182de636b672bc5bf29848e6a7a399793f73ceeaa",
+      "mean_matched.pgm": "7ea0f4ef02fd3e68549240c4d9b262fd687f1a7093c0423499ee3a306a641c3b"
+    },
+    "command": "python solution.py --out run",
+    "source": "本地程序生成的对齐合成灰度数据"
+  }
+}

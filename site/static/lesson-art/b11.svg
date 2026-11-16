@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="404" viewBox="0 0 720 404" role="img" aria-labelledby="title desc">
+<title id="title">基线与候选的串行时间构成</title>
+<desc id="desc">基线输入三、算子六、后处理四毫秒；候选增加二毫秒转置，算子少二毫秒，端到端都为十三毫秒。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#486257"/></marker></defs>
+<rect x="1" y="1" width="718" height="402" rx="20" fill="#fcfdf6" stroke="#c7d5c9" stroke-width="2"/>
+<g font-family="Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif">
+<text x="30" y="46" font-size="30" fill="#1b3026" font-weight="650" text-anchor="start">算子快了 2 ms，整帧仍是 13 ms</text>
+<text x="30" y="182" font-size="25" fill="#1b3026" font-weight="650" text-anchor="start">基线</text>
+<rect x="125" y="137" width="123" height="71" rx="4" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="186.5" y="166" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">输入</text>
+<text x="186.5" y="194" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">3</text>
+<rect x="251" y="137" width="249" height="71" rx="4" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="375.5" y="166" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">算子</text>
+<text x="375.5" y="194" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">6</text>
+<rect x="503" y="137" width="165" height="71" rx="4" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="585.5" y="166" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">后处理</text>
+<text x="585.5" y="194" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">4</text>
+<text x="30" y="283" font-size="25" fill="#1b3026" font-weight="650" text-anchor="start">候选</text>
+<rect x="125" y="238" width="123" height="71" rx="4" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="186.5" y="267" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">输入</text>
+<text x="186.5" y="295" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">3</text>
+<rect x="251" y="238" width="81" height="71" rx="4" fill="#f7e3cc" stroke="none" stroke-width="2"/>
+<text x="291.5" y="267" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">转置</text>
+<text x="291.5" y="295" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">2</text>
+<rect x="335" y="238" width="165" height="71" rx="4" fill="#dcecdf" stroke="none" stroke-width="2"/>
+<text x="417.5" y="267" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">算子</text>
+<text x="417.5" y="295" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">4</text>
+<rect x="503" y="238" width="165" height="71" rx="4" fill="#e5edf1" stroke="none" stroke-width="2"/>
+<text x="585.5" y="267" font-size="22" fill="#1b3026" font-weight="650" text-anchor="middle">后处理</text>
+<text x="585.5" y="295" font-size="22" fill="#1b3026" font-weight="730" text-anchor="middle">4</text>
+<path d="M125 345 L671 345" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<path d="M125 340 L125 350" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<text x="125" y="377" font-size="20" fill="#486257" font-weight="650" text-anchor="middle">0</text>
+<path d="M251 340 L251 350" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<text x="251" y="377" font-size="20" fill="#486257" font-weight="650" text-anchor="middle">3</text>
+<path d="M335 340 L335 350" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<text x="335" y="377" font-size="20" fill="#486257" font-weight="650" text-anchor="middle">5</text>
+<path d="M503 340 L503 350" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<text x="503" y="377" font-size="20" fill="#486257" font-weight="650" text-anchor="middle">9</text>
+<path d="M671 340 L671 350" fill="none" stroke="#486257" stroke-width="2" stroke-linecap="round"/>
+<text x="671" y="377" font-size="20" fill="#486257" font-weight="650" text-anchor="middle">13</text>
+<text x="30" y="373" font-size="22" fill="#486257" font-weight="650" text-anchor="start">时间 ms</text>
+</g>
+</svg>

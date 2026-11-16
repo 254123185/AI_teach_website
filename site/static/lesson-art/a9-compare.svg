@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="390" viewBox="0 0 720 390" font-family="Microsoft YaHei, Noto Sans CJK SC, PingFang SC, system-ui, sans-serif">
+<defs><marker id="end" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="#405767"/></marker></defs>
+<rect x="1" y="1" width="718" height="388" rx="18" fill="#f1f6f5" stroke="#9bb0ba"/>
+<rect x="201" y="19" width="318" height="56" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="360.0" y="55.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">先收集运行 ID 和退出状态</text>
+<path d="M360 75 V95 H188 V116 M360 95 H532 V116" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<path d="M188 95 V116" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<rect x="26" y="118" width="324" height="75" rx="10" fill="#d6e8f1" stroke="#40769a"/><text x="188.0" y="151.5" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">run01 · 日志指向缺目录</text><text x="188.0" y="180.5" text-anchor="middle" font-size="22" fill="#162831">missing ./data/val</text>
+<rect x="370" y="118" width="324" height="75" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="532.0" y="151.5" text-anchor="middle" font-size="22" fill="#162831" font-weight="700">run02 · 只有退出码</text><text x="532.0" y="180.5" text-anchor="middle" font-size="22" fill="#162831">exit=137</text>
+<path d="M188 193 V218 M532 193 V218 M188 288 V307 M532 288 V307" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<path d="M188 193 V218 M532 193 V218 M188 288 V307" fill="none" stroke="#405767" stroke-width="2.5" marker-end="url(#end)"/>
+<rect x="26" y="219" width="324" height="68" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="188.0" y="261.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">读生效配置，再查目录</text>
+<rect x="370" y="219" width="324" height="68" rx="10" fill="#ffffff" stroke="#9bb0ba"/><text x="532.0" y="261.0" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">找 stderr，结果缺失</text>
+<rect x="26" y="307" width="324" height="63" rx="10" fill="#dceddf" stroke="#3d765e"/><text x="188.0" y="346.5" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">确认该目录下路径缺失</text>
+<rect x="370" y="307" width="324" height="63" rx="10" fill="#fde8ce" stroke="#a25622"/><text x="532.0" y="346.5" text-anchor="middle" font-size="24" fill="#162831" font-weight="700">原因未知，等待证据</text>
+</svg>

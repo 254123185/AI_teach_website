@@ -1,1 +1,2 @@
 * text=auto eol=lf
+/site/experiment-snapshot/** -text whitespace=trailing-space,space-before-tab,cr-at-eol
