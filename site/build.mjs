@@ -174,6 +174,7 @@ function shell(base, title, active, main, caseStyles = false) {
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f6ed">
 <meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、实战工作流和本地任务包。">
 <title>${h(title)} · AI 辅助研发训练手册</title><link rel="icon" href="${base}assets/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="${base}assets/style.css">${caseStyles || ['home','projects'].includes(active) ? `<link rel="stylesheet" href="${base}assets/case-guide.css">` : ''}${active === 'projects' && !sample ? `<link rel="stylesheet" href="${base}assets/workflow-examples/p34-interaction.css">` : ''}
+<script defer src="https://cloud.umami.is/script.js" data-website-id="104c3902-b290-434d-9f46-0be5b6cf8b31" data-domains="254123185.github.io" data-exclude-search="true" data-exclude-hash="true"></script>
 <script type="module" src="${base}assets/main.mjs"></script></head>
 <body><a class="skip" href="#main">跳到正文</a><header class="masthead"><div class="wrap header-inner">
 <a class="brand" href="${base}index.html"><img src="${base}assets/mark.svg" alt="" width="34" height="34"><span>AI 辅助研发训练手册</span></a>
