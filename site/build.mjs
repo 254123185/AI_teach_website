@@ -9,12 +9,14 @@ import { blindSpotCheck, caseHandoff, controlReview, denoiseOpening, fusionFlow,
 import { visualInputLesson } from './visual-input.mjs';
 import { deepContent, deepTask, evidenceTable, lessonFlow, taskMarkdown, validateDeepLesson } from './deep-lesson.mjs';
 import { showSkillExamples, skillExamples } from './skill-lesson.mjs';
+import { onboardingLesson, validateOnboarding } from './onboarding.mjs';
 
 const site = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(site, '../dist');
 const sample = process.argv.includes('--sample');
 const json = async (name) => JSON.parse((await readFile(join(site, 'content', name), 'utf8')).replace(/^\uFEFF/, ''));
 const { modules, sources, version } = await json('curriculum.json');
+const onboarding = await json('onboarding.json');
 const projects = await Promise.all(['P1', 'P2', 'P3', 'P4'].map(async id =>
   ({ id, ...await json(`workflows/${id.toLowerCase()}.json`) })));
 const workflowFixtures = {
@@ -83,6 +85,7 @@ const sampleLesson = {
 
 const h = (value) => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const courseUrl = (id) => `courses/${id.toLowerCase()}/`;
+const onboardingUrl = 'courses/onboarding/';
 const projectUrl = (id) => `${casePath}${id.toLowerCase()}/`;
 const paragraphs = (items) => items.map(item => `<p>${h(item)}</p>`).join('');
 const courseChip = (id, base) => {
@@ -94,6 +97,7 @@ const courseChip = (id, base) => {
 function validateData() {
   const expected = [...Object.entries({ A: 15, B: 12, C: 5 }).flatMap(([key, count]) => Array.from({length: count}, (_, index) => key + (index + 1)))];
   assert.deepEqual([...courseMap.keys()], expected);
+  validateOnboarding(onboarding, courseMap);
   assert.deepEqual(projects.map(item => item.id), ['P1', 'P2', 'P3', 'P4']);
   const completed = new Set();
   function visit(id, trail = new Set()) {
@@ -193,21 +197,23 @@ function home() {
 <div class="actions"><a class="button primary" href="paths/">选一条学习路线 <span aria-hidden="true">↗</span></a><a class="button secondary" href="courses/">浏览课程</a></div>
 <div class="hero-summary"><span><b>32</b> 门课程</span><span><b>4</b> 个实战专题</span></div></div>${workflowArt('')}</section>
 <section class="home-tracks" aria-labelledby="tracks-title"><div class="section-heading"><div><h2 id="tracks-title">课程内容</h2></div><a class="text-link" href="courses/">查看完整目录 ↗</a></div>
-<div class="cards">${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="courses/#track-${key}"><span class="track-sign" aria-hidden="true">${track.sign}</span><h3>${track.title}</h3><p>${track.text}</p><span class="card-end">${modules.filter(item => item.track === key).length} 门课程 <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>
+<div class="cards"><a class="track-card onboarding-card" href="${onboardingUrl}"><h3>${h(onboarding.title)}</h3><p>${h(onboarding.description)}</p><span class="card-end">${onboarding.sections.length} 个入门主题 <span aria-hidden="true">↗</span></span></a>
+${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="courses/#track-${key}"><span class="track-sign" aria-hidden="true">${track.sign}</span><h3>${track.title}</h3><p>${track.text}</p><span class="card-end">${modules.filter(item => item.track === key).length} 门课程 <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>
 <section class="home-cases" aria-labelledby="home-cases"><div class="section-heading"><h2 id="home-cases">${caseMenuLabel}</h2><a data-case-overview class="text-link" href="${casePath}">打开实战案例总览 ↗</a></div>
 <div class="case-overview-copy"><h3>${caseTitle}</h3><p>${caseScope}</p></div>${projectCards('')}</section></div>`;
 }
 
 function paths() {
-  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">按研发任务选课。先修章节见各课页首。</p></section>
+  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">第一次接触大模型，可以先从 <a href="../${onboardingUrl}">${h(onboarding.title)}</a> 学起。了解基础后，按研发任务选课。</p></section>
 <div class="route-list">${routes.map(route => `<section class="route" id="${route.key}"><h2>${route.name}</h2><p>${route.text}</p><ol>${route.ids.map(id => `<li>${courseChip(id, '../')}</li>`).join('')}</ol></section>`).join('')}</div>
 <p class="route-case-link"><a data-case-overview class="text-link" href="../${casePath}">打开实战案例总览 ↗</a> · ${caseTitle}</p></div>`;
 }
 
 function catalog() {
   return `<div class="wrap"><section class="page-intro"><h1>课程目录</h1></section>
-<div class="catalog-toolbar"><label class="search"><span>搜索课程</span><input type="search" data-course-search placeholder="搜索标题、主题或编号" autocomplete="off"></label><p class="catalog-count" data-course-count aria-live="polite">${modules.length} 门课程</p></div>
-<div class="tabs"><a href="#track-A">通用主干</a><a href="#track-B">算法实战</a><a href="#track-C">前沿选修</a></div><p data-empty hidden>没有找到课程，试试别的关键词。</p>
+<div class="catalog-toolbar"><label class="search"><span>搜索课程与学习资料</span><input type="search" data-course-search placeholder="搜索标题、主题或编号" autocomplete="off"></label><p class="catalog-count" data-course-count aria-live="polite">${modules.length} 门课程 · 1 个入门类目</p></div>
+<div class="tabs"><a href="#track-onboarding">${h(onboarding.title)}</a><a href="#track-A">通用主干</a><a href="#track-B">算法实战</a><a href="#track-C">前沿选修</a></div><p data-empty hidden>没有找到课程或学习资料，试试别的关键词。</p>
+<section class="catalog-track" data-course-group="onboarding" id="track-onboarding"><h2>${h(onboarding.title)}</h2><div class="catalog-list"><a class="catalog-item" data-course-card data-keywords="${h('LLM Token 提示词 RAG API Harness 新人答疑 ' + onboarding.sections.map(section => section.title).join(' '))}" href="../${onboardingUrl}"><div><h3>大模型与 Agent 入门导读</h3><p>${h(onboarding.description)}</p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a></div></section>
 ${Object.entries(tracks).map(([key, track]) => `<section class="catalog-track" data-course-group id="track-${key}"><h2>${track.title}</h2><p>${track.text}</p><div class="catalog-list">${modules.filter(item => item.track === key).map(item => {
     const body = `<span class="mono">${item.id}</span><div><h3>${h(item.title)}</h3><p>${h(item.goal)}</p></div><span class="catalog-arrow" data-course-state="${item.id}" aria-label="打开课程">↗</span>`;
     return pageCourseIds.includes(item.id)
@@ -494,6 +500,7 @@ await write('.nojekyll', '');
 await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
+await write(`${onboardingUrl}index.html`, shell('../../', onboarding.title, 'courses', onboardingLesson(onboarding, h, courseChip), true));
 await write(`${casePath}index.html`, shell('../', caseTitle, 'projects', denoiseStory(fusionResult)));
 const lessonExtras = sample ? {} : { A8: { 'exact-ids': showSkillExamples(await skillExamples(site, python), h) } };
 for (const id of pageCourseIds) {

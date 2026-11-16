@@ -1,0 +1,86 @@
+{
+  "title": "新员工入门",
+  "description": "用一个新人答疑助手，弄清大模型能做什么、Agent 多做了什么，以及输出怎么核查。",
+  "sections": [
+    {
+      "id": "model",
+      "title": "大模型能写出答案，答案从哪来？",
+      "paragraphs": [
+        "新同事问：“我可以直接使用共享测试机吗？”大模型可能马上写出一段流畅的答复。它先把输入拆成 token，也就是文字、符号等片段，逐次预测下一片并接到回答上。只给一个问题时，模型可以写出常见做法，但这台机器的申请要求要查本地规则。",
+        "假设教学手册的第 2 节写着“共享测试机须登记后使用”。把这段提供给模型，它就可以帮忙把原文改成易懂的答复。复核时看它有没有引到第 2 节，以及有没有擅自加上审批人、时限等原文未提到的条件。"
+      ],
+      "figure": {"caption":"一个问题，两种材料条件", "nodes":[{"title":"只有问题","text":"模型能给常见流程，具体规则待查"},{"title":"给第 2 节原文","text":"把原文转成给新人的简短说明"},{"title":"人核一条引用","text":"确认登记要求和引用确实对应"}]},
+      "sources": [
+        {"title":"李宏毅 · 生成式 AI 第 1 讲", "url":"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php", "note":"中文。课表里选第 1 讲，先理解生成；想看模型内部再读第 3 讲。"},
+        {"title":"Datawhale × OceanBase · Easy Data x AI 公共基础", "url":"https://datawhalechina.github.io/easy-data-x-ai/course-intro.html", "note":"中文。选 F1「大模型的本质与边界」，再用 F2 建立 Agent 的基本概念。"}
+      ],
+      "courses":["A1","A2"]
+    },
+    {
+      "id": "prompt",
+      "title": "把一句需求写成能接手的任务",
+      "paragraphs": [
+        "只说“帮我回复新人”，模型还缺回复对象、手册版本和找不到依据时的做法。把目标、材料、交付和失败处理说清楚，模型才知道该保留哪些条款，以及什么时候停下来请人补资料。",
+        "第一版可以先拿手册里一条明确的问题试。第二版只换提问措辞，检查答案和引用是否仍然一致。若两次都遗漏同一个要点，可以给一个合格输出示例；若原文缺这条规则，需要补资料或把问题转给流程负责人。"
+      ],
+      "prompt": "请用下面两条模拟手册回答“我可以直接使用共享测试机吗？”先给一句答复，然后写依据段落。资料里未写的审批人、时限或例外，请写“手册未说明”。\n\n[入职手册 v2 §2] 共享测试机须登记后使用。\n[入职手册 v2 §3] 借用外设应在归还时登记。",
+      "sources":[{"title":"微软 · Generative AI for Beginners 中文目录", "url":"https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/zh-CN/README.md", "note":"先看第 4 课提示词基础。可直接读讲义。跟做代码时再按相应章节准备模型 API。"}],
+      "courses":["A4"]
+    },
+    {
+      "id": "retrieval",
+      "title": "资料多了，让系统先找原文再回答",
+      "paragraphs": [
+        "手册有几十份时，每次把全文交给模型既麻烦也容易混进旧版本。检索增强生成（RAG）先用问题查找相关段落，再让模型根据返回内容生成答复。检索记录能告诉你模型实际上拿到了哪些资料。",
+        "假如同样的测试机问题查出来的是旧版手册，优先核对来源、版本筛选和检索排序。若已经找到了 v2 第 2 节，回答却漏写登记要求，才去检查提示词和模型。没有找到支持答案的段落时，返回资料不足，并说明要找哪类文件。"
+      ],
+      "figure":{"caption":"答错时，从返回的原文定位问题", "nodes":[{"title":"问题","text":"是否能直接使用共享测试机？"},{"title":"查段落","text":"排除旧版，找到 v2 第 2 节"},{"title":"生成回答","text":"先登记，再使用，并附出处"},{"title":"核对证据","text":"原文未命中与答复误读分开记录"}]},
+      "sources":[{"title":"阿里云 ACP · 新人答疑项目", "url":"https://github.com/AlibabaCloudDocs/aliyun_acp_learning", "note":"中文。公开目录选 C2 的 2.1、2.2、2.4 和 2.5。跟做云端示例可能需要百炼 API Key；认证与看讲义是两回事。"}],
+      "courses":["A7"]
+    },
+    {
+      "id": "tools",
+      "title": "查某台设备现在忙不忙，需要工具",
+      "paragraphs": [
+        "手册能说明如何登记。要查设备是否空闲，由应用通过 API，也就是程序间约定的接口，把问题和可用的工具说明发给模型。这里提供一个只读工具 lookup_machine，接收 machine_id。由模型提出调用，应用检查参数和权限、执行查询，再把结果交回模型。",
+        "问“TEST-07 现在空闲吗？”时，查询回传“忙”才能据此作答。设备编号无效要请人确认，超时则说明没查到。读到工具请求只能证明模型提出了调用，只有收到成功返回才能确认读数。"
+      ],
+      "figure":{"caption":"一次设备查询实际传了什么", "nodes":[{"title":"模型提出请求","text":"lookup_machine，编号 TEST-07"},{"title":"应用核对并执行","text":"编号合法，当前人有查询权限"},{"title":"工具返回","text":"状态 busy 与查询时间"},{"title":"模型据此回答","text":"说明当前忙；超时则明确没查到"}]},
+      "trace":{"request":"{\n  \"tool\": \"lookup_machine\",\n  \"machine_id\": \"TEST-07\"\n}", "response":"{\n  \"status\": \"busy\",\n  \"checked_at\": \"10:30 +08:00\"\n}"},
+      "sources":[
+        {"title":"Easy Data x AI · D1 大模型 API 基础", "url":"https://datawhalechina.github.io/easy-data-x-ai/dev/D1%20%E8%AF%BE%E7%A8%8B%E7%A8%BF%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%20API%20%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%9F%BA%E7%A1%80.html", "note":"中文，适合会读 Python 的新人。选 API 消息结构和 Tool Use 小节。"},
+        {"title":"哥伦比亚大学 · Designing LLM Agents 第 7 周课件", "url":"https://designing-agents.github.io/assets/lecture_slides/week7.pdf", "note":"英文 PDF，从工具调用读起；想了解不同应用如何接同类工具，再读 MCP 部分。"}
+      ],
+      "courses":["A6"]
+    },
+    {
+      "id": "agent",
+      "title": "什么时候值得让 Agent 自己选下一步？",
+      "paragraphs": [
+        "如果问题总是“查一个编号的状态”，代码可固定按校验、查询、汇报来走。遇到“我今天能用哪台测试机，需要先做什么？”时，需要根据手册、设备清单和工具结果决定先查哪项、要不要补问。Agent 可以在这些有限的选择间往下走。",
+        "例如先找登记规则，再查 TEST-07。忙则给出查过的备选编号，缺时间段就先问。把分支和查到的结果记下来，接手的人能知道哪里卡住。若要替用户提交预约，先把设备、时段和影响给人确认。常用的交接方法可以写进一个可复用的说明包，也就是 Skill，下一次直接按里面的步骤做。"
+      ],
+      "figure":{"caption":"同一句需求会走到不同下一步", "nodes":[{"title":"先找规则","text":"登记后才能使用"},{"title":"再查设备","text":"TEST-07 忙，列出可核实的备选"},{"title":"判断信息是否够","text":"时段不明先追问，提交预约前确认"}]},
+      "sources":[
+        {"title":"微软 · AI Agents for Beginners 中文目录", "url":"https://github.com/microsoft/ai-agents-for-beginners/blob/main/translations/zh-CN/README.md", "note":"先看第 4 课工具使用与第 6 课可信 Agent。实验环境依课次，部分使用 Microsoft Foundry。"},
+        {"title":"Datawhale · Hello-Agents", "url":"https://github.com/datawhalechina/hello-agents", "note":"中文。研发新人先选第 4 章的 ReAct，再读第 7 章搭框架的过程。跟做模型示例前确认 Python 和 API 配置。"}
+      ],
+      "courses":["A8","A9","A11"],
+      "demo":true
+    },
+    {
+      "id": "evaluation",
+      "title": "上线前，先留三道回归题",
+      "paragraphs": [
+        "给新人答疑助手留一组固定问题。正常题看规则和引用，无依据题看它能否说缺什么，工具失败题看它有没有把错误说成成功。改过提示词、资料或工具之后逐项重跑，记录输出来追查哪一步出错。",
+        "判断是否省事，可以记录原本人工查几份文档、AI 方案需要手工核对几条引用，以及返工从哪里来。AI 适合定位段落和整理查询；工程师检查短语是否忠实于原文、系统权限是否合适、失败是否明确报告。下面是教学验收口径。"
+      ],
+      "table":{"caption":"新人答疑助手的三条验收记录", "headers":["给它什么", "应看到什么", "失败后先查哪里"], "rows":[["问测试机怎么用，有 v2 §2", "答登记后使用，引用 v2 §2", "检索到的版本和段落"],["问审批时限，手册未写", "说明手册未说明，不填小时数", "模型有没有硬补细节"],["查 TEST-07，工具超时", "说明未查到实时状态", "工具日志和返回状态"]]},
+      "sources":[
+        {"title":"李宏毅 · 生成式 AI 第 4 讲", "url":"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php", "note":"中文。课表里打开第 4 讲「评估生成式人工智慧能力时可能遇到的各种坑」。"},
+        {"title":"DataTalks.Club · LLM Zoomcamp 模块 4：评估", "url":"https://github.com/DataTalksClub/llm-zoomcamp/blob/main/04-evaluation/README.md", "note":"英文。重点看如何分别评价检索、回答和工具轨迹。完整课程还需要 Python、命令行和基础 Docker。"}
+      ],
+      "courses":["A12","A14"]
+    }
+  ]
+}
