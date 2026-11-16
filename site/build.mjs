@@ -71,7 +71,7 @@ const tracks = {
   C: { title: '前沿选修', text: '研究自动化、长期记忆与多 Agent 协作，按手头任务选读。', sign: '∿' },
 };
 const routes = [
-  { key: 'apply', name: '日常使用 AI', text: '从模型边界、任务说明和编码协作入手，再学会组织上下文和复用方法。', ids: ['A1','A2','A3','A4','A5','A6','A7','A8','B1'] },
+  { key: 'apply', name: '日常使用 AI', text: '从模型边界、任务说明和编码协作入手，再补执行和评测，把一个真实需求写成可验收的算法任务。', ids: ['A1','A2','A3','A4','A5','A6','A7','A8','A9','A12','B1'] },
   { key: 'build', name: '做一个领域工具', text: '把已有脚本接到 AI 工作流，学习怎样留下运行记录、验证结果和处理失败。', ids: ['A6','A9','A10','A11','A12','B7','B9'] },
   { key: 'platform', name: '建设团队能力', text: '关心长任务、评测、协作和服务化时，从这里开始。', ids: ['A11','A12','A13','A14','A15','C4'] },
 ];
@@ -194,22 +194,46 @@ function workflowArt(base) {
 </div><figcaption>按报错线索选择检查项。 <a href="${base + courseUrl('A9')}#demo">看 A9 训练故障排查演示 ↗</a></figcaption></div></figure>`;
 }
 
+function learningMap(base) {
+  const steps = [
+    { title: '公开课程', path: `${publicCourseDirectory}#fit-foundations`, phase: '零基础可先选', text: '先选一门通识课熟悉大模型与 Agent。学到陌生专题时也可以回来查。', optional: true },
+    { title: tracks.A.title, path: 'courses/#track-A', phase: '先学基础', text: '弄清模型边界，再学怎么交代任务、接工具和判断 Agent 的执行结果。' },
+    { title: tracks.B.title, path: 'courses/#track-B', phase: '再练算法任务', text: '用 AI 把论文变成原型，组织样本和对照实验，学会核对结果。' },
+    { title: caseMenuLabel, path: casePath, phase: '串起一个项目', text: '读低照度降噪案例。先看 P1 怎么选论文，再到 P4 核对实验、报告与 Demo。' },
+    { title: tracks.C.title, path: 'courses/#track-C', phase: '按项目需要选读', text: '想做研究自动化、长期记忆或多 Agent 协作时，再选相应专题。', optional: true },
+  ];
+  const reproduction = ['A1','A4','A5','A6','A7','A9','A12','B1','B2'];
+  return `<section id="learning-map" class="learning-map" aria-labelledby="learning-map-title">
+<h2 id="learning-map-title">学习导图</h2>
+<p class="learning-map-intro">沿实线走完「通用主干 → 算法实战 → 实战案例」。虚线两端是按需选读。点任一节点可以进入对应栏目。</p>
+<ol class="learning-map-nodes" aria-label="推荐阅读顺序">${steps.map((step, index) => `<li${step.optional ? ' class="learning-map-optional"' : ''}>
+<a href="${base + step.path}"><span class="learning-map-phase">${h(step.phase)}</span><strong>${h(step.title)}</strong><span class="learning-map-note">${h(step.text)}</span></a>
+${index < steps.length - 1 ? `<span class="learning-map-arrow${step.optional || steps[index + 1].optional ? ' dashed' : ''}" aria-hidden="true"></span>` : ''}</li>`).join('')}</ol>
+<details class="learning-map-example"><summary>第一次做论文复现，可以按这个顺序读</summary>
+<p>先学模型边界、任务说明和工具调用，再看 Agent 怎样查资料、怎样验收。学到算法实战后，P2 和 P3 可以作为单独的教学工作台打开。</p>
+<ol aria-label="论文复现推荐课次">${reproduction.map(id => `<li>${courseChip(id, base)}</li>`).join('')}</ol></details>
+</section>`;
+}
+
 function home() {
-  return `<div class="wrap">${publicCoursesEntry(publicCourses.length, publicCourseFit, h)}<section class="hero"><div><p class="eyebrow">算法研发 · 自助培训</p>
+  return `<div class="wrap"><section class="hero"><div><p class="eyebrow">算法研发 · 自助培训</p>
 <h1>把 AI 用到<br>日常研发里<span>。</span></h1>
 <p class="intro">算法研发自学材料，覆盖模型原理、论文复现、实验诊断、图像质量和部署。</p>
-<div class="actions"><a class="button primary" href="paths/">选一条学习路线 <span aria-hidden="true">↗</span></a><a class="button secondary" href="courses/">浏览课程</a></div>
+<div class="actions"><a class="button primary" href="#learning-map">看学习导图 <span aria-hidden="true">↓</span></a><a class="button secondary" href="courses/">浏览课程</a></div>
 <div class="hero-summary"><span><b>32</b> 门课程</span><span><b>4</b> 个实战专题</span></div></div>${workflowArt('')}</section>
+${learningMap('')}
 <section class="home-tracks" aria-labelledby="tracks-title"><div class="section-heading"><div><h2 id="tracks-title">课程内容</h2></div><a class="text-link" href="courses/">查看完整目录 ↗</a></div>
 <div class="cards">${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="courses/#track-${key}"><span class="track-sign" aria-hidden="true">${track.sign}</span><h3>${track.title}</h3><p>${track.text}</p><span class="card-end">${modules.filter(item => item.track === key).length} 门课程 <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>
 <section class="home-cases" aria-labelledby="home-cases"><div class="section-heading"><h2 id="home-cases">${caseMenuLabel}</h2><a data-case-overview class="text-link" href="${casePath}">打开实战案例总览 ↗</a></div>
-<div class="case-overview-copy"><h3>${caseTitle}</h3><p>${caseScope}</p></div>${projectCards('')}</section></div>`;
+<div class="case-overview-copy"><h3>${caseTitle}</h3><p>${caseScope}</p></div>${projectCards('')}</section>
+${publicCoursesEntry(publicCourses.length, publicCourseFit, h)}</div>`;
 }
 
 function paths() {
-  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">找外部课可以先看 <a href="../${publicCourseDirectory}">公开课程适配表</a>。学本站课程时，按手头的研发任务选择下面的路线。</p></section>
-<div class="route-list">${routes.map(route => `<section class="route" id="${route.key}"><h2>${route.name}</h2><p>${route.text}</p><ol>${route.ids.map(id => `<li>${courseChip(id, '../')}</li>`).join('')}</ol></section>`).join('')}</div>
-<p class="route-case-link"><a data-case-overview class="text-link" href="../${casePath}">打开实战案例总览 ↗</a> · ${caseTitle}</p></div>`;
+  return `<div class="wrap"><header class="page-intro"><h1>学习路线</h1></header>
+${learningMap('../')}
+<section aria-labelledby="paths-by-task"><h2 id="paths-by-task" class="paths-by-task">按手头任务选课</h2>
+<div class="route-list">${routes.map(route => `<section class="route" id="${route.key}"><h3>${route.name}</h3><p>${route.text}</p><ol>${route.ids.map(id => `<li>${courseChip(id, '../')}</li>`).join('')}</ol></section>`).join('')}</div></section></div>`;
 }
 
 function catalog() {
