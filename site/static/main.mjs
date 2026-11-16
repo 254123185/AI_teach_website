@@ -75,21 +75,14 @@ if (casePrompts.length) {
 }
 const workspace = document.querySelector('[data-workflow-id]');
 if (workspace) {
-  const optional = workspace.closest('details');
-  async function loadWorkspace() {
-    if (!optional.open) return;
-    optional.removeEventListener('toggle', loadWorkspace);
-    try {
-      const name = workspace.dataset.workflowId;
-      const { mountWorkflow } = await import(`./workflow-examples/${name}-interaction.mjs`);
-      await mountWorkflow(workspace);
-    } catch (error) {
-      workspace.textContent = '工具未能载入。可以刷新页面，或展开下方的示例产物。';
-      console.error(error);
-    }
+  try {
+    const name = workspace.dataset.workflowId;
+    const { mountWorkflow } = await import(`./workflow-examples/${name}-interaction.mjs`);
+    await mountWorkflow(workspace);
+  } catch (error) {
+    workspace.textContent = '演示加载失败。可以刷新页面，或直接查看下方的示例记录。';
+    console.error(error);
   }
-  optional.addEventListener('toggle', loadWorkspace);
-  loadWorkspace();
 }
 const workflowSwitch = document.querySelector('[data-workflow-switch]');
 if (workflowSwitch) {

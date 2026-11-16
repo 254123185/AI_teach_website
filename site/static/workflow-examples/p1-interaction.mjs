@@ -33,7 +33,7 @@ const candidates = [
     check: '看图 6 的 (a) 和 (c)，找去噪后仍在的棋盘纹。回到 §3.1，核对式 (3) 的条件独立和式 (4) 的零均值假设。',
     experiment: '同一相机设置下拍几帧平坦暗墙，用残差检查行、列方向的相关性。条件基本满足时再做小规模训练，另留带细纹和孤立亮点的样本比较。',
     stop: '发现稳定行纹，先查相机残差。若模型抹掉暗弱纹理或真实小亮点，同样要停下来复查。',
-    decision: '现阶段缺训练窗口。即便以后可以训练，也要先检查噪声是否适合盲点预测。',
+    decision: '主案例没有训练窗口。若下一轮可以训练，先用多帧暗墙检查盲点预测的噪声假设。',
   },
 ];
 
@@ -42,7 +42,7 @@ const resourceLabels = {
   raw: 'RAW 噪声标定',
   paired: '实拍噪声／干净图对',
   train: '小规模训练窗口',
-  stripe: '假设新样本出现稳定条纹',
+  stripe: '新样本有稳定条纹',
 };
 
 function assess(candidate, resources) {
@@ -88,6 +88,7 @@ export function mountWorkflow(root) {
   .p1-study .p1-bar.alt { background:#b45d34; }
   .p1-study .p1-evidence figcaption,.p1-study .p1-chart-scale { color:var(--p1-quiet); font-size:.85rem; }
   .p1-study .p1-download { margin-top:.6rem; }
+  .p1-study [data-p1-download-status]:empty { display:none; }
   .p1-study .p1-transfer { display:grid; gap:.55rem; margin:.75rem 0 0; padding:.75rem; border-radius:.7rem; background:#edf3e9; }
   .p1-study .p1-transfer p { margin:0; }
   .p1-study .p1-map { display:grid; gap:.35rem; grid-template-columns:repeat(3,minmax(0,1fr)); }
@@ -116,8 +117,8 @@ export function mountWorkflow(root) {
   </div>
 </figure>
 <fieldset>
-  <legend>改变项目条件</legend>
-  <p>默认只开放融合权重。试着补一组实拍图或一个训练窗口，也可以假设新样本出现条纹，看看路线怎样变化。</p>
+  <legend>用假设条件试筛论文路线</legend>
+  <p>默认带入主案例的条件，只开放融合权重。勾选其他条件可以试着改变选型，再点一条路线看原文依据和拟做的对照。</p>
   <div class="p1-toggles">${Object.entries(resourceLabels).map(([id, label]) => `<label class="p1-toggle"><input type="checkbox" name="${id}" ${id === 'hook' ? 'checked' : ''}>${label}</label>`).join('')}</div>
 </fieldset>
 <div class="p1-candidates" role="group" aria-label="候选路线">
@@ -125,11 +126,13 @@ export function mountWorkflow(root) {
 </div>
 <div id="p1-workflow-details" class="p1-details">
   <div class="p1-copy" aria-live="polite"></div>
-  <button type="button" class="button secondary p1-download">下载这条路线的对照单</button>
+  <button type="button" class="button secondary p1-download">下载所选路线的对照单（Markdown）</button>
+  <p class="p1-reason" data-p1-download-status role="status"></p>
 </div>`;
   const controls = root.querySelectorAll('input[type="checkbox"]');
   const buttons = root.querySelectorAll('[data-p1-candidate]');
   const details = root.querySelector('.p1-copy');
+  const downloadStatus = root.querySelector('[data-p1-download-status]');
   let selected = candidates[0];
 
   function resources() {
@@ -137,6 +140,7 @@ export function mountWorkflow(root) {
   }
 
   function update() {
+    downloadStatus.textContent = '';
     const conditions = resources();
     for (const [index, candidate] of candidates.entries()) {
       const option = assess(candidate, conditions);
@@ -152,10 +156,10 @@ export function mountWorkflow(root) {
       <h3>${selected.name} · ${result.label}</h3>
       <p>${result.reason}</p>
       <p><strong>论文里的做法</strong>　${selected.mechanism}</p>
-      <p><strong>打开原文核对</strong>　${selected.check}</p>
+      <p><strong>读原文时核对</strong>　${selected.check}</p>
       <p><strong>拟做的对照</strong>　${selected.experiment}</p>
       <p><strong>停止条件</strong>　${selected.stop}</p>
-      <p><strong>放到这个项目里</strong>　${selected.decision}</p>
+      <p><strong>主案例当时的取舍</strong>　${selected.decision}</p>
       <p><a href="${selected.source}">${selected.paper} ↗</a></p>`;
   }
 
@@ -170,9 +174,9 @@ export function mountWorkflow(root) {
     const checked = Object.entries(conditions).filter(([, yes]) => yes).map(([key]) => resourceLabels[key]).join('、') || '暂无';
     const content = [
       `# 低照度图像降噪对照单 · ${selected.name}`, '',
-      `所选假设条件：${checked}`, `状态：${result.label}。${result.reason}`, '',
-      `论文位置：[${selected.paper}](${selected.source})`, `证据：${selected.mechanism}`, `打开原文核对：${selected.check}`, '',
-      `拟做的对照：${selected.experiment}`, `停止条件：${selected.stop}`, `放到这个项目里：${selected.decision}`, '',
+      `本次演示所选条件：${checked}`, `试筛结果：${result.label}。${result.reason}`, '',
+      `论文位置：[${selected.paper}](${selected.source})`, `证据：${selected.mechanism}`, `读原文时核对：${selected.check}`, '',
+      `拟做的对照：${selected.experiment}`, `停止条件：${selected.stop}`, `主案例当时的取舍：${selected.decision}`, '',
       '实测结果：待填', '',
     ].join('\n');
     const href = URL.createObjectURL(new Blob([content], { type: 'text/markdown;charset=utf-8' }));
@@ -180,6 +184,7 @@ export function mountWorkflow(root) {
     link.href = href;
     link.download = `low-light-denoise-${selected.id}.md`;
     link.click();
+    downloadStatus.textContent = `已请求下载 ${link.download}，文件包含所选条件和试筛结果。`;
     setTimeout(() => URL.revokeObjectURL(href), 1000);
   });
   update();

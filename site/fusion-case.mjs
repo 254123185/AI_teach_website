@@ -116,7 +116,7 @@ export function fusionResults(result, h) {
 
 export function fusionLinks(base) {
   const src = base + fusionPath;
-  return `<div class="actions fusion-links"><a class="button primary" href="${src}demo.html">打开同一实验的 Demo ↗</a><a class="button secondary" href="${src}report.md" download>下载报告</a><a class="button secondary" href="${src}result.json" download>下载机器可读结果</a><a class="button secondary" href="${base}downloads/p4.zip" download>下载完整复现包</a></div>`;
+  return `<div class="actions fusion-links"><a class="button primary" href="${src}demo.html">打开二维分区融合 Demo ↗</a><a class="button secondary" href="${src}report.md" download>下载实验报告 · Markdown</a><a class="button secondary" href="${src}result.json" download>下载实验读数 · JSON</a><a class="button secondary" href="${base}downloads/p4.zip" download>下载 P4 复现包 · ZIP</a></div>`;
 }
 
 export function inspectFusionRegions(base) {

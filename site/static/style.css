@@ -96,6 +96,9 @@ h3 { font-size: 1.16rem; line-height: 1.4; }
 .route-list { display: grid; gap: 15px; }
 .route { border: 1px solid var(--line); border-radius: 12px; background: var(--white); padding: 24px; }
 .route p { color: var(--muted); margin-top: .55rem; }
+.route-case-link { margin-top: 1.2rem; }
+.course-case-links { margin-top: 1.5rem; }
+.subtle { color: var(--muted); font-size: .86rem; }
 .route ol { display: flex; flex-wrap: wrap; align-items: center; column-gap: 30px; row-gap: 9px; padding-left: 23px; margin-bottom: 0; }
 .route li::marker, .text-list li::marker, .stages li::marker { color: var(--accent); font-weight: 700; }
 .catalog-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 14px; margin-bottom: 19px; }

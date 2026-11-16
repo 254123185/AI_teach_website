@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="0;url=../../experiments/tea-shop/demo.html">
 <title>低照度图像降噪 · 分区融合 Demo</title>
 </head>
-<body><p><a href="../../experiments/tea-shop/demo.html">打开分区降噪对照</a></p></body>
+<body><p><a id="demo-link" href="../../experiments/tea-shop/demo.html">打开二维分区融合 Demo</a></p>
+<script>
+  const target = new URL(document.getElementById('demo-link').href);
+  target.search = location.search;
+  target.hash = location.hash;
+  location.replace(target.href);
+</script></body>
 </html>

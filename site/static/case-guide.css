@@ -9,26 +9,18 @@
 .case-card-text { padding: 15px 18px 20px; }
 .case-card-label { display: flex; justify-content: space-between; align-items: center; color: var(--accent); margin-bottom: .6rem; }
 .case-card-output { display: block; border-top: 1px solid var(--line); padding-top: .45rem; margin-top: .55rem; color: var(--accent); font-size: .84rem; }
-.case-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: clamp(1rem, 4vw, 4rem); padding: .3rem 0 2.1rem; }
+.case-overview-copy { margin-bottom: 1rem; }
+.case-overview-copy p { max-width: 42rem; margin-top: .4rem; color: var(--muted); }
+.story-topics { margin-bottom: clamp(2.1rem, 5vw, 4rem); }
+.case-hero { padding: .8rem 0 1.65rem; }
 .case-hero h1 { font-size: clamp(2.15rem, 3.55vw, 3.35rem); text-wrap: balance; }
+.case-hero .actions { margin-top: 1rem; }
+.case-topic-link { margin-top: .85rem; }
 .case-body { max-width: 1040px; }
-.workflow-evidence { margin: 0; border: 1px solid #c9d5c4; border-radius: 1rem; padding: .8rem; background: #e9efe1; min-width: 0; }
-.workflow-evidence figcaption { padding: .1rem .25rem .55rem; color: var(--accent); }
-.workflow-evidence figcaption p { color: var(--muted); font-size: .86rem; }
-.workflow-evidence ol { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; }
-.workflow-evidence li { min-width: 0; }
-.workflow-evidence a { display: grid; grid-template-columns: auto minmax(0,1fr); align-content: start; gap: .3rem .48rem; padding: .65rem .57rem; height: 100%; border: 1px solid #cad6c6; border-radius: .65rem; background: #fffdf7; color: var(--ink); text-decoration: none; }
-.workflow-evidence a:hover, .workflow-evidence a[aria-current] { border-color: #315a42; background: #dbead5; }
-.workflow-evidence a > span:nth-of-type(2), .workflow-evidence a > small { grid-column: 1 / -1; }
-.workflow-evidence a > span:nth-of-type(2) { color: var(--muted); font-size: .85rem; }
-.workflow-evidence a > small { font-weight: 710; color: var(--accent); font-size: .79rem; }
-.workflow-evidence .guide-index { width: 1.42rem; height: 1.42rem; margin-top: .1rem; }
 .workflow-journey { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .5rem; padding: 0; margin: 0 0 1.1rem; }
 .workflow-journey a { min-width: 0; display: flex; gap: .38rem; align-items: center; padding: .56rem .7rem; border: 1px solid var(--line); border-radius: .56rem; color: var(--accent); font-weight: 720; text-decoration: none; background: var(--white); }
-.workflow-journey a span:first-child { background: var(--accent-soft); border-radius: 50%; width: 1.28rem; height: 1.28rem; flex: 0 0 1.28rem; text-align: center; font: 700 .79rem/1.28rem var(--mono); }
-.workflow-journey a span:last-child { margin-inline-start: auto; }
+.workflow-journey a:hover { border-color: var(--accent); }
 .workflow-journey a[aria-current] { background: #244d38; color: white; border-color: #244d38; }
-.workflow-journey a[aria-current] span:first-child { color: #244d38; }
 .story-page { max-width: 1180px; }
 .story-hero { padding: clamp(2.1rem, 6vw, 5rem) 0 2.55rem; }
 .story-hero h1 { font-size: clamp(2.65rem, 6.1vw, 5rem); line-height: 1.05; }
@@ -93,7 +85,6 @@
 .revision-list { padding-left: 1.5rem; }
 .revision-list li + li { margin-top: .8rem; }
 .revision-list h3 { margin: 0 0 .25rem; }
-.story-article #appendix .project-cards { margin-top: .75rem; }
 .paper-proof figcaption, .fusion-diagram figcaption { margin-top: 0; font-size: .96rem; color: var(--ink); }
 .paper-panels, .comparison-key { margin: .6rem 0; }
 .paper-panels > div, .comparison-key > div { padding: .56rem 0; border-bottom: 1px solid var(--line); }
@@ -201,8 +192,7 @@
   .visual-panel:last-child .visual-frame { aspect-ratio: 2/3; max-height: 10rem; }
   .visual-average { grid-template-columns: 1fr; gap: .4rem; }
   .visual-arrow { line-height: 1; }
-  .case-hero { grid-template-columns: 1fr; gap: 1.05rem; padding-bottom: 1.45rem; }
-  .case-hero .actions { margin-top: 1rem; }
+  .case-hero { padding-bottom: 1.45rem; }
   .case-contract { grid-template-columns: 1fr; }
   .workflow-journey { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .guided-workflow dl { grid-template-columns: 1fr; }

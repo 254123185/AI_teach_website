@@ -56,8 +56,9 @@ export async function mountWorkflow(root) {
   const { width, height } = config;
   root.classList.add('sample-studio');
   root.innerHTML = `<div class="study-board">
+    <p class="study-note">这里每次生成一对 ${width}×${height} 灰度图。选好退化类型、种子和幅度后，点击任意一张图即可对照同一坐标。</p>
     <div class="study-controls">
-      <label>复现哪类缺口<select data-studio-case></select></label>
+      <label>退化类型<select data-studio-case></select></label>
       <label>随机种子<select data-studio-seed></select></label>
       <label><span data-studio-knob></span><select data-studio-strength></select></label>
     </div>
@@ -76,10 +77,11 @@ export async function mountWorkflow(root) {
       <div><dt>与参考图的 MAE</dt><dd data-studio-mae></dd></div>
     </dl>
     <p class="study-note" data-studio-reading></p>
+    <p class="study-note">这三个文件一起保存，清单记录生成条件和两张图的校验值。批量生成五对样本的任务在下方 P3 本地任务包。</p>
     <div class="study-downloads">
-      <button type="button" class="button" data-download="reference">下载参考 PGM</button>
-      <button type="button" class="button" data-download="input">下载退化 PGM</button>
-      <button type="button" class="button" data-download="manifest">下载清单 JSON</button>
+      <button type="button" class="button" data-download="reference">下载当前参考图（PGM）</button>
+      <button type="button" class="button" data-download="input">下载当前退化图（PGM）</button>
+      <button type="button" class="button" data-download="manifest">下载这对图的清单（JSON）</button>
     </div>
     <p class="study-note" data-studio-download-status role="status"></p>
   </div>`;
@@ -90,6 +92,7 @@ export async function mountWorkflow(root) {
   const strength = find('[data-studio-strength]');
   const x = find('[data-studio-x]');
   const y = find('[data-studio-y]');
+  const downloadStatus = find('[data-studio-download-status]');
   const [left, right] = root.querySelectorAll('canvas');
   let current;
   const renderPoint = () => {
@@ -102,10 +105,11 @@ export async function mountWorkflow(root) {
       marker.style.setProperty('--point-w', `${100 / width}%`);
       marker.style.setProperty('--point-h', `${100 / height}%`);
     });
-    find('[data-studio-pixel]').textContent = `坐标 (${column}, ${row}) · ${current.reference[index]} → ${current.input[index]} 灰度级`;
+    find('[data-studio-pixel]').textContent = `坐标 (${column}, ${row}) · 参考 ${current.reference[index]} → 退化 ${current.input[index]} 灰度级`;
   };
 
   function render() {
+    downloadStatus.textContent = '';
     const scenario = config.scenarios.find(item => item.id === mode.value);
     const seedValue = Number(seed.value);
     const level = Number(strength.value);
@@ -147,14 +151,22 @@ export async function mountWorkflow(root) {
     renderPoint();
   });
   root.querySelectorAll('[data-download]').forEach(button => button.addEventListener('click', async () => {
-    const { scenario, seedValue, level, reference, input, saturated } = current;
+    const selectedPair = current;
+    const { scenario, seedValue, level, reference, input, saturated } = selectedPair;
     const fileBase = `${scenario.id}-${seedValue}-${level}`;
+    const referenceName = `${fileBase}-reference.pgm`;
+    const inputName = `${fileBase}-input.pgm`;
     const first = encodePgm(width, height, reference);
     const second = encodePgm(width, height, input);
-    if (button.dataset.download === 'reference') return download(first, `${fileBase}-reference.pgm`, 'image/x-portable-graymap');
-    if (button.dataset.download === 'input') return download(second, `${fileBase}-input.pgm`, 'image/x-portable-graymap');
-    const status = find('[data-studio-download-status]');
+    const kind = button.dataset.download;
+    function requestDownload(data, name, mime) {
+      download(data, name, mime);
+      if (current === selectedPair) downloadStatus.textContent = `已请求下载 ${name}。`;
+    }
+    if (kind === 'reference') return requestDownload(first, referenceName, 'image/x-portable-graymap');
+    if (kind === 'input') return requestDownload(second, inputName, 'image/x-portable-graymap');
     button.disabled = true;
+    downloadStatus.textContent = '正在计算这对图的校验值…';
     try {
       const payload = {
         scenario: scenario.id,
@@ -164,16 +176,15 @@ export async function mountWorkflow(root) {
         reference_pattern: scenario.reference,
         noise_bound: scenario.reference === 'highlight' ? 0 : level,
         offset: scenario.reference === 'highlight' ? level : 0,
-        reference: `${fileBase}-reference.pgm`,
-        input: `${fileBase}-input.pgm`,
+        reference: referenceName,
+        input: inputName,
         reference_sha256: await hash(first),
         input_sha256: await hash(second),
         saturated_pixels: saturated,
       };
-      download(JSON.stringify([payload], null, 2) + '\n', `${fileBase}-manifest.json`, 'application/json');
-      status.textContent = `已生成 ${fileBase} 清单。`;
+      requestDownload(JSON.stringify([payload], null, 2) + '\n', `${fileBase}-manifest.json`, 'application/json');
     } catch {
-      status.textContent = '当前浏览环境无法计算 SHA-256。可从本地任务包生成清单。';
+      if (current === selectedPair) downloadStatus.textContent = '当前浏览环境无法计算 SHA-256。可用 P3 本地任务包生成清单。';
     } finally {
       button.disabled = false;
     }

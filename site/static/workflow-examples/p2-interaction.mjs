@@ -100,9 +100,10 @@ const markup = `
     .p2-experiment .p2-no { color: #924521; }
     .p2-experiment .p2-actions { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; }
     .p2-experiment .p2-status { margin-top: .65rem; }
+    .p2-experiment .p2-download-status:empty { display: none; }
   </style>
-  <h3>候选实验台</h3>
-  <p class="p2-muted">改变方案或门控阈值，观察剖面与分区误差。通过开发门槛后可冻结当前设置并复核留出集。</p>
+  <h3>在一维剖面上筛选降噪候选</h3>
+  <p class="p2-muted">四条一维合成剖面用于筛选，另四条用于留出复核。先选方案和门控阈值，观察暗墙与木纹的误差。过线后锁定设置，就能看到留出集的结果。</p>
   <div class="p2-controls">
     <label><span>处理方案</span><select data-method>
       <option value="baseline">原图基线</option>
@@ -134,11 +135,12 @@ const markup = `
     </thead><tbody></tbody></table>
   </div>
   <div class="p2-actions">
-    <button class="button primary" type="button" data-freeze>冻结方案并复核</button>
-    <button class="button" type="button" data-download hidden>导出本轮 JSON</button>
-    <button class="button" type="button" data-reset>重新开始</button>
+    <button class="button primary" type="button" data-freeze>锁定设置并复核留出集</button>
+    <button class="button" type="button" data-download hidden>下载筛选与复核记录（JSON）</button>
+    <button class="button" type="button" data-reset>重置设置并返回开发集</button>
   </div>
-  <p class="p2-status" role="status"></p>`;
+  <p class="p2-status" data-p2-status role="status"></p>
+  <p class="p2-muted p2-download-status" data-p2-download-status role="status"></p>`;
 
 export async function mountWorkflow(root) {
   let fixtures;
@@ -147,7 +149,7 @@ export async function mountWorkflow(root) {
     if (!response.ok) throw new Error('Fixture fetch failed');
     fixtures = await response.json();
   } catch {
-    root.textContent = '剖面数据加载失败。可刷新重试，或下载任务包复算参考表。';
+    root.textContent = '剖面数据加载失败。可刷新页面重试，也可用本页的 P2 本地任务包复算。';
     return;
   }
 
@@ -166,7 +168,8 @@ export async function mountWorkflow(root) {
   const sampleInputValues = root.querySelector('[data-sample-input]');
   const sampleOutput = root.querySelector('[data-sample-output]');
   const gates = root.querySelector('[data-gates]');
-  const status = root.querySelector('[role="status"]');
+  const status = root.querySelector('[data-p2-status]');
+  const downloadStatus = root.querySelector('[data-p2-download-status]');
   const body = root.querySelector('tbody');
   let locked = false;
   let report;
@@ -214,7 +217,8 @@ export async function mountWorkflow(root) {
     }).join('');
 
     if (locked) {
-      status.textContent = chosen.passes ? '留出复核通过，可排入二维实拍验证。' : '留出复核未通过，记录失败条件，保留基线。';
+      const fixedSetting = candidate === 'gated' ? `${methods[candidate]}，阈值 ${cutoff} 灰度级` : methods[candidate];
+      status.textContent = `已锁定${fixedSetting}。${chosen.passes ? '一维留出复核通过，可作为后续实拍验证的候选。' : '一维留出复核未通过，记录失败项并保留基线。'}`;
       report = {
         fixture: '八条一维合成灰度剖面',
         selected: candidate,
@@ -225,11 +229,11 @@ export async function mountWorkflow(root) {
         advanceToRealImageValidation: chosen.passes,
       };
     } else if (candidate === 'baseline') {
-      status.textContent = '选择一项候选，再决定是否冻结。';
+      status.textContent = '当前正在看原图基线。选一个处理方案，检查开发集是否达标。';
     } else {
       status.textContent = chosen.passes
-        ? '当前候选通过两个开发门槛，可冻结后查看留出结果。'
-        : '当前候选有指标超线。切换剖面检查孤点与纹理的变化。';
+        ? '当前候选通过两项开发门槛。锁定后可查看留出集的结果。'
+        : '当前候选未通过开发门槛，暂不能锁定。表格标出了超线区域，可切到对应剖面查看。';
     }
   }
 
@@ -243,6 +247,7 @@ export async function mountWorkflow(root) {
   reset.addEventListener('click', () => {
     locked = false;
     report = undefined;
+    downloadStatus.textContent = '';
     method.value = 'gated';
     threshold.value = String(defaultThreshold);
     swapProfiles();
@@ -256,6 +261,7 @@ export async function mountWorkflow(root) {
     const objectUrl = URL.createObjectURL(blob);
     const link = Object.assign(document.createElement('a'), { href: objectUrl, download: 'p2-comparison.json' });
     link.click();
+    downloadStatus.textContent = `已请求下载 ${link.download}，文件包含已锁定的设置和两个数据集的结果。`;
     setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
   });
   method.addEventListener('change', render);
