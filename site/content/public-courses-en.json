@@ -1,0 +1,210 @@
+[
+  {
+    "id": "microsoft-generative-ai",
+    "title": "Generative AI for Beginners",
+    "provider": "Microsoft",
+    "language": "英文原版 · 简体中文译文",
+    "level": "全员基础 · 研发入门",
+    "summary": "先学大模型、提示词和负责任使用，再做一次模型调用、工具接入或知识库问答。",
+    "audience": "刚接触生成式 AI 的同事可选读概念课。能读 Python 或 TypeScript 的研发同事可继续跟做应用课。",
+    "overview": [
+      "微软云倡导者团队把课程分成概念讲解和实际构建两类。概念课介绍模型能做什么、如何选型以及需要核对什么，应用课给出可以对照阅读的 Python 和 TypeScript 示例。",
+      "适合把零散的聊天体验变成一次可复查的请求。先看输入的消息和模型响应，再增加函数调用或检索。要求答案依赖外部资料时，可以沿第 15 课比较直接生成与检索后生成的差别。"
+    ],
+    "outline": [
+      { "title": "01–05 · 模型与提示词", "text": "学习大模型基础、模型选型、负责任使用，以及如何让提示说明任务、约束和输出要求。" },
+      { "title": "06–08 · 模型 API 与语义搜索", "text": "从文本生成和多轮聊天入手，再读向量搜索示例，理解查询如何找到语义相关的数据。" },
+      { "title": "11、15 · 函数调用与 RAG", "text": "第 11 课把模型接到外部函数，第 15 课让应用先检索再生成。对照两节可以分清执行动作和补充证据。" },
+      { "title": "12–14、16–21 · 应用交付与扩展", "text": "补读交互设计、安全、运行指标，并按需要选读开源模型、Agent、微调和小语言模型。" }
+    ],
+    "start": [
+      "全员先读 01、03 和 04。拿一句常用需求，把输出要求与要核对的事实写出来。",
+      "研发同事从 00 配环境，做 06、07 中的一次完整请求。接工具读 11，做知识库问答读 15。"
+    ],
+    "access": "GitHub 讲义和代码可以公开阅读。代码示例使用 Python 或 TypeScript，按课次选择 Microsoft Foundry、Azure OpenAI、OpenAI API 或可用的本地模型。本地运行要满足模型环境要求，云端接口按账号额度或服务计费。",
+    "links": [
+      { "title": "简体中文课程目录", "url": "https://github.com/microsoft/generative-ai-for-beginners/blob/main/translations/zh-CN/README.md" },
+      { "title": "英文原版与示例代码", "url": "https://github.com/microsoft/generative-ai-for-beginners" }
+    ],
+    "courses": ["A1", "A2", "A4", "A6", "A7"]
+  },
+  {
+    "id": "microsoft-ai-agents",
+    "title": "AI Agents for Beginners",
+    "provider": "Microsoft",
+    "language": "英文原版 · 简体中文译文",
+    "level": "研发入门",
+    "summary": "用工具调用、任务规划、人工确认和上下文管理，逐步搭出可检查的 Agent。",
+    "audience": "已能读 Python 示例并理解一次模型 API 请求的研发同事。使用 Microsoft Foundry 的团队更容易复用主线实验。",
+    "overview": [
+      "课程从 Agent 的适用场景讲起，逐步加入工具、检索、计划、记忆和交接。它按主题拆开不同设计模式，便于带着自己的问题直接找对应一节。",
+      "初学者可以先让 Agent 查一个只读工具，记录它请求了什么、收到什么。再学习如何在真正改变业务状态前设置人工审批。把两个环节分开，调试时更容易判断问题出在模型、参数、工具返回还是流程控制。"
+    ],
+    "outline": [
+      { "title": "01–03 · Agent 场景和设计模式", "text": "判断哪些任务的步骤会随观察结果变化，认识框架负责管理的执行部分。" },
+      { "title": "04–07 · 工具、检索与规划", "text": "接一个工具或检索服务，设计 Agent 的任务步骤和人工干预位置。" },
+      { "title": "08–13 · 协作、运行与上下文", "text": "看多 Agent 如何分工，模型怎样根据反馈修正结果，并了解生产运行、MCP 等协议、上下文组织和记忆。" },
+      { "title": "14–18 · 框架与部署", "text": "按需选读 Microsoft Agent Framework、计算机操作、扩展部署、本地运行与安全。" }
+    ],
+    "start": [
+      "能调用模型后，做第 04 课工具示例。单独保存请求参数和回传结果，再读第 06 课的可信运行讨论。",
+      "需要接知识库时读第 05 课。需要跨应用接入工具时，随后读第 11 课的 MCP 相关内容。"
+    ],
+    "access": "讲义、视频链接和 Python 示例在 GitHub 公开。主线使用 Microsoft Agent Framework 和 Microsoft Foundry，部分实验需要 Azure 账号和相应资源。个别示例支持其他模型服务或本地环境，跟做前先看该节配置。",
+    "links": [
+      { "title": "简体中文课程目录", "url": "https://github.com/microsoft/ai-agents-for-beginners/blob/main/translations/zh-CN/README.md" },
+      { "title": "第 04 课 · 工具使用设计模式", "url": "https://github.com/microsoft/ai-agents-for-beginners/blob/main/translations/zh-CN/04-tool-use/README.md" },
+      { "title": "英文原版与实验代码", "url": "https://github.com/microsoft/ai-agents-for-beginners" }
+    ],
+    "courses": ["A6", "A7", "A9", "A11", "A13"]
+  },
+  {
+    "id": "columbia-designing-llm-agents",
+    "title": "Designing LLM Agents",
+    "provider": "哥伦比亚大学 · COMS 4995-15",
+    "language": "英文",
+    "level": "研发入门 · 工程实践",
+    "summary": "从解码和上下文到检索、Harness 和工具调用，再用公开作业检查各模块能否接起来。",
+    "audience": "能用 Python 编程、想系统理解 Agent 机制的研发同事，也适合寻找教学顺序和项目验收样例的讲师。",
+    "overview": [
+      "这是哥伦比亚大学 2026 年秋季的线下课程。前几周用语言建模、模型结构和文本生成建立基础，再把检索、工具与规划接入同一个系统。课表提供已发布的讲义、部分课堂代码和公开作业。",
+      "第三次作业适合参照接口设计。它把资料检索、内容规划、文字表达和超范围处理拆开。内部学习可以换成自己的制度问答或设备操作手册，按同样的模块边界核对每一步有没有读到证据。"
+    ],
+    "outline": [
+      { "title": "第 1–4 周 · 模型怎样读写上下文", "text": "认识 Agent，读模型结构、训练和解码，再看提示词、推理与记忆怎样改变模型收到的信息。" },
+      { "title": "第 5–7 周 · 构建 Agent", "text": "从后训练与检索走到 Harness 和规划，再接入工具调用、框架及 MCP。" },
+      { "title": "第 8–9 周 · 失败边界与作业演示", "text": "了解安全与防护要求，对照第三次作业看检索、回答和超范围处理怎样验收。" },
+      { "title": "第 10–13 周 · 应用与项目", "text": "按公开日程选读 AI 辅助开发、业界分享和结课项目要求。" }
+    ],
+    "start": [
+      "第一次读原理可从第 3 周开始，结合课堂脚本理解生成策略为什么会得到不同文本。",
+      "已有模型 API 基础时，连读第 6、7 周和第三次作业。试着画出谁检索、谁执行工具、谁决定何时结束。"
+    ],
+    "access": "公开课表、已发布讲义和作业页面可以自学阅读，课程要求会 Python，无需已有机器学习背景。校内授课、课程平台和提交系统另有学校权限。运行练习按作业所选的模型及环境准备。",
+    "links": [
+      { "title": "公开课表与讲义", "url": "https://designing-agents.github.io/" },
+      { "title": "第 7 周 · 工具调用课件 PDF", "url": "https://designing-agents.github.io/assets/lecture_slides/week7.pdf" },
+      { "title": "第三次作业 · 构建第一个 Agent", "url": "https://designing-agents.github.io/HW3.html" }
+    ],
+    "courses": ["A1", "A6", "A7", "A9", "A11"]
+  },
+  {
+    "id": "llm-zoomcamp-2026",
+    "title": "LLM Zoomcamp 2026",
+    "provider": "DataTalks.Club",
+    "language": "英文",
+    "level": "项目型实践",
+    "summary": "从 FAQ 检索起步，把问答原型做成有离线评估、运行监控和用户反馈的项目。",
+    "audience": "会 Python 和命令行、接触过基础 Docker，想完成企业知识库问答项目或补上评测环节的研发同事。",
+    "overview": [
+      "2026 版用 DataTalks.Club 的 FAQ 贯穿检索、回答和工具调用，再逐步替换检索方式并加入工作流编排。用同一批问题做对照，容易看清改动究竟提升了找资料还是写答案。",
+      "评估模块把检索是否命中、回答是否合格、Agent 的工具轨迹拆开。监控模块继续看延迟、成本和用户反馈。可把这套方法应用于团队自己的问答项目，保留一版稳定测试集来检查后续改动。"
+    ],
+    "outline": [
+      { "title": "模块 1–2 · Agentic RAG 与向量搜索", "text": "先跑关键词搜索和问答流程，加入函数调用与 Agent 循环，再用同一 FAQ 对照向量检索。" },
+      { "title": "模块 3 与工作坊 · 编排和日志", "text": "用 Kestra 组织步骤，借 dlt 工作坊理解如何收集和处理运行轨迹。" },
+      { "title": "模块 4 · 评估", "text": "用命中率和平均倒数排名检查检索，再分别核对回复文本与 Agent 工具轨迹。" },
+      { "title": "模块 5 · 监控", "text": "为问答应用记录成本、延迟和用户反馈，用仪表盘观察上线表现。" },
+      { "title": "选修与结课项目", "text": "模块 6–7 选看混合检索、重排和端到端项目，其中部分材料录于 2024 年。结课项目用自己的知识库，串起检索、应用和评估。" }
+    ],
+    "start": [
+      "想做第一个知识库，先跑模块 1 的关键词 FAQ。保留查询和命中文档，再用模块 2 的向量检索对照。",
+      "手头已有原型时，直接读模块 4 和模块 5。先补一组可重跑的评估题，再决定线上要记录哪些指标。"
+    ],
+    "access": "2026 版讲义、录播、代码和作业公开自学。完整项目要用 Python、命令行和 Docker，模型 API 及云资源可能按用量收费。官方建议按每周约 10 小时安排完整学习。",
+    "links": [
+      { "title": "2026 版教学材料", "url": "https://github.com/DataTalksClub/llm-zoomcamp/blob/main/cohorts/2026/README.md" },
+      { "title": "官方课纲", "url": "https://datatalksclub.github.io/docs/courses/llm-zoomcamp/curriculum/" },
+      { "title": "模块 4 · 评估资料与 Notebook", "url": "https://github.com/DataTalksClub/llm-zoomcamp/blob/main/04-evaluation/README.md" }
+    ],
+    "courses": ["A7", "A9", "A12", "A14"]
+  },
+  {
+    "id": "building-with-claude-api",
+    "title": "Building with the Claude API",
+    "provider": "Anthropic · Claude Academy",
+    "language": "英文",
+    "level": "研发入门 · 工程实践",
+    "summary": "按同一套 API 练习多轮消息、提示词评测、工具回传、检索和 MCP。",
+    "audience": "会 Python 和 JSON，准备把 Claude 接进实际应用，或者需要补齐模型工具调用与测试方法的开发者。",
+    "overview": [
+      "这是 Claude API 的完整工程教程。先把消息、流式输出和结构化数据跑通，再逐项加入提示词测试、外部工具和知识检索。课程提供按主题展开的讲解与演示。",
+      "工具和评测两部分最适合并读。学习者可以先检查模型发出的调用请求和应用回传的结果，再用几条测试记录核对成功、参数错误及工具超时。掌握这个循环后，再学习多工具、路由和并行。"
+    ],
+    "outline": [
+      { "title": "API 与提示词评测", "text": "配置请求和多轮消息，比较流式与结构化输出，建立测试数据并尝试代码判分或模型判分。" },
+      { "title": "工具调用", "text": "定义工具函数及参数，拆解响应中的消息块，回传结果并处理多个工具和多轮会话。" },
+      { "title": "检索与 MCP", "text": "试切块、向量和 BM25 检索，再区分 MCP 客户端、服务端、工具和资料各自承担的工作。" },
+      { "title": "工作流与平台功能", "text": "按需了解提示缓存、视觉输入、Claude Code，以及串联、并行和路由的工作流。" }
+    ],
+    "start": [
+      "先读 Making a request、Multi-Turn conversations 和 Structured data。把一次请求和返回都保存下来供核对。",
+      "接着学 Tool schemas 与 Sending tool results。已有工具时，直接读 A typical eval workflow，把工具失败题列进验收。"
+    ],
+    "access": "Claude Academy 课程免费学习，免费 Claude 账号可保存进度并获取徽章。跟做实操需要 Python、JSON 基础和 Anthropic API Key，API 用量另按服务计费。",
+    "links": [
+      { "title": "官方课程与逐节目录", "url": "https://academy.claude.com/courses/building-with-the-claude-api" },
+      { "title": "Claude Academy 学习和账号说明", "url": "https://academy.claude.com/help/faq" }
+    ],
+    "courses": ["A4", "A6", "A7", "A9", "A12"]
+  },
+  {
+    "id": "claude-platform-101",
+    "title": "Claude Platform 101",
+    "provider": "Anthropic · Claude Academy",
+    "language": "英文",
+    "level": "研发短课",
+    "summary": "先手写一遍 Agent 循环，再比较 SDK 接管循环和托管 Agent 的差别。",
+    "audience": "看得懂基础代码和命令行、想快速理解一个对话如何变成可调用工具的应用的研发新人。",
+    "overview": [
+      "这门课从结构化 API 请求开始，解释模型如何提出工具调用，应用怎样执行工具并回传结果。先手写循环，再用 SDK 的 Tool Runner 减少重复代码，便于看懂哪些工作依旧由业务应用负责。",
+      "后半程介绍内置工具、Skills、MCP 与上下文管理。最终用托管 Agent 的事件流对比自建调用循环。选择之前可以先写清想保留哪些状态、在哪一步由人确认，以及谁负责记录执行过程。"
+    ],
+    "outline": [
+      { "title": "第一次 API 请求与模型选型", "text": "阅读结构化响应，用同一任务比较模型输出质量、时延及成本。" },
+      { "title": "手写 Agent 循环", "text": "让应用检查并执行工具调用，回传实际结果，循环到最终答复或明确退出。" },
+      { "title": "Skills、MCP 与上下文", "text": "比较可复用步骤、外部能力和长会话材料组织，并观察不同做法的职责区别。" },
+      { "title": "托管 Agent 与代码审阅", "text": "看托管 Agent 怎样用事件报告进度，再读 Claude Code 示例和人工审阅的环节。" }
+    ],
+    "start": [
+      "时间有限时读 The agent loop explained 与 What is tool use?，画出一次请求、执行、回传的顺序。",
+      "自己写过工具循环后，再读 Context management 与 What are managed agents?，比较平台能接管哪些运行工作。"
+    ],
+    "access": "Claude Academy 提供免费学习，账号可保存进度。跟做需要 Claude Console 账号、API Key 和可用额度。多数演示是 Python，部分用 TypeScript 和 Node.js。Coursera 也有同名课程，章节和访问条件以所选平台为准。",
+    "links": [
+      { "title": "Claude Academy 课程", "url": "https://academy.claude.com/courses/claude-platform-101" },
+      { "title": "Coursera 版课纲", "url": "https://www.coursera.org/learn/claude-platform-101" }
+    ],
+    "courses": ["A2", "A6", "A8", "A9", "A11"]
+  },
+  {
+    "id": "google-kaggle-agents-2026",
+    "title": "AI Agents Intensive 2026",
+    "provider": "Google × Kaggle",
+    "language": "英文",
+    "level": "集中实训",
+    "summary": "沿五天材料做 Agent 原型，逐项加入工具、Skills、人工确认、评估和部署。",
+    "audience": "做过大模型应用或会跟着 Notebook 调试的研发同事，适合选几天的实验做短期实训。",
+    "overview": [
+      "Google 和 Kaggle 在 2026 年 6 月举办了这期实训，活动结束后仍可按 Kaggle Learn 的指南自学。白皮书、Notebook 和案例项目围绕如何把一个原型做成可以演示和核对的应用。",
+      "建议选一个边界清楚的任务贯穿练习，例如根据公开资料回答疑问。先用工具获取事实，再补记录和人工确认，最后用固定问题比较改动前后的表现。工具栈以 Google Antigravity 和 Agent Development Kit 为主，应用设计思路也可作跨平台参考。"
+    ],
+    "outline": [
+      { "title": "第 1–2 天 · 应用起步与工具", "text": "用 Antigravity 创建原型。学习怎样连接外部 API、MCP 和 A2A，并观察调用的输入与返回。" },
+      { "title": "第 3 天 · Skills 与上下文", "text": "把常用方法写成可按需加载的 Skill，区分当前任务状态、上下文和跨会话记忆。" },
+      { "title": "第 4 天 · 质量、权限与人工确认", "text": "通过费用审批等课程示例理解动作前的确认，把预期输出和失败情形写进评估。" },
+      { "title": "第 5 天与项目 · 调试和交付", "text": "按规格推进实现，借运行日志定位问题，选做云端部署与前端，并提交项目说明。" }
+    ],
+    "start": [
+      "已有原型时优先选第 2、3 天。接入一个只读工具并把固定使用步骤整理成 Skill。",
+      "准备演示前再学第 4 天。先验证工具失败和等待人工确认两种场景，再按需看第 5 天的部署。"
+    ],
+    "access": "Google 官方说明课程材料保留为免费自学指南。部分跟做需要 Kaggle 账号、Google AI Studio API Key 或 Antigravity。选做 Google Cloud 部署时按项目配置计费账号，云资源和模型用量依账号条件计费。",
+    "links": [
+      { "title": "Kaggle 2026 自学指南", "url": "https://www.kaggle.com/learn-guide/5-day-agents-vibecoding" },
+      { "title": "Kaggle 活动课纲", "url": "https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google/overview" },
+      { "title": "Google 官方活动回顾", "url": "https://blog.google/innovation-and-ai/technology/developers-tools/ai-agents-intensive-recap-2026/" }
+    ],
+    "courses": ["A4", "A6", "A8", "A12", "A14"]
+  }
+]

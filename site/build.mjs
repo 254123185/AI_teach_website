@@ -10,6 +10,7 @@ import { visualInputLesson } from './visual-input.mjs';
 import { deepContent, deepTask, evidenceTable, lessonFlow, taskMarkdown, validateDeepLesson } from './deep-lesson.mjs';
 import { showSkillExamples, skillExamples } from './skill-lesson.mjs';
 import { onboardingLesson, validateOnboarding } from './onboarding.mjs';
+import { publicCourseDirectory, publicCourseDetail, publicCourseLabel, publicCoursesEntry, publicCoursesIndex, publicCourseUrl, validatePublicCourses } from './public-courses.mjs';
 
 const site = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(site, '../dist');
@@ -17,6 +18,7 @@ const sample = process.argv.includes('--sample');
 const json = async (name) => JSON.parse((await readFile(join(site, 'content', name), 'utf8')).replace(/^\uFEFF/, ''));
 const { modules, sources, version } = await json('curriculum.json');
 const onboarding = await json('onboarding.json');
+const publicCourses = (await Promise.all(['public-courses-cn.json', 'public-courses-en.json'].map(json))).flat();
 const projects = await Promise.all(['P1', 'P2', 'P3', 'P4'].map(async id =>
   ({ id, ...await json(`workflows/${id.toLowerCase()}.json`) })));
 const workflowFixtures = {
@@ -98,6 +100,7 @@ function validateData() {
   const expected = [...Object.entries({ A: 15, B: 12, C: 5 }).flatMap(([key, count]) => Array.from({length: count}, (_, index) => key + (index + 1)))];
   assert.deepEqual([...courseMap.keys()], expected);
   validateOnboarding(onboarding, courseMap);
+  validatePublicCourses(publicCourses, courseMap);
   assert.deepEqual(projects.map(item => item.id), ['P1', 'P2', 'P3', 'P4']);
   const completed = new Set();
   function visit(id, trail = new Set()) {
@@ -165,7 +168,7 @@ function validateData() {
 }
 
 function shell(base, title, active, main, caseStyles = false) {
-  const links = [['home','', '首页'], ['paths','paths/', '学习路线'], ['courses','courses/', '课程目录'], ['projects',casePath,caseMenuLabel]];
+  const links = [['home','', '首页'], ['public',publicCourseDirectory, '公开课程'], ['paths','paths/', '学习路线'], ['courses','courses/', '课程目录'], ['projects',casePath,caseMenuLabel]];
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f6ed">
 <meta name="description" content="面向算法研发同事的 AI 自助培训，含课程、实战工作流和本地任务包。">
@@ -191,7 +194,7 @@ function workflowArt(base) {
 }
 
 function home() {
-  return `<div class="wrap"><section class="hero"><div><p class="eyebrow">算法研发 · 自助培训</p>
+  return `<div class="wrap">${publicCoursesEntry(publicCourses.length)}<section class="hero"><div><p class="eyebrow">算法研发 · 自助培训</p>
 <h1>把 AI 用到<br>日常研发里<span>。</span></h1>
 <p class="intro">算法研发自学材料，覆盖模型原理、论文复现、实验诊断、图像质量和部署。</p>
 <div class="actions"><a class="button primary" href="paths/">选一条学习路线 <span aria-hidden="true">↗</span></a><a class="button secondary" href="courses/">浏览课程</a></div>
@@ -204,15 +207,16 @@ ${Object.entries(tracks).map(([key, track]) => `<a class="track-card" href="cour
 }
 
 function paths() {
-  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">第一次接触大模型，可以先从 <a href="../${onboardingUrl}">${h(onboarding.title)}</a> 学起。了解基础后，按研发任务选课。</p></section>
+  return `<div class="wrap"><section class="page-intro"><h1>学习路线</h1><p class="intro">先到 <a href="../${publicCourseDirectory}">${publicCourseLabel}</a> 按基础和岗位挑选外部课程。也可以直接读本站的 <a href="../${onboardingUrl}">${h(onboarding.title)}</a>，再按研发任务选课。</p></section>
 <div class="route-list">${routes.map(route => `<section class="route" id="${route.key}"><h2>${route.name}</h2><p>${route.text}</p><ol>${route.ids.map(id => `<li>${courseChip(id, '../')}</li>`).join('')}</ol></section>`).join('')}</div>
 <p class="route-case-link"><a data-case-overview class="text-link" href="../${casePath}">打开实战案例总览 ↗</a> · ${caseTitle}</p></div>`;
 }
 
 function catalog() {
   return `<div class="wrap"><section class="page-intro"><h1>课程目录</h1></section>
-<div class="catalog-toolbar"><label class="search"><span>搜索课程与学习资料</span><input type="search" data-course-search placeholder="搜索标题、主题或编号" autocomplete="off"></label><p class="catalog-count" data-course-count aria-live="polite">${modules.length} 门课程 · 1 个入门类目</p></div>
-<div class="tabs"><a href="#track-onboarding">${h(onboarding.title)}</a><a href="#track-A">通用主干</a><a href="#track-B">算法实战</a><a href="#track-C">前沿选修</a></div><p data-empty hidden>没有找到课程或学习资料，试试别的关键词。</p>
+<div class="catalog-toolbar"><label class="search"><span>搜索课程与学习资料</span><input type="search" data-course-search placeholder="搜索标题、主题或编号" autocomplete="off"></label><p class="catalog-count" data-course-count aria-live="polite">${modules.length} 门课程 · 1 个入门类目 · ${publicCourseLabel}</p></div>
+<div class="tabs"><a href="#track-public">${publicCourseLabel}</a><a href="#track-onboarding">${h(onboarding.title)}</a><a href="#track-A">通用主干</a><a href="#track-B">算法实战</a><a href="#track-C">前沿选修</a></div><p data-empty hidden>没有找到课程或学习资料，试试别的关键词。</p>
+<section class="catalog-track" data-course-group="public" id="track-public"><h2>${publicCourseLabel}</h2><div class="catalog-list"><a class="catalog-item public-catalog-item" data-course-card data-keywords="${h(publicCourses.map(item => `${item.provider} ${item.title} ${item.summary}`).join(' '))}" href="../${publicCourseDirectory}"><div><h3>浏览 ${publicCourses.length} 门外部课程</h3><p>从入门讲义到 Agent 实训，逐门查看大纲、选读建议和原课。</p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a></div></section>
 <section class="catalog-track" data-course-group="onboarding" id="track-onboarding"><h2>${h(onboarding.title)}</h2><div class="catalog-list"><a class="catalog-item" data-course-card data-keywords="${h('LLM Token 提示词 RAG API Harness 新人答疑 ' + onboarding.sections.map(section => section.title).join(' '))}" href="../${onboardingUrl}"><div><h3>大模型与 Agent 入门导读</h3><p>${h(onboarding.description)}</p></div><span class="catalog-arrow" aria-hidden="true">↗</span></a></div></section>
 ${Object.entries(tracks).map(([key, track]) => `<section class="catalog-track" data-course-group id="track-${key}"><h2>${track.title}</h2><p>${track.text}</p><div class="catalog-list">${modules.filter(item => item.track === key).map(item => {
     const body = `<span class="mono">${item.id}</span><div><h3>${h(item.title)}</h3><p>${h(item.goal)}</p></div><span class="catalog-arrow" data-course-state="${item.id}" aria-label="打开课程">↗</span>`;
@@ -501,6 +505,10 @@ await write('index.html', shell('', '首页', 'home', home()));
 await write('paths/index.html', shell('../', '学习路线', 'paths', paths()));
 await write('courses/index.html', shell('../', '课程目录', 'courses', catalog()));
 await write(`${onboardingUrl}index.html`, shell('../../', onboarding.title, 'courses', onboardingLesson(onboarding, h, courseChip), true));
+await write(`${publicCourseDirectory}index.html`, shell('../../', publicCourseLabel, 'public', publicCoursesIndex(publicCourses, h)));
+for (const item of publicCourses) {
+  await write(`${publicCourseUrl(item.id)}index.html`, shell('../../../', item.title, 'public', publicCourseDetail(item, h, courseChip)));
+}
 await write(`${casePath}index.html`, shell('../', caseTitle, 'projects', denoiseStory(fusionResult)));
 const lessonExtras = sample ? {} : { A8: { 'exact-ids': showSkillExamples(await skillExamples(site, python), h) } };
 for (const id of pageCourseIds) {

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "easy-data-x-ai",
+    "title": "Easy Data x AI",
+    "provider": "Datawhale × OceanBase",
+    "language": "简体中文",
+    "level": "全员入门 · 开发选修",
+    "summary": "从大模型的能力边界入手，再按岗位选读需求设计或 API、检索与记忆的实现。",
+    "audience": "适合产品、运营和研发一起建立基础概念。公共篇和产品篇无需编程，开发篇适合会读 Python、能调用模型 API 的同事。",
+    "overview": [
+      "课程从数据怎样进入 AI 应用讲起。以知识库问答为例，资料缺失、检索错版本、模型读错内容，分别需要不同的修正方式。公共篇用两个章节让不同岗位的同事先理解模型和 Agent 的基本分工。",
+      "产品路线讲怎样选业务问题、设计问答和衡量效果。开发路线把问题落到 API、检索与记忆的实现。如果团队既有非研发学员，也有人要落地系统，可以先读同一份公共材料，再分开选读。"
+    ],
+    "outline": [
+      {"title":"F1–F2 · 公共基础", "text":"从模型能生成什么、什么时候要查证，过渡到 Agent 怎样利用工具、记忆和外部资料。"},
+      {"title":"P1–P5 · 产品与决策", "text":"判断场景是否适合 Agent，设计知识库检索、记忆和 Skill，并用失败样本和业务指标看成效。"},
+      {"title":"D1–D5 · 开发与工程", "text":"练习模型 API、工具调用、数据层、Agentic RAG 与记忆实现。D3 有一套可先离线运行的评测。"},
+      {"title":"产业应用与扩展", "text":"围绕 AI 数据库、混合检索、上下文、Skill 和 MCP 继续深入。数据层示例主要使用 OceanBase 或 SeekDB。"}
+    ],
+    "start": [
+      "全员先读 F1 和 F2。带着一个岗位上的问答问题，写下需要哪些文件、什么情况应交给人确认。",
+      "产品和运营先读 P1、P2，再用 P5 选一种能衡量失败的指标。",
+      "研发从 D1 的工具调用入手，再做 D3 的离线评测。接入真实模型之前，先熟悉检索和回答分别怎样打分。"
+    ],
+    "access": "网页讲义和 GitHub 资料公开。D3 的指定离线评测无需 API Key 和数据库，真实模型示例需要模型配置，部分数据层实验需要数据库。仓库教材采用 CC BY-NC-SA 4.0。",
+    "links": [
+      {"title":"课程网站与完整目录", "url":"https://datawhalechina.github.io/easy-data-x-ai/course-intro.html"},
+      {"title":"GitHub 教材、实验和离线运行说明", "url":"https://github.com/datawhalechina/easy-data-x-ai"},
+      {"title":"教材许可", "url":"https://github.com/datawhalechina/easy-data-x-ai/blob/main/LICENSE"}
+    ],
+    "courses": ["A1","A6","A7","A9"]
+  },
+  {
+    "id": "aliyun-aca",
+    "title": "阿里云大模型工程师 ACA",
+    "provider": "阿里云培训中心",
+    "language": "简体中文",
+    "level": "零编程入门",
+    "summary": "把提示词、知识库、桌面 Agent 与 Skill 用到办公任务，适合团队全员一起学。",
+    "audience": "适合产品、运营、销售和其他无算法或编程基础的新同事，也适合初次使用桌面 Agent 的研发同事。",
+    "overview": [
+      "这套课把大模型基础放进办公任务。先练清楚交代要求与核对回答，再让桌面 Agent 查资料或调用工具。遇到同样的工作要重复做，就把输入、步骤和交付要求写成可复用的 Skill。",
+      "课程的周报实验适合观察一个草稿怎样变成可重复执行的流程。可以先用虚构材料走一遍，再加自检，最后确定哪些内容必须由人审核。云产品操作依对应课时，场景选择和验收方法也可用于其他工具。"
+    ],
+    "outline": [
+      {"title":"第 1–5 课 · 认识模型与改善输入", "text":"学习应用场景、提示词、知识库检索与效果评估，再了解调整模型的方法以及适用范围。"},
+      {"title":"第 6–8 课 · 用桌面 Agent 做事", "text":"从桌面环境里的第一项任务开始，加入资料和工具，了解 MCP，并把跑通的步骤整理成 Skill。"},
+      {"title":"第 9–11 课 · 自检与业务落地", "text":"用反馈与人工确认控制重复执行，了解有分支的工作流、安全合规和企业应用选题。"}
+    ],
+    "start": [
+      "第一次学，先看第 1–4 课，比较同一个问题在补清材料与引用要求前后的回答。",
+      "做过基础提示词练习后，选第 6–9 课或周报 Skill 实验，重点看步骤中哪里需要设停点、哪里由人确认。"
+    ],
+    "access": "课程入口和官方更新记录公开可访问。完整课时、进度或在线实验的权限以阿里云账号页面为准。认证考试另行收费，费用以官方认证页面为准。",
+    "links": [
+      {"title":"阿里云 ACA 课程入口", "url":"https://edu.aliyun.com/course/3126500/note"},
+      {"title":"官方课程发布记录", "url":"https://help.aliyun.com/zh/document_detail/2949765.html"},
+      {"title":"周报 Skill 实验说明", "url":"https://developer.aliyun.com/adc/scenario/77d767921740493ba39bcc58bb97f9b8"}
+    ],
+    "courses": ["A1","A4","A7","A8"]
+  },
+  {
+    "id": "aliyun-acp",
+    "title": "阿里云大模型高级工程师 ACP",
+    "provider": "阿里云培训中心",
+    "language": "简体中文",
+    "level": "研发入门到进阶",
+    "summary": "用一个新人答疑项目串起 API、知识库、自动评测、Agent 工具与部署。",
+    "audience": "适合有 Python、Git 基础，想按项目学习大模型应用开发的研发新人。",
+    "overview": [
+      "课程先用模型 API 搭出新人答疑机器人，再补充知识来源和提示词，然后用固定问题检查改动是否有效。连着做这几个版本，可以看到加入检索以后怎样区分资料召回错误和回答错误。",
+      "后半部分把项目从问答扩展到工具和任务执行。除了工具、记忆和 Skill，课程也安排了部署、日志追踪及安全。想了解应用交付的同事，可以把一次模型回答沿工具日志和评测结果查回问题发生的位置。"
+    ],
+    "outline": [
+      {"title":"C1 · 配置开发环境", "text":"准备 Python 依赖、代码环境和模型平台。先验证一次最小 API 调用，再继续做项目。"},
+      {"title":"C2 · 新人答疑机器人", "text":"从 2.1 的模型调用做到补知识、改提示词、自动评估和 RAG 优化。"},
+      {"title":"C3 · 构建 Agent", "text":"学习工具调用、规划、多 Agent、记忆、Skill 和评测。3.8 用工程实验讲工具、验证、停止条件与反馈。"},
+      {"title":"C4–C5 · 生产交付", "text":"覆盖模型蒸馏、部署、日志与可观测性、安全合规，以及如何挑选业务场景。"}
+    ],
+    "start": [
+      "先跟 2.1、2.2、2.4 和 2.5。用同一组问题比较有检索和无检索的答复，记录有没有找到正确原文。",
+      "接着做 3.1 和 3.6，观察一次工具调用和失败记录。已有经验的同事再看 3.8 与 4.3。"
+    ],
+    "access": "GitHub 可公开阅读课纲、教程与代码，仓库采用 Apache-2.0。官方示例主要使用百炼、AgentScope 和 Qwen Code，调用云端模型的课次需要 API Key 及可用额度。认证考试单独收费。",
+    "links": [
+      {"title":"GitHub 课程目录与代码", "url":"https://github.com/AlibabaCloudDocs/aliyun_acp_learning"},
+      {"title":"阿里云 ACP 课程平台", "url":"https://edu.aliyun.com/course/3130200/"},
+      {"title":"官方课程发布记录", "url":"https://help.aliyun.com/zh/document_detail/2949766.html"}
+    ],
+    "courses": ["A6","A7","A8","A12"]
+  },
+  {
+    "id": "hylee-genai-2025",
+    "title": "生成式人工智慧与机器学习导论（2025 秋季）",
+    "provider": "李宏毅 · 台湾大学",
+    "language": "中文授课 · 繁体课件",
+    "level": "全员入门 · 原理选修",
+    "summary": "通过中文视频理解文本生成、上下文、Agent 和评估，前四讲可按主题单独观看。",
+    "audience": "适合希望先看视频建立直觉的新同事。研发新人可继续选读模型架构和训练，讲师可用课表定位公开课件。",
+    "overview": [
+      "前四讲适合作为入门材料。先观察模型怎样一步步生成，再看回答随上下文变化的原因，最后看怎样用评测判断模型在特定条件下表现如何。",
+      "后续讲次把话题扩展到机器学习、深度学习、模型训练和后训练。建议按目标选看。应用岗位可以先获得评估意识，研发岗位再补足模型内部结构和训练过程。"
+    ],
+    "outline": [
+      {"title":"第 1–2 讲 · 从生成到 Agent", "text":"从生成式 AI 的基本工作方式开始，接着看模型、上下文和 Agent 分别承担什么。"},
+      {"title":"第 3–4 讲 · 模型内部与评估", "text":"第 3 讲介绍大模型内部的运作机制，第 4 讲讨论怎样设计评估以及常见误判。"},
+      {"title":"第 5–8 讲 · 学习、训练与后训练", "text":"补机器学习、深度学习与模型训练过程，再看后训练如何改变模型的行为。"},
+      {"title":"后续专题 · 图像、音频与语音", "text":"按课表选看图像和音频生成，以及能听和能说的模型。"}
+    ],
+    "start": [
+      "全员先看第 1、2、4 讲，看完后试着解释回答为什么需要来源、评测时应该锁定哪些条件。",
+      "研发新人在第 2 讲后加看第 3 讲。想了解训练，再按课表继续第 5–8 讲。"
+    ],
+    "access": "课程站公开提供课表、视频、课件和作业。课站公告写明本学期结束后，旁听者可从课程网站获取材料。视频由 YouTube 提供，也可阅读课表中的 PDF。",
+    "links": [
+      {"title":"2025 秋季课程主页与完整课表", "url":"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php"},
+      {"title":"第 2 讲课件 · 从大模型到 Agent", "url":"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Agent.pdf"},
+      {"title":"第 4 讲课件 · 生成式 AI 的评估", "url":"https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall-course-data/Evaluation.pdf"}
+    ],
+    "courses": ["A1","A2","A9","A12"]
+  },
+  {
+    "id": "hylee-ml-2026",
+    "title": "机器学习（2026 春季）· Agent 与模型工程选讲",
+    "provider": "李宏毅 · 台湾大学",
+    "language": "中文授课 · 繁体课件",
+    "level": "研发进阶选读",
+    "summary": "从具体 Agent 实例看上下文与任务执行，再选读 Harness、反馈修正和推理效率。",
+    "audience": "适合已有大模型和工具调用基本概念、想了解 Agent 工程设计的研发人员，也适合教师备课时按日期选择专题。",
+    "overview": [
+      "学期前两周用 OpenClaw 等实例讨论 Agent 怎样组织上下文，以及多个 Agent 可以怎样协作。读完可试着画出一条任务链，区分发起者给的信息、模型选的动作和工具返回的资料。",
+      "之后的专题分两条线。一条解释推理效率和长输入，另一条讨论怎样用程序、明确的反馈与验证条件约束 Agent 的运行。两条线可以按工作问题分别选学。"
+    ],
+    "outline": [
+      {"title":"3 月 6 日与 13 日 · Agent 与上下文", "text":"拆解 OpenClaw 的工作方式，介绍上下文工程、Agent 之间的交互和研究任务示例。"},
+      {"title":"3 月 20 日与 27 日 · 推理与长输入", "text":"Flash Attention、KV Cache，以及处理超长输入时涉及的位置编码。"},
+      {"title":"4 月 10 日与 24 日 · Harness 与自我修正", "text":"先学习怎样把规则、工具和验证组织起来，再看模型如何在反馈后重新尝试。"},
+      {"title":"5 月 · 自我改进与专题", "text":"课程安排了模型自我改进与业界分享，可按课表和已有课件选读。"}
+    ],
+    "start": [
+      "想学 Agent，顺着 3 月 6 日、3 月 13 日、4 月 10 日、4 月 24 日观看。每次记下一个能在程序中验证的输出。",
+      "想理解推理效率，直接选 3 月 20 日与 27 日。看完后再读本站 A1 关于上下文和 KV 缓存的讲解。"
+    ],
+    "access": "课表列出公开视频、PDF、PPT 与作业。单看公开讲义无需模型密钥。实际提交作业或跟做有模型、算力要求的作业时，按课程和相应平台说明准备。",
+    "links": [
+      {"title":"2026 春季课程主页与完整课表", "url":"https://speech.ee.ntu.edu.tw/~hylee/ml/2026-spring.php"},
+      {"title":"3 月 6 日课件 · OpenClaw 与 Agent 原理", "url":"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/intro.pdf"},
+      {"title":"4 月 10 日课件 · Harness Engineering", "url":"https://speech.ee.ntu.edu.tw/~hylee/ml/ml2026-course-data/harness.pdf"}
+    ],
+    "courses": ["A1","A9","A11","A12"]
+  },
+  {
+    "id": "hello-agents",
+    "title": "Hello-Agents · 从零开始构建智能体",
+    "provider": "Datawhale",
+    "language": "简体中文 · 有英文版",
+    "level": "研发入门到进阶",
+    "summary": "从 ReAct 循环写到小型 Agent 框架，再选学记忆、上下文、协议和评估。",
+    "audience": "适合会写基础 Python、已经知道如何调用模型 API，想看懂框架内部做了什么的研发新人。",
+    "overview": [
+      "教程先用小程序展示 Agent 如何根据观察结果选择工具，然后把执行结果交回下一轮。亲手读一遍循环，可以更容易定位常见问题，比如参数错在哪里、重复调用怎样结束、失败有没有被当成成功。",
+      "后续章节依次扩展到自己的框架、记忆、检索和评估，并提供旅行助手等综合案例。先跑通一次最小工具调用，再看框架和案例里哪些处理可以复用。"
+    ],
+    "outline": [
+      {"title":"第 1–3 章 · Agent 与模型基础", "text":"理解 Agent 的组成和类型，补齐语言模型及提示词的基本概念。"},
+      {"title":"第 4–7 章 · 经典范式与自建框架", "text":"用 ReAct、先规划后执行和反馈修正展示几种控制方式，也介绍低代码、现成框架与自建框架。"},
+      {"title":"第 8–12 章 · 检索、上下文、协议和评估", "text":"按需要选读记忆、RAG、上下文工程、MCP 与 A2A、训练或性能评估。"},
+      {"title":"第 13–16 章 · 项目与毕业设计", "text":"有旅行助手、深度研究智能体和模拟社会的案例，也提供完整应用设计的方向。"}
+    ],
+    "start": [
+      "先跟第 4 章的 ReAct 小例子，记录一次工具输入、返回和下一步。再看第 7 章怎样把这些部件封装成框架。",
+      "如果已经有一个 Agent 原型，优先读第 8、9、12 章，分别查检索、上下文和行为评估有没有可诊断的输出。"
+    ],
+    "access": "GitHub 教材、代码与在线阅读版公开。第 4 章建议 Python 3.10 或更高版本。调用真实模型的示例需要可用的模型服务及相应配置，云端服务可能产生费用。教材采用 CC BY-NC-SA 4.0。",
+    "links": [
+      {"title":"GitHub 项目与完整章节目录", "url":"https://github.com/datawhalechina/hello-agents"},
+      {"title":"第 4 章 · 经典 Agent 范式与示例", "url":"https://github.com/datawhalechina/hello-agents/blob/main/docs/chapter4/%E7%AC%AC%E5%9B%9B%E7%AB%A0%20%E6%99%BA%E8%83%BD%E4%BD%93%E7%BB%8F%E5%85%B8%E8%8C%83%E5%BC%8F%E6%9E%84%E5%BB%BA.md"},
+      {"title":"教材发布与 PDF", "url":"https://github.com/datawhalechina/hello-agents/releases/latest/"}
+    ],
+    "courses": ["A6","A7","A9","A12"]
+  },
+  {
+    "id": "happy-llm",
+    "title": "Happy-LLM · 从零开始构建大模型",
+    "provider": "Datawhale",
+    "language": "简体中文 · 有英文版",
+    "level": "模型原理与训练选修",
+    "summary": "用中文教材与配套课件学习 Transformer、预训练和微调，也可选读模型应用章节。",
+    "audience": "适合想从模型内部理解大语言模型的研发新人。读原理可先看图与示例，完整实现和训练适合有 Python、PyTorch 基础的同事。",
+    "overview": [
+      "教材从语言表示和注意力讲起，逐步进入 Transformer、预训练模型与大语言模型。想弄懂模型为什么能利用前文生成文本，或不同架构为什么适合不同任务，可以选前半部分作为原理读物。",
+      "实践部分带读小型模型的搭建、训练和微调。应用岗位可以直接跳到第 7 章了解评测、RAG 和 Agent。第 8 章面向希望继续探索 Agent 强化学习的读者。"
+    ],
+    "outline": [
+      {"title":"第 1–2 章 · NLP 与 Transformer", "text":"从语言表示过渡到自注意力和 Transformer 的主要模块，结合代码看输入和输出的形状。"},
+      {"title":"第 3–4 章 · 预训练模型与大模型", "text":"比较编码器、编码器加解码器和仅解码器的架构，理解预训练语言模型的典型用法。"},
+      {"title":"第 5–6 章 · 搭建与训练", "text":"包括分词器、小模型实现、预训练、有监督微调，以及 LoRA 等高效微调方法。"},
+      {"title":"第 7–8 章 · 应用与 Agent 强化学习", "text":"第 7 章讲评测、RAG 和 Agent。第 8 章介绍强化学习方法与相关案例。"}
+    ],
+    "start": [
+      "先读第 2 章的注意力，再读第 4 章的模型概述。配套 PPT 可作为看图回顾的材料。",
+      "在训练方向选第 5–6 章，先读仓库的环境准备并挑适合已有算力的小实验。做应用的同事可先读第 7 章。"
+    ],
+    "access": "教材和配套课件可公开阅读。训练实验按章节配置 Python、PyTorch、依赖、数据及相应算力，先看官方环境说明。教材采用 CC BY-NC-SA 4.0。",
+    "links": [
+      {"title":"GitHub 教材、章节目录和环境准备", "url":"https://github.com/datawhalechina/happy-llm"},
+      {"title":"第 2 章 · Transformer 架构", "url":"https://github.com/datawhalechina/happy-llm/blob/main/docs/chapter2/%E7%AC%AC%E4%BA%8C%E7%AB%A0%20Transformer%E6%9E%B6%E6%9E%84.md"},
+      {"title":"配套中文课件", "url":"https://github.com/HZAI-ZJNU/happy-llm-ppt"}
+    ],
+    "courses": ["A1","A2","A7"]
+  }
+]
